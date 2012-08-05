@@ -6,36 +6,41 @@ namespace skies\system\database;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package skies.system.database
+ * @package   skies.system.database
  */
 class MySQL extends \mysqli {
 
     /**
      * Hostname of the SQL server
+     *
      * @var string
      */
     protected $host = '';
 
     /**
      * Username for logging into the SQL server
+     *
      * @var string
      */
     protected $user = '';
 
     /**
      * Password for login
+     *
      * @var string
      */
     protected $password = '';
 
     /**
      * Database name
+     *
      * @var string
      */
     protected $database = '';
 
     /**
      * Number of executed queries
+     *
      * @var int
      */
     protected $queryCount = 0;
@@ -51,9 +56,9 @@ class MySQL extends \mysqli {
         parent::__construct($host, $user, $password, $database, 3306);
 
         $this->database = $database;
-        $this->host = $host;
+        $this->host     = $host;
         $this->password = $password;
-        $this->user = $user;
+        $this->user     = $user;
 
     }
 
@@ -61,9 +66,9 @@ class MySQL extends \mysqli {
 
         $result = parent::query($query, $resultmode);
 
-        if($this->errno != 0) {
+        if (!empty($this->error)) {
 
-            throw new \skies\system\exception\SystemException('MySQL error: '.$this->error, $this->errno, $this->error);
+            throw new \skies\system\exception\SystemException('MySQL error: ' . $this->error, $this->errno, $this->error.'. Query: '.$query);
 
         }
 

@@ -1,13 +1,16 @@
 <?php
 /**
- * @author Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
+ * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
- * @license http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package skies
+ * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
+ * @package   skies
  */
 
 // Debug
 define('DEBUG', true);
+
+// Show full query in exceptions
+define('DEBUG_MYSQL', true);
 
 // Version
 define('VERSION', '0.1');
@@ -19,6 +22,6 @@ define('TBL_PRE', '');
 define('GUEST_ID', 0);
 
 // Cookie prefix
-define('COOKIE_PRE', 'pp_')
+define('COOKIE_PRE', 'skies_');
 
 ?>

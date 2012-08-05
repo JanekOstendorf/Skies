@@ -6,24 +6,27 @@ namespace skies\system\user;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package skies.user
+ * @package   skies.user
  */
 class User {
 
     /**
      * User ID
+     *
      * @var int
      */
     protected $id;
 
     /**
      * User name
+     *
      * @var string
      */
     protected $name;
 
     /**
      * User's mail address
+     *
      * @var string
      */
     protected $mail;
@@ -31,15 +34,15 @@ class User {
     public function __construct($userID) {
 
         // Normal users
-        if($userID != GUEST_ID) {
+        if ($userID != GUEST_ID) {
 
             // Fetch info
-            $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'users WHERE userID = '.escape($userID));
+            $result = \Skies::$db->query("SELECT * FROM " . TBL_PRE . 'users WHERE userID = ' . escape($userID));
 
             $data = $result->fetch_array();
 
             // Write into our vars
-            $this->id = $data['userID'];
+            $this->id   = $data['userID'];
             $this->name = $data['userName'];
             $this->mail = $data['userMail'];
         }
@@ -47,7 +50,7 @@ class User {
         // Guests
         else {
 
-            $this->id = GUEST_ID;
+            $this->id   = GUEST_ID;
             $this->name = null;
             $this->mail = null;
 
@@ -61,12 +64,14 @@ class User {
     public function update() {
 
         // No need for this if we're a guest
+        if($this->isGuest())
+            return;
 
         // Write stuff into DB
-        $query = 'UPDATE '.TBL_PRE.'user
-            SET `userMail` = \''.escape($this->mail).'\',
-            `userName` = \''.escape($this->name).'\'
-            WHERE `userID` = '.escape($this->id);
+        $query = 'UPDATE ' . TBL_PRE . 'user
+            SET `userMail` = \'' . escape($this->mail) . '\',
+            `userName` = \'' . escape($this->name) . '\'
+            WHERE `userID` = ' . escape($this->id);
 
         \Skies::$db->query($query);
 
@@ -78,6 +83,7 @@ class User {
 
     /**
      * Is this user a guest?
+     *
      * @return bool
      */
     public function isGuest() {
@@ -115,6 +121,7 @@ class User {
 
     /**
      * Changes user's user name
+     *
      * @param string $name User name
      */
     public function setName($name) {
@@ -125,6 +132,7 @@ class User {
 
     /**
      * Changes user's mail address
+     *
      * @param string $mail User's mail address
      */
     public function setMail($mail) {

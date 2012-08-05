@@ -1,17 +1,26 @@
 <?php
+
+namespace skies\system\page;
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package   skies
+ * @package
  */
 
-// Root directory
-define('ROOT_DIR', dirname(__FILE__));
+class PageTypes {
 
-// Start Skies up!
-require ROOT_DIR . '/libs/system/Skies.class.php';
+    /**
+     * Page is read from a file
+     */
+    const FILE = 1;
 
-new \Skies();
+    /**
+     * Page is read from the DB
+     */
+    const DB = 2;
+
+}
 
 ?>

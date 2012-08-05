@@ -1,0 +1,24 @@
+#################################
+#                               #
+# Skies main configuration file #
+#                               #
+#################################
+
+# Meta information
+meta:
+
+    # Title of the website
+    title: Skies
+
+# Subdirectory on the webserver
+# Example: 'http://test.skies.net/Skies' is the Skies URL. In this case, '/Skies' is the subdir
+subdir: /Skies
+
+# Default language
+defaultLanguage: en-UK
+
+# Default template (short name)
+defaultTemplate: woobie
+
+# Default page (Homepage)
+defaultPage: home

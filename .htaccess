@@ -1,0 +1,23 @@
+########################
+# Skies .htaccess file #
+########################
+
+# @author Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
+# @copyright Copyright (c) Janek Ostendorf
+# @license http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
+
+# Avtivate mod_rewrite
+Options +FollowSymlinks
+RewriteEngine on
+
+# Rewrite $_GET, too
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Page given
+# Pagename => $_GET['_0']
+RewriteRule ^([-a-zA-Z0-9]+)/$ index.php?_0=$1
+RewriteRule ^([-a-zA-Z0-9]+)$ index.php?_0=$1&%{QUERY_STRING}
+
+# Page and Subpage / Argument given
+RewriteRule ^([-a-zA-Z0-9]+)/([-a-zA-Z0-9/]+)/$ index.php?_0=$1&_1=$2
+RewriteRule ^([-a-zA-Z0-9]+)/([-a-zA-Z0-9/]+)$ index.php?_0=$1&_1=$2&%{QUERY_STRING}

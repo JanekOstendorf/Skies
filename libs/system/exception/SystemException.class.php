@@ -170,7 +170,7 @@ class SystemException extends \Exception {
                         <b>error code:</b> <?= intval($e->getCode())?><br>
                         <b>file:</b> <?= StringUtils::encodeHTML($e->getFile())?> (<?= $e->getLine(); ?>)<br>
                         <b>php version:</b> <?=StringUtils::encodeHTML(phpversion())?><br>
-                        <b>wcf version:</b> <?=VERSION?><br>
+                        <b>skies version:</b> <?=VERSION?><br>
                         <b>date:</b> <?=gmdate('r'); ?><br>
                         <b>request:</b> <?php if (isset($_SERVER['REQUEST_URI'])) echo StringUtils::encodeHTML($_SERVER['REQUEST_URI']); ?>
                         <br>
@@ -214,18 +214,20 @@ class SystemException extends \Exception {
     /**
      * Suppresses the original error message.
      *
-     * @see		\Exception::getMessage()
+     * @see        \Exception::getMessage()
      */
     public function _getMessage() {
+
         if (!DEBUG) {
             return 'An error occurred. Sorry.';
         }
 
-        $e = ($this->getPrevious() ?: $this);
+        $e = ($this->getPrevious() ? : $this);
         return $e->getMessage();
     }
 
     protected function logError() {
+
         $logFile = ROOT_DIR . '/log/' . date('Y-m-d', NOW) . '.txt';
 
         // try to create file
@@ -242,20 +244,20 @@ class SystemException extends \Exception {
             return;
         }
 
-        $e = ($this->getPrevious() ?: $this);
+        $e = ($this->getPrevious() ? : $this);
 
-        $message = date('r', NOW)."\n".
-            'Message: '.$e->getMessage()."\n".
-            'File: '.$e->getFile().' ('.$e->getLine().")\n".
-            'PHP version: '.phpversion()."\n".
-            'WCF version: '.VERSION."\n".
-            'Request URI: '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '')."\n".
-            'Referrer: '.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')."\n".
-            "Stacktrace: \n  ".implode("\n  ", explode("\n", $e->getTraceAsString()))."\n";
+        $message = date('r', NOW) . "\n" .
+            'Message: ' . $e->getMessage() . "\n" .
+            'File: ' . $e->getFile() . ' (' . $e->getLine() . ")\n" .
+            'PHP version: ' . phpversion() . "\n" .
+            'Skies version: ' . VERSION . "\n" .
+            'Request URI: ' . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '') . "\n" .
+            'Referrer: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '') . "\n" .
+            "Stacktrace: \n  " . implode("\n  ", explode("\n", $e->getTraceAsString())) . "\n";
 
         // calculate Exception-ID
-        $id = \skies\utils\StringUtils::getHash($message);
-        $message = "<<<<<<<<".$id."<<<<\n".$message."<<<<\n\n";
+        $id      = \skies\utils\StringUtils::getHash($message);
+        $message = "<<<<<<<<" . $id . "<<<<\n" . $message . "<<<<\n\n";
 
         // append
         @file_put_contents($logFile, $message, FILE_APPEND);
