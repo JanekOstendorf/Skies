@@ -8,29 +8,36 @@ namespace skies\system\page;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.system.page
  */
-class FilePage extends Page {
+class SystemPage extends FilePage {
 
     /**
-     * File to get the content from
+     * Init the system page
      *
-     * @var string
+     * @param string $name Page name
      */
-    protected $file;
+    public function __construct($name) {
 
-    /**
-     * File to include before showing anything
-     *
-     * @var string
-     */
-    protected $incFile;
+        $this->data = [];
 
-    protected function onInit() {
+        $this->title = \Skies::$language->get('system.page.'.$name.'.title');
+        $this->name  = $name;
+        $this->php   = true;
 
-        $this->file    = $this->data['pageFile'];
-        $this->incFile = $this->data['pageIncFile'];
+        $this->onInit();
 
     }
 
+    /**
+     * Stuff to do after __construct and init
+     *
+     * @return void
+     */
+    protected function onInit() {
+
+        $this->file    = $this->name.'.page.php';
+        $this->incFile = $this->name.'.page.inc.php';
+
+    }
 
     /**
      * Shows the page content
@@ -39,16 +46,7 @@ class FilePage extends Page {
      */
     public function show() {
 
-        if($this->php) {
-
-            include ROOT_DIR.'/page/'.$this->file;
-
-        }
-        else {
-
-            print file_get_contents(ROOT_DIR.'/page/'.$this->file);
-
-        }
+        include ROOT_DIR.'/page/system/'.$this->file;
 
     }
 
@@ -59,9 +57,11 @@ class FilePage extends Page {
      */
     public function getIncFile() {
 
-        return (empty($this->incFile) ? false : ROOT_DIR.'/page/include/'.$this->incFile);
+        return ROOT_DIR.'/page/system/include/'.$this->incFile;
 
     }
+
+
 }
 
 ?>

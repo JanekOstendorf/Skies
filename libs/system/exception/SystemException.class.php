@@ -157,7 +157,7 @@ class SystemException extends \Exception {
             <div class="systemException">
                 <h1>Fatal error: <?=StringUtils::encodeHTML($this->_getMessage())?></h1>
 
-                <?php if (DEBUG) { ?>
+                <?php if(DEBUG) { ?>
 
                 <div>
                     <p><?=StringUtils::encodeHTML($this->getDescription())?></p>
@@ -172,9 +172,9 @@ class SystemException extends \Exception {
                         <b>php version:</b> <?=StringUtils::encodeHTML(phpversion())?><br>
                         <b>skies version:</b> <?=VERSION?><br>
                         <b>date:</b> <?=gmdate('r'); ?><br>
-                        <b>request:</b> <?php if (isset($_SERVER['REQUEST_URI'])) echo StringUtils::encodeHTML($_SERVER['REQUEST_URI']); ?>
+                        <b>request:</b> <?php if(isset($_SERVER['REQUEST_URI'])) echo StringUtils::encodeHTML($_SERVER['REQUEST_URI']); ?>
                         <br>
-                        <b>referrer:</b> <?php if (isset($_SERVER['HTTP_REFERER'])) echo StringUtils::encodeHTML($_SERVER['HTTP_REFERER']); ?>
+                        <b>referrer:</b> <?php if(isset($_SERVER['HTTP_REFERER'])) echo StringUtils::encodeHTML($_SERVER['HTTP_REFERER']); ?>
                         <br>
                     </p>
 
@@ -218,7 +218,7 @@ class SystemException extends \Exception {
      */
     public function _getMessage() {
 
-        if (!DEBUG) {
+        if(!DEBUG) {
             return 'An error occurred. Sorry.';
         }
 
@@ -228,13 +228,13 @@ class SystemException extends \Exception {
 
     protected function logError() {
 
-        $logFile = ROOT_DIR . '/log/' . date('Y-m-d', NOW) . '.txt';
+        $logFile = ROOT_DIR.'/log/'.date('Y-m-d', NOW).'.txt';
 
         // try to create file
         @touch($logFile);
 
         // validate if file exists and is accessible for us
-        if (!file_exists($logFile) || !is_writable($logFile)) {
+        if(!file_exists($logFile) || !is_writable($logFile)) {
             /*
                    We cannot recover if we reached this point, the server admin
                    is urged to fix his pretty much broken configuration.
@@ -246,18 +246,18 @@ class SystemException extends \Exception {
 
         $e = ($this->getPrevious() ? : $this);
 
-        $message = date('r', NOW) . "\n" .
-            'Message: ' . $e->getMessage() . "\n" .
-            'File: ' . $e->getFile() . ' (' . $e->getLine() . ")\n" .
-            'PHP version: ' . phpversion() . "\n" .
-            'Skies version: ' . VERSION . "\n" .
-            'Request URI: ' . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '') . "\n" .
-            'Referrer: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '') . "\n" .
-            "Stacktrace: \n  " . implode("\n  ", explode("\n", $e->getTraceAsString())) . "\n";
+        $message = date('r', NOW)."\n".
+            'Message: '.$e->getMessage()."\n".
+            'File: '.$e->getFile().' ('.$e->getLine().")\n".
+            'PHP version: '.phpversion()."\n".
+            'Skies version: '.VERSION."\n".
+            'Request URI: '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '')."\n".
+            'Referrer: '.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '')."\n".
+            "Stacktrace: \n  ".implode("\n  ", explode("\n", $e->getTraceAsString()))."\n";
 
         // calculate Exception-ID
         $id      = \skies\utils\StringUtils::getHash($message);
-        $message = "<<<<<<<<" . $id . "<<<<\n" . $message . "<<<<\n\n";
+        $message = "<<<<<<<<".$id."<<<<\n".$message."<<<<\n\n";
 
         // append
         @file_put_contents($logFile, $message, FILE_APPEND);

@@ -66,9 +66,9 @@ class MySQL extends \mysqli {
 
         $result = parent::query($query, $resultmode);
 
-        if (!empty($this->error)) {
+        if(!empty($this->error)) {
 
-            throw new \skies\system\exception\SystemException('MySQL error: ' . $this->error, $this->errno, $this->error.'. Query: '.$query);
+            throw new \skies\system\exception\SystemException('MySQL error: '.$this->error, $this->errno, $this->error.'. Query: '.$query);
 
         }
 

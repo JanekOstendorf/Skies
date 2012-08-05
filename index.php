@@ -10,7 +10,7 @@
 define('ROOT_DIR', dirname(__FILE__));
 
 // Start Skies up!
-require ROOT_DIR . '/libs/system/Skies.class.php';
+require ROOT_DIR.'/libs/system/Skies.class.php';
 
 new \Skies();
 

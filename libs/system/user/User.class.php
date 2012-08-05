@@ -34,10 +34,10 @@ class User {
     public function __construct($userID) {
 
         // Normal users
-        if ($userID != GUEST_ID) {
+        if($userID != GUEST_ID) {
 
             // Fetch info
-            $result = \Skies::$db->query("SELECT * FROM " . TBL_PRE . 'users WHERE userID = ' . escape($userID));
+            $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'users WHERE userID = '.escape($userID));
 
             $data = $result->fetch_array();
 
@@ -64,14 +64,15 @@ class User {
     public function update() {
 
         // No need for this if we're a guest
-        if($this->isGuest())
+        if($this->isGuest()) {
             return;
+        }
 
         // Write stuff into DB
-        $query = 'UPDATE ' . TBL_PRE . 'user
-            SET `userMail` = \'' . escape($this->mail) . '\',
-            `userName` = \'' . escape($this->name) . '\'
-            WHERE `userID` = ' . escape($this->id);
+        $query = 'UPDATE '.TBL_PRE.'user
+            SET `userMail` = \''.escape($this->mail).'\',
+            `userName` = \''.escape($this->name).'\'
+            WHERE `userID` = '.escape($this->id);
 
         \Skies::$db->query($query);
 

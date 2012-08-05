@@ -12,30 +12,35 @@ class Session {
 
     /**
      * Session ID
+     *
      * @var string
      */
     protected $id = '';
 
     /**
      * User ID
+     *
      * @var string
      */
     protected $userID = 0;
 
     /**
      * Is this a long login?
+     *
      * @var bool
      */
     protected $long = 0;
 
     /**
      * IPv6 of the user
+     *
      * @var string
      */
     protected $ip;
 
     /**
      * IP fetched from the DB
+     *
      * @var string
      */
     protected $oldIP;
@@ -48,10 +53,10 @@ class Session {
         $this->ip = \skies\utils\UserUtils::getIpAddress();
 
         // Fetch session ID
-        if (isset($_COOKIE[COOKIE_PRE . 'sessionID']) && !empty($_COOKIE[COOKIE_PRE . 'sessionID']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE . 'sessionID'])) {
+        if(isset($_COOKIE[COOKIE_PRE.'sessionID']) && !empty($_COOKIE[COOKIE_PRE.'sessionID']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionID'])) {
 
-                $this->id = $_COOKIE[COOKIE_PRE . 'sessionID'];
-                $this->continueSession();
+            $this->id = $_COOKIE[COOKIE_PRE.'sessionID'];
+            $this->continueSession();
 
         }
         else {
@@ -77,12 +82,15 @@ class Session {
 
         $query = 'INSERT INTO '.TBL_PRE.'session
             (`sessionID`, `sessionIP`, `sessionLastActivity`, `sessionUserID`)
-            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\utils\UserUtils::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ?: '0').')';
+            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\utils\UserUtils::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ? : '0').')';
 
         if(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (($this->long ? 30 * 60 : 365 * 86400))))
-            return false;
-        else
+                {
+                    return false;
+                }
+        else {
             return true;
+        }
 
 
     }
@@ -104,8 +112,8 @@ class Session {
             $data = $res->fetch_array();
 
             $this->userID = $data['sessionUserID'];
-            $this->long = ($data['sessionLong'] == 1);
-            $this->oldIP = $data['sessionIP'];
+            $this->long   = ($data['sessionLong'] == 1);
+            $this->oldIP  = $data['sessionIP'];
 
             // Check session's IP
             if($this->oldIP == $this->ip) {
@@ -147,7 +155,9 @@ class Session {
 
     /**
      * Change the user ID of this session
+     *
      * @param $userID User ID
+     *
      * @return bool Success?
      */
     public function login($userID) {

@@ -1,10 +1,3 @@
-<?php
-// Define for denying call of seperate files
-define("IN_POSTPONE", true);
-header('Content-type: text/css');
-include '../../../subdir.php';
-include '../../../inc/common.inc.php';
-?>
 /*
  * author:      SkyIrc development team <skyirc@skyirc.net>
  * copyright:   Copyright (c) SkyIrc
@@ -36,10 +29,10 @@ nav {
     font-family: Ubuntu, sans-serif;
     font-size: 12pt;
     color: #000;
-    border-bottom: 1px solid rgb(230,230,230);
+    border-bottom: 1px solid rgb(230, 230, 230);
     padding-left: 6px;
     padding-right: 6px;
-    background: rgb(250,250,250);
+    background: rgb(250, 250, 250);
 }
 
 nav a, nav a:hover {
@@ -73,17 +66,19 @@ nav ul > li {
 }
 
 nav ul > li:hover {
-    border-left: 1px solid rgb(230,230,230);
-    border-right: 1px solid rgb(230,230,230);
+    border-left: 1px solid rgb(230, 230, 230);
+    border-right: 1px solid rgb(230, 230, 230);
 }
+
 nav ul > li.active {
-    background: #fff url('<?=SUBDIR?>/templates/<?=$template->name?>/images/nav-active_bg.png') repeat-x bottom left;
+    background: #fff url('../images/nav-active_bg.png') repeat-x bottom left;
     color: #000;
-    border-left: 1px solid rgb(230,230,230);
-    border-right: 1px solid rgb(230,230,230);
+    border-left: 1px solid rgb(230, 230, 230);
+    border-right: 1px solid rgb(230, 230, 230);
     padding-bottom: 1px;
     margin-bottom: -1px;
 }
+
 nav ul > li.active > a {
     color: #000;
 }

@@ -6,7 +6,7 @@ namespace skies\utils;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package skies.utils
+ * @package   skies.utils
  */
 class StringUtils {
 
@@ -14,12 +14,14 @@ class StringUtils {
      * Converts special HTML characters
      *
      * @static
+     *
      * @param $string
+     *
      * @return string
      */
     public static function encodeHTML($string) {
 
-        if (is_object($string)) {
+        if(is_object($string)) {
             $string = $string->__toString();
         }
 
@@ -31,7 +33,9 @@ class StringUtils {
      * Alias to php sha1() function
      *
      * @static
+     *
      * @param $string
+     *
      * @return string
      */
     public static function getHash($string) {
@@ -54,6 +58,7 @@ class StringUtils {
      * Generates a random alphanumeric string
      *
      * @param int $length Length of the string
+     *
      * @return string
      */
     public static function getRandomString($length) {
@@ -62,7 +67,7 @@ class StringUtils {
 
         $return = '';
 
-        for ($i = 1; $i <= $length; $i++) {
+        for($i = 1; $i <= $length; $i++) {
             $rand = substr(str_shuffle($pool), 0, 1);
             $return .= $rand;
         }
@@ -74,6 +79,7 @@ class StringUtils {
     /**
      * Generate a string of spaces of defined length.
      *     *
+     *
      * @static
      *
      * @param int $indent Number of spaces to generate

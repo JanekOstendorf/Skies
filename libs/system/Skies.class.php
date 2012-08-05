@@ -1,10 +1,10 @@
 <?php
 
 // Options
-require_once ROOT_DIR . '/options.inc.php';
+require_once ROOT_DIR.'/options.inc.php';
 
 // Core functions
-require_once ROOT_DIR . '/libs/system_functions.inc.php';
+require_once ROOT_DIR.'/libs/system_functions.inc.php';
 
 // Performance reasons ...
 define('NOW', time());
@@ -13,7 +13,7 @@ define('NOW', time());
 set_exception_handler(['\Skies', 'handleException']);
 
 // set php error handler
-if (DEBUG) {
+if(DEBUG) {
     error_reporting(E_ALL);
 }
 else {
@@ -37,6 +37,7 @@ use skies\system\page\Page;
 use skies\system\page\PageTypes;
 use skies\system\page\DBPage;
 use skies\system\page\FilePage;
+use skies\system\page\SystemPage;
 
 use skies\utils\spyc;
 use skies\utils\PageUtils;
@@ -130,7 +131,7 @@ class Skies {
         $dbHost = $dbUser = $dbPassword = $dbName = '';
 
         // Fetch configuration
-        require_once ROOT_DIR . '/libs/config.inc.php';
+        require_once ROOT_DIR.'/libs/config.inc.php';
 
         self::$db = new skies\system\database\MySQL($dbHost, $dbUser, $dbPassword, $dbName);
 
@@ -147,14 +148,16 @@ class Skies {
 
     /**
      * Read the config
+     *
      * @throws skies\system\exception\SystemException
      */
     private function initConfig() {
 
         self::$config = \skies\utils\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
 
-        if(self::$config === false)
+        if(self::$config === false) {
             throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
+        }
 
         /**#@+
          * Config dependant constants
@@ -201,28 +204,38 @@ class Skies {
 
         $page_id = \skies\utils\PageUtils::getIDFromName($page_name);
 
-        // Get the type of the page
-        switch(\skies\utils\PageUtils::getTypeFromID($page_id)) {
+        // If we get -1 back (system page)
+        if($page_id == -1) {
 
-            case \skies\system\page\PageTypes::DB:
-
-                self::$page = new \skies\system\page\DBPage($page_id);
-
-                break;
-
-
-            case \skies\system\page\PageTypes::FILE:
-
-                self::$page = new \skies\system\page\FilePage($page_id);
-
-                break;
+            self::$page = new \skies\system\page\SystemPage($page_name);
 
         }
+        else {
 
-        // TODO: Make a nicer 404
-        if(!is_object(self::$page))
-            throw new \skies\system\exception\SystemException('404!', 404, '404!');
+            // Get the type of the page
+            switch(\skies\utils\PageUtils::getTypeFromID($page_id)) {
 
+                case \skies\system\page\PageTypes::DB:
+
+                    self::$page = new \skies\system\page\DBPage($page_id);
+
+                    break;
+
+
+                case \skies\system\page\PageTypes::FILE:
+
+                    self::$page = new \skies\system\page\FilePage($page_id);
+
+                    break;
+
+            }
+
+            // TODO: Make a nicer 404
+            if(!is_object(self::$page)) {
+                throw new \skies\system\exception\SystemException('404!', 404, '404!');
+            }
+
+        }
 
     }
 
@@ -252,8 +265,9 @@ class Skies {
         // Page includes
         if(self::$page instanceof \skies\system\page\FilePage) {
 
-            if(self::$page->getIncFile() !== false && @file_exists(self::$page->getIncFile()))
+            if(self::$page->getIncFile() !== false && @file_exists(self::$page->getIncFile())) {
                 require_once self::$page->getIncFile();
+            }
 
         }
 
@@ -264,7 +278,7 @@ class Skies {
      */
     private function showTemplate() {
 
-        return self::$template->printTemplate();
+        self::$template->printTemplate();
 
     }
 
@@ -272,11 +286,12 @@ class Skies {
      * Handle our Exceptions
      *
      * @static
+     *
      * @param \Exception $e
      */
     public static final function handleException(\Exception $e) {
 
-        if ($e instanceof skies\system\exception\SystemException) {
+        if($e instanceof skies\system\exception\SystemException) {
 
             $e->show();
             exit;
@@ -294,13 +309,14 @@ class Skies {
      * @param    string         $message
      * @param    string         $filename
      * @param    integer        $lineNo
+     *
      * @throws skies\system\exception\SystemException
      */
     public static final function handleError($errorNo, $message, $filename, $lineNo) {
 
-        if (error_reporting() != 0) {
+        if(error_reporting() != 0) {
             $type = 'error';
-            switch ($errorNo) {
+            switch($errorNo) {
                 case 2:
                     $type = 'warning';
                     break;
@@ -309,7 +325,7 @@ class Skies {
                     break;
             }
 
-            throw new skies\system\exception\SystemException('PHP ' . $type . ' in file ' . $filename . ' (' . $lineNo . '): ' . $message, 0);
+            throw new skies\system\exception\SystemException('PHP '.$type.' in file '.$filename.' ('.$lineNo.'): '.$message, 0);
         }
     }
 
@@ -317,6 +333,7 @@ class Skies {
      * Includes the required util or exception classes automatically.
      *
      * @param     string        $className
+     *
      * @see        spl_autoload_register()
      */
     public static final function autoload($className) {
@@ -324,11 +341,11 @@ class Skies {
         $namespaces = explode('\\', $className);
 
         // Is it a valid import?
-        if (array_shift($namespaces) == 'skies') {
+        if(array_shift($namespaces) == 'skies') {
 
-            $classPath = ROOT_DIR . '/libs/' . implode('/', $namespaces) . '.class.php';
+            $classPath = ROOT_DIR.'/libs/'.implode('/', $namespaces).'.class.php';
 
-            if (file_exists($classPath)) {
+            if(file_exists($classPath)) {
                 require_once($classPath);
             }
 

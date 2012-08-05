@@ -12,30 +12,35 @@ class Language {
 
     /**
      * Language ID
+     *
      * @var int
      */
     protected $id = 0;
 
     /**
      * Short language identifier
+     *
      * @var string
      */
     protected $name = '';
 
     /**
      * Detailed name
+     *
      * @var string
      */
     protected $title = '';
 
     /**
      * Array holding all the data
+     *
      * @var array<mixed>
      */
     protected $data = [];
 
     /**
      * Default language?
+     *
      * @var bool
      */
     protected $default = false;
@@ -43,7 +48,7 @@ class Language {
     /**
      * Hm, what do you think this __construct does ... coffee?
      *
-     * @param int  $id Language ID
+     * @param int  $id      Language ID
      * @param bool $default Is this the default language?
      */
     public function __construct($id, $default = false) {
@@ -53,7 +58,7 @@ class Language {
 
         $data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);
 
-        $this->name = $data['langName'];
+        $this->name  = $data['langName'];
         $this->title = $data['langTitle'];
 
         // Fetch data
@@ -63,7 +68,7 @@ class Language {
 
         // Blah blah
         $this->default = $default;
-        $this->id = $id;
+        $this->id      = $id;
 
     }
 
@@ -71,6 +76,7 @@ class Language {
      * Fetch the language variable
      *
      * @param string $var language variable
+     *
      * @return string Content of the language variable
      */
     public function get($var) {

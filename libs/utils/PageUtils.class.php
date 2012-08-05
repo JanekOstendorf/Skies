@@ -6,7 +6,7 @@ namespace skies\utils;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package skies.utils
+ * @package   skies.utils
  */
 class PageUtils {
 
@@ -17,16 +17,20 @@ class PageUtils {
      *
      * @param string $page_name Short name of the page
      *
-     * @return int ID of the page
+     * @return int ID of the page. `-1` for system pages
      */
     public static function getIDFromName($page_name) {
+
+        if(\skies\system\page\SystemPages::isSystemPage($page_name))
+            return -1;
 
         $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageName` = \''.\escape($page_name).'\'';
 
         $result = \Skies::$db->query($query);
 
-        if($result === false)
+        if($result === false) {
             return false;
+        }
 
         return $result->fetch_array(MYSQL_ASSOC)['pageID'];
 
@@ -44,12 +48,14 @@ class PageUtils {
      */
     public static function getTypeFromID($id) {
 
+
         $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageID` = \''.\escape($id).'\'';
 
         $result = \Skies::$db->query($query);
 
-        if($result === false)
+        if($result === false) {
             return false;
+        }
 
         return $result->fetch_array(MYSQL_ASSOC)['pageType'];
 

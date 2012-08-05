@@ -1,10 +1,3 @@
-<?php
-// Define for denying call of seperate files
-define("IN_POSTPONE", true);
-header('Content-type: text/css');
-include '../../../subdir.php';
-include '../../../inc/common.inc.php';
-?>
 /*
  * author:      SkyIrc development team <skyirc@skyirc.net>
  * copyright:   Copyright (c) SkyIrc
@@ -13,21 +6,23 @@ include '../../../inc/common.inc.php';
 
 /* Ubuntu */
 
-@font-face
-{ 
-	font-family: "Ubuntu";
-	src: url('<?=SUBDIR?>/fonts/Ubuntu-R.ttf') format("truetype");
+
+
+
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url('../fonts/Ubuntu-R.ttf') format("truetype");
 }
-@font-face
-{ 
-	font-family: "Ubuntu";
-	font-weight: bold;
-	src: url('<?=SUBDIR?>/fonts/Ubuntu-B.ttf') format("truetype");
+
+@font-face {
+    font-family: "Ubuntu";
+    font-weight: bold;
+    src: url('../fonts/Ubuntu-B.ttf') format("truetype");
 }
 
 /* URW Gothic L */
-@font-face
-{ 
-	font-family: "URC Gothic L";
-	src: url('<?=SUBDIR?>/fonts/urw-gothic-l.ttf') format("truetype");
+@font-face {
+    font-family: "URC Gothic L";
+    src: url('../fonts/urw-gothic-l.ttf') format("truetype");
 }

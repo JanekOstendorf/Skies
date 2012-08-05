@@ -12,42 +12,49 @@ class Template {
 
     /**
      * Template's short name
+     *
      * @var string
      */
     protected $name = '';
 
     /**
      * Template title
+     *
      * @var string
      */
     protected $title = '';
 
     /**
      * Main template file (usually php)
+     *
      * @var string
      */
     protected $mainFile = '';
 
     /**
      * List of Cascading Stylesheets to include
+     *
      * @var array<string>
      */
     protected $cssFiles = [];
 
     /**
      * List of JavaScript files to include
+     *
      * @var array<string>
      */
     protected $jsFiles = [];
 
     /**
      * Meta information
+     *
      * @var array<string|array>
      */
     protected $meta = [];
 
     /**
      * Content of our template.yml
+     *
      * @var array<string|array>
      */
     protected $config = [];
@@ -61,21 +68,24 @@ class Template {
      */
     public function __construct($name) {
 
-        if(!file_exists(ROOT_DIR.'/templates/'.$name.'/template.yml'))
+        if(!file_exists(ROOT_DIR.'/templates/'.$name.'/template.yml')) {
             throw new \skies\system\exception\SystemException('Failed to load template '.$name.'!', 0, 'Failed to find the configuration file of the template "'.$name.'".');
+        }
 
         // Open config file
         $this->config = \skies\utils\Spyc::YAMLLoad(ROOT_DIR.'/templates/'.$name.'/template.yml');
 
         if($this->config === false)
-            throw new \skies\system\exception\SystemException('Failed to load template '.$name.'!', 0, 'Failed to read the configuration file of the template "'.$name.'".');
+                {
+                    throw new \skies\system\exception\SystemException('Failed to load template '.$name.'!', 0, 'Failed to read the configuration file of the template "'.$name.'".');
+                }
 
         $this->cssFiles = explode(', ', $this->config['css_files']);
-        $this->jsFiles = explode(', ', $this->config['js_files']);
+        $this->jsFiles  = explode(', ', $this->config['js_files']);
         $this->mainFile = $this->config['main_file'];
-        $this->meta = $this->config['meta'];
+        $this->meta     = $this->config['meta'];
 
-        $this->name = $this->config['name'];
+        $this->name  = $this->config['name'];
         $this->title = $this->config['title'];
 
     }
@@ -91,6 +101,7 @@ class Template {
 
     /**
      * Get the URL path to this template directory
+     *
      * @return string URL to this template directory
      */
     public function getTemplateDirURL() {
@@ -101,6 +112,7 @@ class Template {
 
     /**
      * Get the absolute path to this template directory
+     *
      * @return string Absolute path to the template directory
      */
     public function getTemplatePath() {
@@ -111,6 +123,7 @@ class Template {
 
     /**
      * Print the HTML lines for including JS and CSS files
+     *
      * @param int $indent Number of spaces to add as an indent
      */
     public function printIncludes($indent = 0) {
@@ -144,6 +157,7 @@ class Template {
 
     /**
      * Include favorite icon
+     *
      * @param int $indent Indent to prepend
      */
     public function printFavicon($indent = 0) {
@@ -157,6 +171,7 @@ class Template {
 
     /**
      * Print meta data
+     *
      * @param int $indent
      */
     public function printMeta($indent = 0) {
@@ -181,6 +196,7 @@ class Template {
 
     /**
      * Print the title tag
+     *
      * @param int $indent Number of spaces to prepend
      */
     public function printTitle($indent = 0) {
