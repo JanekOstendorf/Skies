@@ -46,6 +46,13 @@ class Language {
     protected $default = false;
 
     /**
+     * Buffer for already fetched language vars
+     *
+     * @var array
+     */
+    protected $buffer = [];
+
+    /**
      * Hm, what do you think this __construct does ... coffee?
      *
      * @param int  $id      Language ID
@@ -72,14 +79,37 @@ class Language {
 
     }
 
+    public function get($var, $nl2br = false) {
+
+        if(isset($this->buffer[$var])) {
+
+            return ($nl2br ? nl2br($this->buffer[$var], true) : $this->buffer[$var]);
+
+        }
+        else {
+
+            if(explode('.', $var)[0] == 'config')
+                $varData = $this->replaceVars($this->getConfig($var));
+            else
+                $varData = $this->replaceVars($this->getDB($var));
+
+            // Save to the buffer
+            $this->buffer[$var] = $varData;
+
+            return ($nl2br ? nl2br($varData, true) : $varData);
+
+        }
+
+    }
+
     /**
-     * Fetch the language variable
+     * Fetch the language variable form the DB
      *
      * @param string $var language variable
      *
      * @return string Content of the language variable
      */
-    public function get($var) {
+    protected function getDB($var) {
 
         $query = 'SELECT * FROM '.TBL_PRE.'languagedata WHERE langID = '.\escape($this->id).' AND varName = \''.\escape($var).'\'';
 
@@ -101,6 +131,71 @@ class Language {
 
         }
 
+
+    }
+
+    protected function getConfig($var) {
+
+        // Explode
+        $var_arr = explode('.', $var);
+
+        // Remove the 'config' from the start
+        $var_arr = array_slice($var_arr, 1);
+
+        // temporary array
+        $tmp = \Skies::$config;
+
+        // Try to get the string, recurse deeper and deeper ...
+        foreach($var_arr as $cur) {
+
+            if(isset($tmp[$cur])) {
+                $tmp = $tmp[$cur];
+            }
+            else {
+                $tmp = null;
+                break;
+            }
+        }
+
+        return $tmp;
+
+    }
+
+
+    protected function replaceVars($varData) {
+
+        $matches = [];
+
+        // Language vars (lower case)
+        if(preg_match_all('/\{\{[a-z0-9\.-_]+\}\}/', $varData, $matches) > 0) {
+
+            foreach($matches[0] as $tag) {
+
+                $varName = substr($tag, 2, strlen($tag) - 4);
+
+                $varData = str_replace($tag, $this->get($varName), $varData);
+
+            }
+
+        }
+
+        $matches = [];
+
+        // Constants (upper case)
+        if(preg_match_all('/\{\{[A-Z0-9\.-_]+\}\}/', $varData, $matches) > 0) {
+
+            foreach($matches[0] as $tag) {
+
+                $constName = substr($tag, 2, strlen($tag) - 4);
+
+                if(defined($constName))
+                    $varData = str_replace($tag, constant($constName), $varData);
+
+            }
+
+        }
+
+        return $varData;
 
     }
 
