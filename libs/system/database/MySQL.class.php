@@ -55,6 +55,8 @@ class MySQL extends \mysqli {
 
         parent::__construct($host, $user, $password, $database, 3306);
 
+        $this->set_charset("utf8");
+
         $this->database = $database;
         $this->host     = $host;
         $this->password = $password;

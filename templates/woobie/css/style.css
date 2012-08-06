@@ -296,11 +296,11 @@ table th {
     padding-bottom: 2px;
 }
 
-table tr.header {
+table tr.header, table thead tr {
     border-bottom: 1px solid rgb(230, 230, 230)
 }
 
-table tr.header th {
+table tr.header th, table thead tr th {
     color: #000;
     font-family: 'URW Gothic L', sans-serif;
     font-size: 130%;
