@@ -37,6 +37,29 @@ class PageUtils {
     }
 
     /**
+     * Gets the name of the page with the given ID
+     *
+     * @static
+     *
+     * @param int $page_id ID of the page
+     *
+     * @return string Short name of the page
+     */
+    public static function gerNameFromID($page_id) {
+
+        $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageID` = \''.\escape($page_id).'\'';
+
+        $result = \Skies::$db->query($query);
+
+        if($result === false) {
+            return false;
+        }
+
+        return $result->fetch_array(MYSQL_ASSOC)['pageName'];
+
+    }
+
+    /**
      * Gets the type of the page with the given ID
      *
      * @static

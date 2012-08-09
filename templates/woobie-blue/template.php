@@ -4,7 +4,6 @@
 /* @var $this \skies\system\template\Template */
 
 use skies\system\navigation\Navigation;
-use skies\system\template\Message;
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +23,6 @@ use skies\system\template\Message;
 
         <!-- Start wrapper -->
         <div id="wrapper">
-
             <!-- Start navigation -->
             <?php (new \skies\system\navigation\Navigation(1))->printNav(); ?>
             <!-- End navigation -->
@@ -40,10 +38,9 @@ use skies\system\template\Message;
 
                 <?php
 
-                \skies\system\template\Message::printAll();
-
                 $this->printContent();
                 ?>
+
 
             </div>
             <!-- End content -->
@@ -52,11 +49,10 @@ use skies\system\template\Message;
             <!-- Start footer -->
             <div id="footer-wrapper">
                 <div id="footer">
-                    Copyright &copy; SkyIrc 2012<?=(date('Y', NOW) > 2012 ? ' - '.date('Y', NOW) : '')?>
+                    <a href="<?=SUBDIR?>/impressum/">Impressum</a>
                 </div>
             </div>
             <!-- End footer -->
-
         </div>
         <!-- End wrapper -->
     </body>

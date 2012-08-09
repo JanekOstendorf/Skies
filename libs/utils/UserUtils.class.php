@@ -146,6 +146,125 @@ class UserUtils {
 
     }
 
+    /**
+     * Does the user exist?
+     *
+     * @param int $user_id User ID
+     *
+     * @return bool
+     */
+    public static function userExists($user_id) {
+
+        $query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE `userID` = '.\escape($user_id);
+
+        if(!$res = \Skies::$db->query($query)) {
+            return false;
+        }
+
+        if($res->num_rows != 1) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Checks the password
+     *
+     * @param string $password Clear text password to check
+     * @param int    $user_id  User ID
+     *
+     * @return bool
+     */
+    public static function checkPassword($password, $user_id) {
+
+        if(!self::userExists($user_id)) {
+            return false;
+        }
+
+        // Get the password and the salt
+        $query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE userID = '.\escape($user_id);
+
+        if(!$res = \Skies::$db->query($query)) {
+            return false;
+        }
+
+        if(!$data = $res->fetch_object()) {
+            return false;
+        }
+
+        // Password (as stored in the db): md5(md5(%password%).%salt%)
+
+        if(md5(md5($password).$data->userSalt) != $data->userPassword) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /**
+     * Generates a random alphanumeric string
+     * @param int $length
+     * @return string
+     */
+    public static function randStr($length) {
+
+        $pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
+
+        $return = '';
+
+        for ($i = 1; $i <= $length; $i++) {
+            $rand = substr(str_shuffle($pool), 0, 1);
+            $return .= $rand;
+        }
+        return $return;
+
+    }
+
+    /**
+     * Generates salt and hashed password
+     * @param string $password unencrypted password
+     * @return object $return->salt and $return->password
+     */
+    public static function makePass($password) {
+
+        $salt = md5(self::randStr(128));
+        $password = md5(md5($password).$salt);
+
+        // Save salt and password in an obj
+        $return = new \stdClass();
+
+        $return->salt = $salt;
+        $return->password = $password;
+
+        return $return;
+
+    }
+
+    /**
+     * @static
+     *
+     * Gets the ID of the user with the specified userName
+     *
+     * @param string $user_name Name of the user
+     *
+     * @return int ID of the user
+     */
+    public static function usernameToID($user_name) {
+
+        $query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE `userName` = \''.\escape($user_name).'\'';
+
+        $result = \Skies::$db->query($query);
+
+        if($result === false || $result->num_rows != 1)
+            return false;
+        else
+            return $result->fetch_array(MYSQLI_ASSOC)['userID'];
+
+    }
+
 }
 
 ?>

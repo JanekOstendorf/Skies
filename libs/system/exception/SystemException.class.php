@@ -4,6 +4,8 @@ namespace skies\system\exception;
 
 use skies\utils\StringUtils;
 
+date_default_timezone_set('Europe/Berlin');
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf

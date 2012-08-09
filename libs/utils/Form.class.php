@@ -78,7 +78,7 @@ class Form {
      */
     public function printForm() {
 
-        $buffer = '';
+        $buffer = '<form action="'.$this->action.'" method="'.$this->method.(empty($this->id) ? '">' : '" id="'.$this->id.'">')."\n";
 
         $buffer .= '<table>'."\n";
 
@@ -93,6 +93,7 @@ class Form {
         }
 
         $buffer .= '</table>'."\n";
+        $buffer .= '</form>'."\n";
 
         return print $buffer;
 

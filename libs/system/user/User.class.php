@@ -37,7 +37,7 @@ class User {
         if($userID != GUEST_ID) {
 
             // Fetch info
-            $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'users WHERE userID = '.escape($userID));
+            $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'user WHERE userID = '.escape($userID));
 
             $data = $result->fetch_array();
 

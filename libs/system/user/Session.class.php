@@ -84,13 +84,7 @@ class Session {
             (`sessionID`, `sessionIP`, `sessionLastActivity`, `sessionUserID`)
             VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\utils\UserUtils::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ? : '0').')';
 
-        if(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (($this->long ? 30 * 60 : 365 * 86400))))
-                {
-                    return false;
-                }
-        else {
-            return true;
-        }
+        return !(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (365 * 86400)));
 
 
     }
@@ -127,6 +121,7 @@ class Session {
                 if($data['sessionLastActivity'] + $length < NOW) {
 
                     $this->closeSession();
+                    $this->newSession();
 
                 }
                 else {
@@ -145,6 +140,7 @@ class Session {
             else {
 
                 // Damn, session's invalid :/
+                $this->closeSession();
                 $this->newSession();
 
             }
@@ -156,7 +152,7 @@ class Session {
     /**
      * Change the user ID of this session
      *
-     * @param $userID User ID
+     * @param int $userID User ID
      *
      * @return bool Success?
      */
@@ -170,9 +166,36 @@ class Session {
             return false;
         else {
             $this->userID = $userID;
+
+            // Update the global user object
+            $this->rehashUser();
+
             return true;
         }
 
+
+    }
+
+    public function logout() {
+
+        // Are we even logged in?
+        if($this->userID == GUEST_ID)
+            return false;
+
+        // Write it into the DB
+        $query = 'UPDATE '.TBL_PRE.'session SET `sessionUserID` = '.\escape(GUEST_ID).' WHERE `sessionID` = \''.\escape($this->id).'\'';
+
+        // Some checks
+        if(\Skies::$db->query($query) === false)
+            return false;
+        else {
+            $this->userID = GUEST_ID;
+
+            // Update the global user object
+            $this->rehashUser();
+
+            return true;
+        }
 
     }
 
@@ -193,6 +216,15 @@ class Session {
         \skies\utils\UserUtils::deleteCookie(COOKIE_PRE.'sessionID');
 
         \Skies::$db->query('DELETE FROM '.TBL_PRE.'session WHERE sessionID = \''.\escape($this->id).'\'');
+
+    }
+
+    /**
+     * Updates the global user object
+     */
+    public function rehashUser() {
+
+        \Skies::$user = $this->getUser();
 
     }
 

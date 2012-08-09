@@ -31,6 +31,7 @@ spl_autoload_register(['\Skies', 'autoload']);
 
 use skies\system\database\MySQL;
 use skies\system\user\Session;
+use skies\system\user\User;
 use skies\system\language\Language;
 use skies\system\template\Template;
 use skies\system\page\Page;
@@ -38,9 +39,11 @@ use skies\system\page\PageTypes;
 use skies\system\page\DBPage;
 use skies\system\page\FilePage;
 use skies\system\page\SystemPage;
+use skies\system\template\Message;
 
 use skies\utils\spyc;
 use skies\utils\PageUtils;
+use skies\utils\SessionUtils;
 
 
 /**
@@ -64,6 +67,13 @@ class Skies {
      * @var \skies\system\user\Session
      */
     public static $session = null;
+
+    /**
+     * Current user
+     *
+     * @var \skies\system\user\User
+     */
+    public static $user = null;
 
     /**
      * Default language defined in the config file
@@ -92,6 +102,13 @@ class Skies {
      * @var \skies\system\template\Template
      */
     public static $template = null;
+
+    /**
+     * Array of Message objects
+     *
+     * @var array<\skies\system\template\Message>
+     */
+    public static $message = [];
 
     /**
      * Current page
@@ -142,7 +159,12 @@ class Skies {
      */
     private function initSession() {
 
+        // Do some clean ups
+        \skies\utils\SessionUtils::cleanUp();
+
         self::$session = new skies\system\user\Session();
+
+        self::$user = self::$session->getUser();
 
     }
 
@@ -155,9 +177,11 @@ class Skies {
 
         self::$config = \skies\utils\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
 
-        if(self::$config === false) {
+        if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'/config/config.yml') {
             throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
         }
+
+        date_default_timezone_set(self::$config['defaultTimezone']);
 
         /**#@+
          * Config dependant constants
@@ -181,7 +205,7 @@ class Skies {
         self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
 
         // TODO: get this from user's data
-        self::$language = new \skies\system\language\Language(2);
+        self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 2));
 
     }
 
@@ -192,6 +216,15 @@ class Skies {
 
         // TODO: Get used template from user - if configured
         self::$template = new \skies\system\template\Template(self::$config['defaultTemplate']);
+
+        /**#@+
+         * Message objects
+         * @var \skies\system\template\Message
+         */
+        self::$message['error'] = new \skies\system\template\Message('error');
+        self::$message['notice'] = new \skies\system\template\Message('notice');
+        self::$message['success'] = new \skies\system\template\Message('success');
+        /**#@-*/
 
     }
 

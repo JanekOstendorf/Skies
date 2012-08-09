@@ -36,7 +36,7 @@ class Language {
      *
      * @var array<mixed>
      */
-    protected $data = [];
+    //protected $data = [];
 
     /**
      * Default language?
@@ -68,10 +68,10 @@ class Language {
         $this->name  = $data['langName'];
         $this->title = $data['langTitle'];
 
-        // Fetch data
-        $query = 'SELECT * FROM '.TBL_PRE.'languagedata WHERE `langID` = '.\escape($id);
+        /*// Fetch data
+        $query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE `langID` = '.\escape($id);
 
-        $this->data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);
+        $this->data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
 
         // Blah blah
         $this->default = $default;
@@ -79,7 +79,7 @@ class Language {
 
     }
 
-    public function get($var, $nl2br = false) {
+    public function get($var, $userVars = [], $nl2br = false) {
 
         if(isset($this->buffer[$var])) {
 
@@ -89,12 +89,15 @@ class Language {
         else {
 
             if(explode('.', $var)[0] == 'config')
-                $varData = $this->replaceVars($this->getConfig($var));
+                $varData = $this->replaceVars($this->getConfig($var), $userVars);
             else
-                $varData = $this->replaceVars($this->getDB($var));
+                $varData = $this->replaceVars($this->getDB($var), $userVars);
 
             // Save to the buffer
             $this->buffer[$var] = $varData;
+
+            if($varData == $var)
+                $varData = '{{'.$varData.'}}';
 
             return ($nl2br ? nl2br($varData, true) : $varData);
 
@@ -111,7 +114,7 @@ class Language {
      */
     protected function getDB($var) {
 
-        $query = 'SELECT * FROM '.TBL_PRE.'languagedata WHERE langID = '.\escape($this->id).' AND varName = \''.\escape($var).'\'';
+        $query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE langID = '.\escape($this->id).' AND varName = \''.\escape($var).'\'';
 
         $result = \Skies::$db->query($query);
 
@@ -162,7 +165,7 @@ class Language {
     }
 
 
-    protected function replaceVars($varData) {
+    public function replaceVars($varData, $userVars = []) {
 
         $matches = [];
 
@@ -190,6 +193,25 @@ class Language {
 
                 if(defined($constName))
                     $varData = str_replace($tag, constant($constName), $varData);
+
+            }
+
+        }
+
+        if(!empty($userVars)) {
+
+            $matches = [];
+
+            if(preg_match_all('/\[\[[a-z0-9\.-_]+\]\]/', $varData, $matches) > 0) {
+
+                foreach($matches[0] as $tag) {
+
+                    $varName = substr($tag, 2, strlen($tag) - 4);
+
+                    if(isset($userVars[$varName]))
+                        $varData = str_replace($tag, $userVars[$varName], $varData);
+
+                }
 
             }
 

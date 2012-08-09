@@ -12,7 +12,7 @@ meta:
 
 # Subdirectory on the webserver
 # Example: 'http://test.skies.net/Skies' is the Skies URL. In this case, '/Skies' is the subdir
-subdir: /Skies
+subdir: ''
 
 # Default language
 defaultLanguage: en-UK
@@ -22,3 +22,6 @@ defaultTemplate: woobie
 
 # Default page (Homepage)
 defaultPage: home
+
+# Default time zone
+defaultTimezone: Europe/Berlin
