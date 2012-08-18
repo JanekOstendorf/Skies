@@ -11,6 +11,16 @@ namespace skies\utils;
 class UserUtils {
 
     /**
+     * Regex pattern for usernames
+     */
+    const USERNAME_PATTERN = '[a-zA-Z-_0-9\(\)\[\]]+';
+
+    /**
+     * Regex pattern for mail addresses
+     */
+    const MAIL_PATTERN = '.+\@.+\.[a-zA-Z]{2,7}';
+
+    /**
      * Returns the ipv6 address of the client.
      *
      * @return     string        ipv6 address
@@ -110,7 +120,7 @@ class UserUtils {
     public static function checkMail($mail) {
 
         // TODO: Allow some special chars
-        return (preg_match('/[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z]{2,7}/', trim($mail)) != 0);
+        return (preg_match('/'.self::MAIL_PATTERN.'/', trim($mail)) != 0);
 
     }
 
@@ -125,7 +135,7 @@ class UserUtils {
      */
     public static function checkUsername($username) {
 
-        return (preg_match('/[a-zA-Z-_0-9]+/', trim($username)) != 0);
+        return (preg_match('/'.self::USERNAME_PATTERN.'/', trim($username)) != 0);
 
     }
 

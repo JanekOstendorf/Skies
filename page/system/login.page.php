@@ -5,11 +5,13 @@
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
 
-use skies\utils\Form;
+/* @var $page \skies\system\page\FilePage */
+
+use skies\form\Form;
 
 ?>
 
-<h1><?=\Skies::$page->getTitle()?></h1>
+<h1><?=$page->getTitle()?></h1>
 
 <?php
 
@@ -28,12 +30,6 @@ if(\Skies::$user->isGuest()) {
 
     <?php
 
-    $loginForm = new skies\utils\Form();
-
-    $loginForm->addInput('username', \Skies::$language->get('system.page.login.username'));
-    $loginForm->addInput('password', \Skies::$language->get('system.page.login.password'), 'password');
-    $loginForm->addInput('login', \Skies::$language->get('system.page.login.login'), 'submit');
-
     $loginForm->printForm();
 
 ?>
@@ -45,14 +41,7 @@ if(\Skies::$user->isGuest()) {
 
     <?php
 
-    $loginForm = new skies\utils\Form();
-
-    $loginForm->addInput('username_sign-up', \Skies::$language->get('system.page.login.username'));
-    $loginForm->addInput('password1', \Skies::$language->get('system.page.login.password-twice'), 'password');
-    $loginForm->addInput('password2', '', 'password');
-    $loginForm->addInput('sign-up', \Skies::$language->get('system.page.login.sign-up'), 'submit');
-
-    $loginForm->printForm();
+    $signUpForm->printForm();
 
     ?>
 
@@ -70,10 +59,6 @@ else {
     <?=\Skies::$language->get('system.page.login.welcome-title', ['userName' => \Skies::$user->getName()])?>
 </p>
 <?php
-
-    $logoutForm = new skies\utils\Form();
-
-    $logoutForm->addInput('logout', \Skies::$language->get('system.page.login.logout'), 'submit');
 
     $logoutForm->printForm();
 

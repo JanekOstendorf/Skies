@@ -18,6 +18,12 @@ class FilePage extends Page {
     protected $file;
 
     /**
+     * Store object for globally accessible variables
+     * @var \stdClass
+     */
+    public $store = null;
+
+    /**
      * File to include before showing anything
      *
      * @var string
@@ -28,6 +34,8 @@ class FilePage extends Page {
 
         $this->file    = $this->data['pageFile'];
         $this->incFile = $this->data['pageIncFile'];
+
+        $this->store = new \stdClass();
 
     }
 
@@ -40,6 +48,10 @@ class FilePage extends Page {
     public function show() {
 
         if($this->php) {
+
+            // Make things easier in the page file
+            $page = null;
+            $page &= $this;
 
             include ROOT_DIR.'/page/'.$this->file;
 

@@ -23,7 +23,7 @@
     <p>Dieses Formular macht rein gar nichts.</p>
 
     <?php
-    $loginForm = new skies\utils\Form();
+    $loginForm = new skies\form\Form();
 
     $loginForm->addInput('Test', 'test');
     $loginForm->addInput('Ein Passwort:', 'pw', 'password');

@@ -299,6 +299,9 @@ class Skies {
         if(self::$page instanceof \skies\system\page\FilePage) {
 
             if(self::$page->getIncFile() !== false && @file_exists(self::$page->getIncFile())) {
+                // Make things easier in the inc file
+                $page = null;
+                $page &= self::$page;
                 require_once self::$page->getIncFile();
             }
 
