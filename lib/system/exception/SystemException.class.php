@@ -2,7 +2,7 @@
 
 namespace skies\system\exception;
 
-use skies\utils\StringUtils;
+use skies\util\StringUtils;
 
 date_default_timezone_set('Europe/Berlin');
 
@@ -258,7 +258,7 @@ class SystemException extends \Exception {
             "Stacktrace: \n  ".implode("\n  ", explode("\n", $e->getTraceAsString()))."\n";
 
         // calculate Exception-ID
-        $id      = \skies\utils\StringUtils::getHash($message);
+        $id      = \skies\util\StringUtils::getHash($message);
         $message = "<<<<<<<<".$id."<<<<\n".$message."<<<<\n\n";
 
         // append

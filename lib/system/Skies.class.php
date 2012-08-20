@@ -4,7 +4,7 @@
 require_once ROOT_DIR.'/options.inc.php';
 
 // Core functions
-require_once ROOT_DIR.'/libs/system_functions.inc.php';
+require_once ROOT_DIR.'/lib/system_functions.inc.php';
 
 // Performance reasons ...
 define('NOW', time());
@@ -41,9 +41,9 @@ use skies\system\page\FilePage;
 use skies\system\page\SystemPage;
 use skies\system\template\Message;
 
-use skies\utils\spyc;
-use skies\utils\PageUtils;
-use skies\utils\SessionUtils;
+use skies\util\spyc;
+use skies\util\PageUtils;
+use skies\util\SessionUtils;
 
 
 /**
@@ -148,7 +148,7 @@ class Skies {
         $dbHost = $dbUser = $dbPassword = $dbName = '';
 
         // Fetch configuration
-        require_once ROOT_DIR.'/libs/config.inc.php';
+        require_once ROOT_DIR.'/lib/config.inc.php';
 
         self::$db = new skies\system\database\MySQL($dbHost, $dbUser, $dbPassword, $dbName);
 
@@ -160,7 +160,7 @@ class Skies {
     private function initSession() {
 
         // Do some clean ups
-        \skies\utils\SessionUtils::cleanUp();
+        \skies\util\SessionUtils::cleanUp();
 
         self::$session = new skies\system\user\Session();
 
@@ -175,7 +175,7 @@ class Skies {
      */
     private function initConfig() {
 
-        self::$config = \skies\utils\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
+        self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
 
         if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'/config/config.yml') {
             throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
@@ -214,7 +214,7 @@ class Skies {
      */
     private function initTemplate() {
 
-        // TODO: Get used template from user - if configured
+        // TODO: Get used template from user - if configured.
         self::$template = new \skies\system\template\Template(self::$config['defaultTemplate']);
 
         /**#@+
@@ -235,7 +235,7 @@ class Skies {
 
         $page_name = (isset($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']);
 
-        $page_id = \skies\utils\PageUtils::getIDFromName($page_name);
+        $page_id = \skies\util\PageUtils::getIDFromName($page_name);
 
         // If we get -1 back (system page)
         if($page_id == -1) {
@@ -246,7 +246,7 @@ class Skies {
         else {
 
             // Get the type of the page
-            switch(\skies\utils\PageUtils::getTypeFromID($page_id)) {
+            switch(\skies\util\PageUtils::getTypeFromID($page_id)) {
 
                 case \skies\system\page\PageTypes::DB:
 
@@ -379,7 +379,7 @@ class Skies {
         // Is it a valid import?
         if(array_shift($namespaces) == 'skies') {
 
-            $classPath = ROOT_DIR.'/libs/'.implode('/', $namespaces).'.class.php';
+            $classPath = ROOT_DIR.'/lib/'.implode('/', $namespaces).'.class.php';
 
             if(file_exists($classPath)) {
                 require_once($classPath);

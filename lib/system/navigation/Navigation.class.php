@@ -115,7 +115,7 @@ class Navigation {
                     }
 
                     // Make the link
-                    $link = SUBDIR.'/'.\skies\utils\PageUtils::gerNameFromID($entry['pageID']);
+                    $link = SUBDIR.'/'.\skies\util\PageUtils::gerNameFromID($entry['pageID']);
 
                     break;
 

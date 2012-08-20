@@ -50,7 +50,7 @@ class Session {
      */
     public function __construct() {
 
-        $this->ip = \skies\utils\UserUtils::getIpAddress();
+        $this->ip = \skies\util\UserUtils::getIpAddress();
 
         // Fetch session ID
         if(isset($_COOKIE[COOKIE_PRE.'sessionID']) && !empty($_COOKIE[COOKIE_PRE.'sessionID']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionID'])) {
@@ -75,14 +75,14 @@ class Session {
     protected function newSession($long = false) {
 
         // Create new ID
-        $this->id = \skies\utils\StringUtils::getRandomHash();
+        $this->id = \skies\util\StringUtils::getRandomHash();
 
         // Is that person on the other line a guest?
         $this->userID = \Skies::$db->query('SELECT * FROM '.TBL_PRE.'session WHERE `sessionID` = \''.$this->id.'\' LIMIT 1')->fetch_array()['userID'];
 
         $query = 'INSERT INTO '.TBL_PRE.'session
             (`sessionID`, `sessionIP`, `sessionLastActivity`, `sessionUserID`)
-            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\utils\UserUtils::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ? : '0').')';
+            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\util\UserUtils::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ? : '0').')';
 
         return !(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (365 * 86400)));
 
@@ -213,7 +213,7 @@ class Session {
      */
     protected function closeSession() {
 
-        \skies\utils\UserUtils::deleteCookie(COOKIE_PRE.'sessionID');
+        \skies\util\UserUtils::deleteCookie(COOKIE_PRE.'sessionID');
 
         \Skies::$db->query('DELETE FROM '.TBL_PRE.'session WHERE sessionID = \''.\escape($this->id).'\'');
 

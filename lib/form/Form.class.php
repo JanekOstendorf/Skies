@@ -6,7 +6,7 @@ namespace skies\form;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package   skies.utils
+ * @package   skies.util
  */
 class Form {
 
@@ -49,7 +49,7 @@ class Form {
 
         $this->action = $action;
         $this->method = $method;
-        $this->id = \skies\utils\StringUtils::getRandomString(16);
+        $this->id = \skies\util\StringUtils::getRandomString(16);
 
     }
 
@@ -83,7 +83,7 @@ class Form {
      */
     public function printForm($indent = 0) {
 
-        $indent = \skies\utils\StringUtils::getIndent($indent);
+        $indent = \skies\util\StringUtils::getIndent($indent);
 
         $buffer = $indent.'<form action="'.$this->action.'" method="'.$this->method.(empty($this->id) ? '">' : '" id="'.$this->id.'">')."\n";
 
@@ -111,7 +111,7 @@ class Form {
 
     protected function buildInput($array, $indent = 0) {
 
-        $indent = \skies\utils\StringUtils::getIndent($indent + 8);
+        $indent = \skies\util\StringUtils::getIndent($indent + 8);
 
         $buffer = '';
 

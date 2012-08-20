@@ -7,7 +7,7 @@
 
 /* @var $page \skies\system\page\FilePage */
 
-use skies\utils\UserUtils;
+use skies\util\UserUtils;
 use skies\system\user\User;
 
 /*
@@ -27,7 +27,7 @@ $loginFormHandler = $loginForm->getHandler();
 $signUpForm = new skies\form\Form();
 
 $signUpForm->addInput('username_sign-up', \Skies::$language->get('system.page.login.username'), true);
-$signUpForm->addInput('mail', \Skies::$language->get('system.page.login.register.mail'), true, 'text', \skies\utils\UserUtils::MAIL_PATTERN);
+$signUpForm->addInput('mail', \Skies::$language->get('system.page.login.register.mail'), true, 'text', \skies\util\UserUtils::MAIL_PATTERN);
 $signUpForm->addInput('password1', \Skies::$language->get('system.page.login.register.password-twice'), true, 'password');
 $signUpForm->addInput('password2', '', true, 'password');
 $signUpForm->addInput('sign-up', \Skies::$language->get('system.page.login.sign-up'), 'submit');
@@ -54,12 +54,12 @@ $logoutFormHandler = $logoutForm->getHandler();
 if(isset($_POST['login'])) {
 
     // Check user for existence
-    $userID = \skies\utils\UserUtils::usernameToID($_POST['username']);
+    $userID = \skies\util\UserUtils::usernameToID($_POST['username']);
 
     if($userID !== false) {
 
         // Check password
-        if(\skies\utils\UserUtils::checkPassword($_POST['password'], $userID)) {
+        if(\skies\util\UserUtils::checkPassword($_POST['password'], $userID)) {
 
             $user = new \skies\system\user\User($userID);
 
