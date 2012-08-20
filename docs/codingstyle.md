@@ -7,6 +7,8 @@ PHP (and Javascript)
 ###Indentation (Brace style)
 
 In Skies a mix of a few coding styles is used. See the example below for reference.
+
+
 Example:
 
 ```
@@ -46,6 +48,8 @@ class Classname {
 We use _4 spaces_ to indent subordinated code.
 Between the function- or statement names and their brackets there are no spaces.
 Operators (except "++", "--", "::", "->" or ".") have spaces before and after.
+
+
 Example:
 
 ```
@@ -75,8 +79,12 @@ function example($var) {
 ###Naming
 
 In SilexBoard variable-, function- and methodnames are lowerCamelCase. The first letter is lower case. `$varName`, `iAmAFunction($argumentNo1, $argumentNo2)`
+
 Class-, trait- and interfacenames are UpperCamelCase, with a upper case first letter. `FooBar`, `TestClass`
+
 Constants are uppercase with an underscore as word-delimiter. `I_AM_A_CONSTANT`, `CURRENT_TIME`
+
+
 Example:
 
 ```
@@ -103,7 +111,10 @@ if(MY_CONSTANT)
 ###Quotes
 
 You should always use single quotes (`'`), except you need special escape characters.
+
 Heredoc and Nowdoc should not be used. Instead, close the php tag and print the string with linebreaks this way.
+
+
 Example:
 
 ```
