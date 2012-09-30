@@ -18,7 +18,7 @@ use skies\form\Form;
 // Login, user is guest
 if(\Skies::$user->isGuest()) {
 
-?>
+    ?>
 
 <p>
     <?=\Skies::$language->get('system.page.login.introduction', true)?>
@@ -30,9 +30,9 @@ if(\Skies::$user->isGuest()) {
 
     <?php
 
-    $loginForm->printForm();
+    $page->store['loginForm']->printForm();
 
-?>
+    ?>
 
 </fieldset>
 <fieldset class="float-right" style="width: 45%;">
@@ -41,7 +41,7 @@ if(\Skies::$user->isGuest()) {
 
     <?php
 
-    $signUpForm->printForm();
+    $page->store['signUpForm']->printForm();
 
     ?>
 
@@ -53,14 +53,14 @@ if(\Skies::$user->isGuest()) {
 }
 // User is logged in
 else {
-?>
+    ?>
 
 <p>
-    <?=\Skies::$language->get('system.page.login.welcome-title', ['userName' => \Skies::$user->getName()])?>
+   <?=\Skies::$language->get('system.page.login.welcome-title', ['userName' => \Skies::$user->getName()])?>
 </p>
 <?php
 
-    $logoutForm->printForm();
+    $page->store['logoutForm']->printForm();
 
 
 }

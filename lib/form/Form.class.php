@@ -6,36 +6,41 @@ namespace skies\form;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package   skies.util
+ * @package   skies.form
  */
 class Form {
 
     /**
      * URL to send the data to. Leave empty for the sender URL.
+     *
      * @var string
      */
     protected $action = '';
 
     /**
      * HTTP method. `get` or `post`
+     *
      * @var string
      */
     protected $method = '';
 
     /**
      * ID of the form
+     *
      * @var string
      */
     protected $id = '';
 
     /**
      * Array holding the data about all form elements
+     *
      * @var array
      */
     protected $data = [];
 
     /**
      * Used IDs for input fields
+     *
      * @var array
      */
     protected static $usedInputIDs = [];
@@ -49,7 +54,6 @@ class Form {
 
         $this->action = $action;
         $this->method = $method;
-        $this->id = \skies\util\StringUtils::getRandomString(16);
 
     }
 
@@ -70,7 +74,7 @@ class Form {
 
             'name' => $name,
             'description' => $description,
-            'html_type' => $type,
+            'htmlType' => $type,
             'pattern' => $pattern,
             'required' => $required
 
@@ -83,7 +87,13 @@ class Form {
      */
     public function printForm($indent = 0) {
 
-        $indent = \skies\util\StringUtils::getIndent($indent);
+        // Define the ID - if not already done
+        // This is done here, because the object is done when this function is called
+        if(empty($this->id)) {
+            $this->id = \skies\util\StringUtil::getHash(var_export($this, true));
+        }
+
+        $indent = \skies\util\StringUtil::getIndent($indent);
 
         $buffer = $indent.'<form action="'.$this->action.'" method="'.$this->method.(empty($this->id) ? '">' : '" id="'.$this->id.'">')."\n";
 
@@ -111,7 +121,7 @@ class Form {
 
     protected function buildInput($array, $indent = 0) {
 
-        $indent = \skies\util\StringUtils::getIndent($indent + 8);
+        $indent = \skies\util\StringUtil::getIndent($indent + 8);
 
         $buffer = '';
 
@@ -132,7 +142,7 @@ class Form {
         }
 
         // Normal input
-        if($array['html_type'] != 'submit') {
+        if($array['htmlType'] != 'submit') {
 
             $buffer .= $indent.'<tr class="nohover">'."\n";
             $buffer .= $indent.'    <td><label for="'.$id.'">'.$array['description'].(!empty($array['description']) ? ':' : '').'</label></td>'."\n";
@@ -140,15 +150,17 @@ class Form {
             $buffer .= $indent.'    <td><input class="full-width"';
 
             // Attributes
-            $buffer .= ' type="'.$array['html_type'].'"';
+            $buffer .= ' type="'.$array['htmlType'].'"';
             $buffer .= ' name="'.$array['name'].'"';
             $buffer .= ' id="'.$id.'"';
 
-            if(!empty($array['pattern']))
+            if(!empty($array['pattern'])) {
                 $buffer .= ' pattern="'.$array['pattern'].'"';
+            }
 
-            if($array['required'])
+            if($array['required']) {
                 $buffer .= ' required="required"';
+            }
 
             // Closing
 
@@ -161,7 +173,7 @@ class Form {
 
             $buffer .= $indent.'<tr class="nohover">'."\n";
 
-            $buffer .= $indent.'    <td colspan="2"><input type="'.$array['html_type'].'" name="'.$array['name'].'" id="'.$id.'" value="'.$array['description'].'" /></td>'."\n";
+            $buffer .= $indent.'    <td colspan="2"><input type="'.$array['htmlType'].'" name="'.$array['name'].'" id="'.$id.'" value="'.$array['description'].'" /></td>'."\n";
 
             $buffer .= $indent.'</tr>'."\n";
 
@@ -207,9 +219,16 @@ class Form {
 
     /**
      * Gets the FormHandler for this form
+     *
      * @return FormHandler
      */
     public function getHandler() {
+
+        // Define the ID - if not already done
+        // This is done here, because the object is done when this function is called
+        if(empty($this->id)) {
+            $this->id = \skies\util\StringUtil::getHash(var_export($this, true));
+        }
 
         return new \skies\form\FormHandler($this);
 

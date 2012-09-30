@@ -4,11 +4,11 @@
  * license:     http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
 
-
 #nav1 ul {
     list-style: none;
     margin: 0;
     padding: 0;
+    height: 28px;
 }
 
 #nav1 ul > li {

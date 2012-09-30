@@ -158,6 +158,7 @@ class Spyc {
     public static function YAMLLoad($input) {
 
         $Spyc = new Spyc;
+
         return $Spyc->__load($input);
     }
 
@@ -185,6 +186,7 @@ class Spyc {
     public static function YAMLLoadString($input) {
 
         $Spyc = new Spyc;
+
         return $Spyc->__loadString($input);
     }
 
@@ -212,6 +214,7 @@ class Spyc {
     public static function YAMLDump($array, $indent = false, $wordwrap = false) {
 
         $spyc = new Spyc;
+
         return $spyc->dump($array, $indent, $wordwrap);
     }
 
@@ -262,7 +265,7 @@ class Spyc {
 
         // Start at the base of the array and move through it.
         if($array) {
-            $array        = (array) $array;
+            $array = (array) $array;
             $previous_key = -1;
             foreach($array as $key => $value) {
                 if(!isset($first_key)) $first_key = $key;
@@ -270,6 +273,7 @@ class Spyc {
                 $previous_key = $key;
             }
         }
+
         return $string;
     }
 
@@ -301,6 +305,7 @@ class Spyc {
             // It doesn't have children.  Yip.
             $string = $this->_dumpNode($key, $value, $indent, $previous_key, $first_key, $source_array);
         }
+
         return $string;
     }
 
@@ -316,13 +321,14 @@ class Spyc {
     private function _yamlizeArray($array, $indent) {
 
         if(is_array($array)) {
-            $string       = '';
+            $string = '';
             $previous_key = -1;
             foreach($array as $key => $value) {
                 if(!isset($first_key)) $first_key = $key;
                 $string .= $this->_yamlize($key, $value, $indent, $previous_key, $first_key, $array);
                 $previous_key = $key;
             }
+
             return $string;
         }
         else {
@@ -384,6 +390,7 @@ class Spyc {
             }
             $string = rtrim($spaces.$key.': '.$value)."\n";
         }
+
         return $string;
     }
 
@@ -412,6 +419,7 @@ class Spyc {
         foreach($exploded as $line) {
             $newValue .= "\n".$spaces.($line);
         }
+
         return $newValue;
     }
 
@@ -429,9 +437,9 @@ class Spyc {
 
         if($this->_dumpWordWrap !== 0 && is_string($value) && strlen($value) > $this->_dumpWordWrap) {
             $indent += $this->_dumpIndent;
-            $indent  = str_repeat(' ', $indent);
+            $indent = str_repeat(' ', $indent);
             $wrapped = wordwrap($value, $this->_dumpWordWrap, "\n$indent");
-            $value   = ">\n".$indent.$wrapped;
+            $value = ">\n".$indent.$wrapped;
         }
         else {
             if($this->setting_dump_force_quotes && is_string($value) && $value !== self::REMPTY) {
@@ -448,12 +456,14 @@ class Spyc {
     private function __load($input) {
 
         $Source = $this->loadFromSource($input);
+
         return $this->loadWithSource($Source);
     }
 
     private function __loadString($input) {
 
         $Source = $this->loadFromString($input);
+
         return $this->loadWithSource($Source);
     }
 
@@ -462,10 +472,11 @@ class Spyc {
         if(empty ($Source)) return array();
         if($this->setting_use_syck_is_possible && function_exists('syck_load')) {
             $array = syck_load(implode('', $Source));
+
             return is_array($array) ? $array : array();
         }
 
-        $this->path   = array();
+        $this->path = array();
         $this->result = array();
 
         $cnt = count($Source);
@@ -473,15 +484,15 @@ class Spyc {
             $line = $Source[$i];
 
             $this->indent = strlen($line) - strlen(ltrim($line));
-            $tempPath     = $this->getParentPathByIndent($this->indent);
-            $line         = self::stripIndent($line, $this->indent);
+            $tempPath = $this->getParentPathByIndent($this->indent);
+            $line = self::stripIndent($line, $this->indent);
             if(self::isComment($line)) continue;
             if(self::isEmpty($line)) continue;
             $this->path = $tempPath;
 
             $literalBlockStyle = self::startsLiteralBlock($line);
             if($literalBlockStyle) {
-                $line         = rtrim($line, $literalBlockStyle." \n");
+                $line = rtrim($line, $literalBlockStyle." \n");
                 $literalBlock = '';
                 $line .= $this->LiteralPlaceHolder;
                 $literal_block_indent = strlen($Source[$i + 1]) - strlen(ltrim($Source[$i + 1]));
@@ -518,6 +529,7 @@ class Spyc {
             $this->delayedPath = array();
 
         }
+
         return $this->result;
     }
 
@@ -536,6 +548,7 @@ class Spyc {
         foreach($lines as $k => $_) {
             $lines[$k] = rtrim($_, "\r");
         }
+
         return $lines;
     }
 
@@ -595,7 +608,7 @@ class Spyc {
 
         if($value === '') return null;
         $first_character = $value[0];
-        $last_character  = substr($value, -1, 1);
+        $last_character = substr($value, -1, 1);
 
         $is_quoted = false;
         do {
@@ -626,15 +639,17 @@ class Spyc {
             foreach($explode as $v) {
                 $value[] = $this->_toType($v);
             }
+
             return $value;
         }
 
         if(strpos($value, ': ') !== false && $first_character != '{') {
             $array = explode(': ', $value);
-            $key   = trim($array[0]);
+            $key = trim($array[0]);
             array_shift($array);
             $value = trim(implode(': ', $array));
             $value = $this->_toType($value);
+
             return array($key => $value);
         }
 
@@ -655,6 +670,7 @@ class Spyc {
                 }
                 $array[] = $SubArr;
             }
+
             return $array;
         }
 
@@ -667,6 +683,7 @@ class Spyc {
             if($intvalue != PHP_INT_MAX) {
                 $value = $intvalue;
             }
+
             return $value;
         }
 
@@ -687,6 +704,7 @@ class Spyc {
             if(rtrim($value, 0) === $value) {
                 $value = (float) $value;
             }
+
             return $value;
         }
 
@@ -706,15 +724,15 @@ class Spyc {
         // pure mappings and mappings with sequences inside can't go very
         // deep.  This needs to be fixed.
 
-        $seqs          = array();
-        $maps          = array();
+        $seqs = array();
+        $maps = array();
         $saved_strings = array();
 
         // Check for strings
         $regex = '/(?:(")|(?:\'))((?(1)[^"]+|[^\']+))(?(1)"|\')/';
         if(preg_match_all($regex, $inline, $strings)) {
             $saved_strings = $strings[0];
-            $inline        = preg_replace($regex, 'YAMLString', $inline);
+            $inline = preg_replace($regex, 'YAMLString', $inline);
         }
         unset($regex);
 
@@ -740,7 +758,7 @@ class Spyc {
 
         $explode = explode(', ', $inline);
         $stringi = 0;
-        $i       = 0;
+        $i = 0;
 
         while(1) {
 
@@ -750,7 +768,7 @@ class Spyc {
                     if(strpos($value, 'YAMLSeq') !== false) {
                         foreach($seqs as $seqk => $seq) {
                             $explode[$key] = str_replace(('YAMLSeq'.$seqk.'s'), $seq, $value);
-                            $value         = $explode[$key];
+                            $value = $explode[$key];
                         }
                     }
                 }
@@ -762,7 +780,7 @@ class Spyc {
                     if(strpos($value, 'YAMLMap') !== false) {
                         foreach($maps as $mapk => $map) {
                             $explode[$key] = str_replace(('YAMLMap'.$mapk.'s'), $map, $value);
-                            $value         = $explode[$key];
+                            $value = $explode[$key];
                         }
                     }
                 }
@@ -811,6 +829,7 @@ class Spyc {
 
         if(!trim($line)) return true;
         if(strlen($line) - strlen(ltrim($line)) > $lineIndent) return true;
+
         return false;
     }
 
@@ -822,12 +841,13 @@ class Spyc {
                 break;
             }
             $groupPath = $this->SavedGroups[$alias];
-            $value     = $this->result;
+            $value = $this->result;
             foreach($groupPath as $k) {
                 $value = $value[$k];
             }
         }
         while(false);
+
         return $value;
     }
 
@@ -840,6 +860,7 @@ class Spyc {
             $this->addArray(array($k => $_), $indent);
             $this->path = $CommonGroupPath;
         }
+
         return true;
     }
 
@@ -851,7 +872,7 @@ class Spyc {
             return $this->addArrayInline($incoming_data, $incoming_indent);
         }
 
-        $key   = key($incoming_data);
+        $key = key($incoming_data);
         $value = isset($incoming_data[$key]) ? $incoming_data[$key] : null;
         if($key === '__!YAMLZero') $key = '0';
 
@@ -865,6 +886,7 @@ class Spyc {
                 $key = key($this->result);
             }
             $this->path[$incoming_indent] = $key;
+
             return;
         }
 
@@ -877,7 +899,7 @@ class Spyc {
         }
 
         if($this->_containsGroupAlias) {
-            $value                     = $this->referenceContentsByAlias($this->_containsGroupAlias);
+            $value = $this->referenceContentsByAlias($this->_containsGroupAlias);
             $this->_containsGroupAlias = false;
         }
 
@@ -892,7 +914,7 @@ class Spyc {
         }
         else if($key || $key === '' || $key === '0') {
             if(!is_array($_arr)) {
-                $_arr = array($key=> $value);
+                $_arr = array($key => $value);
             }
             else {
                 $_arr[$key] = $value;
@@ -901,7 +923,7 @@ class Spyc {
         else {
             if(!is_array($_arr)) {
                 $_arr = array($value);
-                $key  = 0;
+                $key = 0;
             }
             else {
                 $_arr[] = $value;
@@ -910,10 +932,10 @@ class Spyc {
             }
         }
 
-        $reverse_path       = array_reverse($this->path);
-        $reverse_history    = array_reverse($history);
+        $reverse_path = array_reverse($this->path);
+        $reverse_history = array_reverse($history);
         $reverse_history[0] = $_arr;
-        $cnt                = count($reverse_history) - 1;
+        $cnt = count($reverse_history) - 1;
         for($i = 0; $i < $cnt; $i++) {
             $reverse_history[$i + 1][$reverse_path[$i]] = $reverse_history[$i];
         }
@@ -941,6 +963,7 @@ class Spyc {
         if($lastChar == '|') return $lastChar;
         // HTML tags should not be counted as literal blocks.
         if(preg_match('#<.*?>$#', $line)) return false;
+
         return $lastChar;
     }
 
@@ -951,6 +974,7 @@ class Spyc {
         if(substr($line, -1, 1) == ']') return false;
         if($line[0] == '[') return true;
         if(preg_match('#^[^:]+?:\s*\[#', $line)) return true;
+
         return false;
     }
 
@@ -973,6 +997,7 @@ class Spyc {
         if($line != "\n") {
             $line = trim($line, "\r\n ")." ";
         }
+
         return $literalBlock.$line;
     }
 
@@ -986,12 +1011,14 @@ class Spyc {
                 $lineArray[$k] = rtrim($literalBlock, " \r\n");
             }
         }
+
         return $lineArray;
     }
 
     private static function stripIndent($line, $indent = -1) {
 
         if($indent == -1) $indent = strlen($line) - strlen(ltrim($line));
+
         return substr($line, $indent);
     }
 
@@ -1005,6 +1032,7 @@ class Spyc {
             if($indent <= $lastIndentInParentPath) array_pop($linePath);
         }
         while($indent <= $lastIndentInParentPath);
+
         return $linePath;
     }
 
@@ -1028,6 +1056,7 @@ class Spyc {
         if(!$line) return false;
         if($line[0] == '#') return true;
         if(trim($line, " \r\n\t") == '---') return true;
+
         return false;
     }
 
@@ -1057,6 +1086,7 @@ class Spyc {
 
         if($this->isArrayElement($line)) return false;
         if($this->isHashElement($line)) return false;
+
         return true;
     }
 
@@ -1067,6 +1097,7 @@ class Spyc {
         if(!is_string($value)) return $value;
         if($value[0] == '\'') return trim($value, '\'');
         if($value[0] == '"') return trim($value, '"');
+
         return $value;
     }
 
@@ -1077,18 +1108,20 @@ class Spyc {
 
     private function returnMappedSequence($line) {
 
-        $array             = array();
-        $key               = self::unquote(trim(substr($line, 1, -1)));
-        $array[$key]       = array();
+        $array = array();
+        $key = self::unquote(trim(substr($line, 1, -1)));
+        $array[$key] = array();
         $this->delayedPath = array(strpos($line, $key) + $this->indent => $key);
+
         return array($array);
     }
 
     private function returnMappedValue($line) {
 
-        $array       = array();
-        $key         = self::unquote(trim(substr($line, 0, -1)));
+        $array = array();
+        $key = self::unquote(trim(substr($line, 0, -1)));
         $array[$key] = '';
+
         return $array;
     }
 
@@ -1110,18 +1143,18 @@ class Spyc {
     private function returnKeyValuePair($line) {
 
         $array = array();
-        $key   = '';
+        $key = '';
         if(strpos($line, ':')) {
             // It's a key/value pair most likely
             // If the key is in double quotes pull it out
             if(($line[0] == '"' || $line[0] == "'") && preg_match('/^(["\'](.*)["\'](\s)*:)/', $line, $matches)) {
                 $value = trim(str_replace($matches[1], '', $line));
-                $key   = $matches[2];
+                $key = $matches[2];
             }
             else {
                 // Do some guesswork as to the key and the value
                 $explode = explode(':', $line);
-                $key     = trim($explode[0]);
+                $key = trim($explode[0]);
                 array_shift($explode);
                 $value = trim(implode(':', $explode));
             }
@@ -1133,6 +1166,7 @@ class Spyc {
         else {
             $array = array($line);
         }
+
         return $array;
 
     }
@@ -1141,10 +1175,11 @@ class Spyc {
     private function returnArrayElement($line) {
 
         if(strlen($line) <= 1) return array(array()); // Weird %)
-        $array   = array();
-        $value   = trim(substr($line, 1));
-        $value   = $this->_toType($value);
+        $array = array();
+        $value = trim(substr($line, 1));
+        $value = $this->_toType($value);
         $array[] = $value;
+
         return $array;
     }
 
@@ -1158,6 +1193,7 @@ class Spyc {
         if(preg_match('/(&['.$symbolsForReference.']+)$/', $line, $matches)) return $matches[1];
         if(preg_match('/(\*['.$symbolsForReference.']+$)/', $line, $matches)) return $matches[1];
         if(preg_match('#^\s*<<\s*:\s*(\*[^\s]+).*$#', $line, $matches)) return $matches[1];
+
         return false;
 
     }
@@ -1172,6 +1208,7 @@ class Spyc {
     private function stripGroup($line, $group) {
 
         $line = trim(str_replace($group, '', $line));
+
         return $line;
     }
 }

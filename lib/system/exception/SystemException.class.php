@@ -2,7 +2,7 @@
 
 namespace skies\system\exception;
 
-use skies\util\StringUtils;
+use skies\util\StringUtil;
 
 date_default_timezone_set('Europe/Berlin');
 
@@ -70,9 +70,10 @@ class SystemException extends \Exception {
      */
     public function __getTraceAsString() {
 
-        $e      = ($this->getPrevious() ? : $this);
+        $e = ($this->getPrevious() ? : $this);
         $string = preg_replace('/MySQL->\_\_construct\(.*\)/', 'MySQL->__construct(...)', $e->getTraceAsString());
         $string = preg_replace('/mysqli->mysqli\(.*\)/', 'mysqli->mysqli(...)', $string);
+
         return $string;
     }
 
@@ -92,7 +93,7 @@ class SystemException extends \Exception {
     <!DOCTYPE html>
     <html>
         <head>
-            <title>Fatal error: <?=StringUtils::encodeHTML($this->getMessage())?></title>
+            <title>Fatal error: <?=StringUtil::encodeHTML($this->getMessage())?></title>
             <style>
                 .systemException {
                     font-family: 'Trebuchet MS', Arial, sans-serif !important;
@@ -157,31 +158,31 @@ class SystemException extends \Exception {
         </head>
         <body>
             <div class="systemException">
-                <h1>Fatal error: <?=StringUtils::encodeHTML($this->_getMessage())?></h1>
+                <h1>Fatal error: <?=StringUtil::encodeHTML($this->_getMessage())?></h1>
 
                 <?php if(DEBUG) { ?>
 
                 <div>
-                    <p><?=StringUtils::encodeHTML($this->getDescription())?></p>
+                    <p><?=StringUtil::encodeHTML($this->getDescription())?></p>
 
                     <h2>Information:</h2>
 
                     <p>
                         <b>id:</b> <code><?=$exceptionID?></code><br>
-                        <b>error message:</b> <?=StringUtils::encodeHTML($this->_getMessage())?><br>
+                        <b>error message:</b> <?=StringUtil::encodeHTML($this->_getMessage())?><br>
                         <b>error code:</b> <?= intval($e->getCode())?><br>
-                        <b>file:</b> <?= StringUtils::encodeHTML($e->getFile())?> (<?= $e->getLine(); ?>)<br>
-                        <b>php version:</b> <?=StringUtils::encodeHTML(phpversion())?><br>
+                        <b>file:</b> <?= StringUtil::encodeHTML($e->getFile())?> (<?= $e->getLine(); ?>)<br>
+                        <b>php version:</b> <?=StringUtil::encodeHTML(phpversion())?><br>
                         <b>skies version:</b> <?=VERSION?><br>
                         <b>date:</b> <?=gmdate('r'); ?><br>
-                        <b>request:</b> <?php if(isset($_SERVER['REQUEST_URI'])) echo StringUtils::encodeHTML($_SERVER['REQUEST_URI']); ?>
+                        <b>request:</b> <?php if(isset($_SERVER['REQUEST_URI'])) echo StringUtil::encodeHTML($_SERVER['REQUEST_URI']); ?>
                         <br>
-                        <b>referrer:</b> <?php if(isset($_SERVER['HTTP_REFERER'])) echo StringUtils::encodeHTML($_SERVER['HTTP_REFERER']); ?>
+                        <b>referrer:</b> <?php if(isset($_SERVER['HTTP_REFERER'])) echo StringUtil::encodeHTML($_SERVER['HTTP_REFERER']); ?>
                         <br>
                     </p>
 
                     <h2>Stacktrace:</h2>
-                    <pre><?=StringUtils::encodeHTML($this->__getTraceAsString()); ?></pre>
+                    <pre><?=StringUtil::encodeHTML($this->__getTraceAsString()); ?></pre>
                 </div>
 
                 <?php
@@ -225,6 +226,7 @@ class SystemException extends \Exception {
         }
 
         $e = ($this->getPrevious() ? : $this);
+
         return $e->getMessage();
     }
 
@@ -258,7 +260,7 @@ class SystemException extends \Exception {
             "Stacktrace: \n  ".implode("\n  ", explode("\n", $e->getTraceAsString()))."\n";
 
         // calculate Exception-ID
-        $id      = \skies\util\StringUtils::getHash($message);
+        $id = \skies\util\StringUtil::getHash($message);
         $message = "<<<<<<<<".$id."<<<<\n".$message."<<<<\n\n";
 
         // append

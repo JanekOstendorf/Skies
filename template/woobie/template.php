@@ -5,6 +5,7 @@
 
 use skies\system\navigation\Navigation;
 use skies\system\template\Message;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,7 +53,7 @@ use skies\system\template\Message;
             <!-- Start footer -->
             <div id="footer-wrapper">
                 <div id="footer">
-                    Copyright &copy; SkyIrc 2012<?=(date('Y', NOW) > 2012 ? ' - '.date('Y', NOW) : '')?>
+                    Copyleft <img src="<?=\Skies::$template->getTemplateDirURL().'/images/Copyleft.svg'?>" style="width: 8px; vertical-align: middle;" alt="" /> SkyIrc 2012<?=(date('Y', NOW) > 2012 ? ' - '.date('Y', NOW) : '')?>
                 </div>
             </div>
             <!-- End footer -->

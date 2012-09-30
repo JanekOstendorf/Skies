@@ -75,17 +75,16 @@ class Template {
         // Open config file
         $this->config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'/template/'.$name.'/template.yml');
 
-        if($this->config === false)
-                {
-                    throw new \skies\system\exception\SystemException('Failed to load template '.$name.'!', 0, 'Failed to read the configuration file of the template "'.$name.'".');
-                }
+        if($this->config === false) {
+            throw new \skies\system\exception\SystemException('Failed to load template '.$name.'!', 0, 'Failed to read the configuration file of the template "'.$name.'".');
+        }
 
         $this->cssFiles = explode(', ', $this->config['css_files']);
-        $this->jsFiles  = explode(', ', $this->config['js_files']);
+        $this->jsFiles = explode(', ', $this->config['js_files']);
         $this->mainFile = $this->config['main_file'];
-        $this->meta     = $this->config['meta'];
+        $this->meta = $this->config['meta'];
 
-        $this->name  = $this->config['name'];
+        $this->name = $this->config['name'];
         $this->title = $this->config['title'];
 
     }
@@ -132,7 +131,7 @@ class Template {
         $buffer = '';
 
         // Indent string
-        $indent_str = \skies\util\StringUtils::getIndent($indent);
+        $indent_str = \skies\util\StringUtil::getIndent($indent);
 
         // CSS
         foreach($this->cssFiles as $css_file) {
@@ -163,9 +162,9 @@ class Template {
     public function printFavicon($indent = 0) {
 
         // Indent string
-        $indent_str = \skies\util\StringUtils::getIndent($indent);
+        $indent_str = \skies\util\StringUtil::getIndent($indent);
 
-        echo $indent_str.'<link rel="shortcut icon" type="'.\skies\util\StringUtils::encodeHTML($this->config['fav_mime']).'" href="'.$this->getTemplateDirURL().'/'.$this->config['favicon'].'" />'."\n";
+        echo $indent_str.'<link rel="shortcut icon" type="'.\skies\util\StringUtil::encodeHTML($this->config['fav_mime']).'" href="'.$this->getTemplateDirURL().'/'.$this->config['favicon'].'" />'."\n";
 
     }
 
@@ -177,16 +176,17 @@ class Template {
     public function printMeta($indent = 0) {
 
         // Indent string
-        $indent_str = \skies\util\StringUtils::getIndent($indent);
+        $indent_str = \skies\util\StringUtil::getIndent($indent);
 
         $buffer = $indent_str.'<meta http-equiv="content-type" content="text/html; charset=UTF-8">'."\n";
 
         foreach(\Skies::$config['meta'] as $key => $content) {
 
-            if($key == 'title')
+            if($key == 'title') {
                 continue;
+            }
 
-            $buffer .= $indent_str.'<meta name="'.\skies\util\StringUtils::encodeHTML($key).'" content="'.\skies\util\StringUtils::encodeHTML($content).'" />'."\n";
+            $buffer .= $indent_str.'<meta name="'.\skies\util\StringUtil::encodeHTML($key).'" content="'.\skies\util\StringUtil::encodeHTML($content).'" />'."\n";
 
         }
 
@@ -202,9 +202,9 @@ class Template {
     public function printTitle($indent = 0) {
 
         // Indent string
-        $indent_str = \skies\util\StringUtils::getIndent($indent);
+        $indent_str = \skies\util\StringUtil::getIndent($indent);
 
-        echo $indent_str.'<title>'.\skies\util\StringUtils::encodeHTML(\Skies::$config['meta']['title']).' | '.\skies\util\StringUtils::encodeHTML(\Skies::$page->getTitle()).'</title>'."\n";
+        echo $indent_str.'<title>'.\skies\util\StringUtil::encodeHTML(\Skies::$config['meta']['title']).' | '.\skies\util\StringUtil::encodeHTML(\Skies::$page->getTitle()).'</title>'."\n";
 
     }
 

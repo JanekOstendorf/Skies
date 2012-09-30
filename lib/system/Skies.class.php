@@ -34,7 +34,6 @@ use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
 use skies\system\template\Template;
-use skies\system\page\Page;
 use skies\system\page\PageTypes;
 use skies\system\page\DBPage;
 use skies\system\page\FilePage;
@@ -42,9 +41,8 @@ use skies\system\page\SystemPage;
 use skies\system\template\Message;
 
 use skies\util\spyc;
-use skies\util\PageUtils;
-use skies\util\SessionUtils;
-
+use skies\util\PageUtil;
+use skies\util\SessionUtil;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -160,7 +158,7 @@ class Skies {
     private function initSession() {
 
         // Do some clean ups
-        \skies\util\SessionUtils::cleanUp();
+        \skies\util\SessionUtil::cleanUp();
 
         self::$session = new skies\system\user\Session();
 
@@ -219,6 +217,7 @@ class Skies {
 
         /**#@+
          * Message objects
+         *
          * @var \skies\system\template\Message
          */
         self::$message['error'] = new \skies\system\template\Message('error');
@@ -235,7 +234,7 @@ class Skies {
 
         $page_name = (isset($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']);
 
-        $page_id = \skies\util\PageUtils::getIDFromName($page_name);
+        $page_id = \skies\util\PageUtil::getIDFromName($page_name);
 
         // If we get -1 back (system page)
         if($page_id == -1) {
@@ -246,7 +245,7 @@ class Skies {
         else {
 
             // Get the type of the page
-            switch(\skies\util\PageUtils::getTypeFromID($page_id)) {
+            switch(\skies\util\PageUtil::getTypeFromID($page_id)) {
 
                 case \skies\system\page\PageTypes::DB:
 
@@ -298,12 +297,7 @@ class Skies {
         // Page includes
         if(self::$page instanceof \skies\system\page\FilePage) {
 
-            if(self::$page->getIncFile() !== false && @file_exists(self::$page->getIncFile())) {
-                // Make things easier in the inc file
-                $page = null;
-                $page &= self::$page;
-                require_once self::$page->getIncFile();
-            }
+            self::$page->includeIncFile();
 
         }
 

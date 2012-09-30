@@ -19,9 +19,10 @@ class FilePage extends Page {
 
     /**
      * Store object for globally accessible variables
-     * @var \stdClass
+     *
+     * @var array
      */
-    public $store = null;
+    public $store = [];
 
     /**
      * File to include before showing anything
@@ -32,10 +33,8 @@ class FilePage extends Page {
 
     protected function onInit() {
 
-        $this->file    = $this->data['pageFile'];
+        $this->file = $this->data['pageFile'];
         $this->incFile = $this->data['pageIncFile'];
-
-        $this->store = new \stdClass();
 
     }
 
@@ -51,7 +50,7 @@ class FilePage extends Page {
 
             // Make things easier in the page file
             $page = null;
-            $page &= $this;
+            $page = &$this;
 
             include ROOT_DIR.'/page/'.$this->file;
 
@@ -72,8 +71,27 @@ class FilePage extends Page {
     public function getIncFile() {
 
         return (empty($this->incFile) ? false : ROOT_DIR.'/page/include/'.$this->incFile);
+    }
+
+    /**
+     * Include the incFile
+     */
+    public function includeIncFile() {
+
+        if($this->getIncFile() !== false && @file_exists($this->getIncFile())) {
+            // Make things easier in the inc file
+            $page = null;
+            $page = &$this;
+            require_once $this->getIncFile();
+
+            return true;
+        }
+        else {
+            return false;
+        }
 
     }
+
 }
 
 ?>

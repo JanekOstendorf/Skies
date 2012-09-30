@@ -21,8 +21,9 @@ class PageUtil {
      */
     public static function getIDFromName($page_name) {
 
-        if(\skies\system\page\SystemPages::isSystemPage($page_name))
+        if(\skies\system\page\SystemPages::isSystemPage($page_name)) {
             return -1;
+        }
 
         $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageName` = \''.\escape($page_name).'\'';
 

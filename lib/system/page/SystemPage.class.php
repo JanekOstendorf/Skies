@@ -20,8 +20,8 @@ class SystemPage extends FilePage {
         $this->data = [];
 
         $this->title = \Skies::$language->get('system.page.'.$name.'.title');
-        $this->name  = $name;
-        $this->php   = true;
+        $this->name = $name;
+        $this->php = true;
 
         $this->onInit();
 
@@ -34,7 +34,7 @@ class SystemPage extends FilePage {
      */
     protected function onInit() {
 
-        $this->file    = $this->name.'.page.php';
+        $this->file = 'system/'.$this->name.'.page.php';
         $this->incFile = $this->name.'.page.inc.php';
 
     }
@@ -46,7 +46,7 @@ class SystemPage extends FilePage {
      */
     public function show() {
 
-        include ROOT_DIR.'/page/system/'.$this->file;
+        parent::show();
 
     }
 

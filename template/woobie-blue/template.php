@@ -4,6 +4,7 @@
 /* @var $this \skies\system\template\Template */
 
 use skies\system\navigation\Navigation;
+
 ?>
 <!DOCTYPE html>
 <html>

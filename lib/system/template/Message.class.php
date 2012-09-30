@@ -12,26 +12,41 @@ class Message {
 
     /**
      * The variable the different types will be saved in
+     *
      * @var array
      */
     private $store;
 
     /**
      * Control variable
+     *
      * @var int
      */
     private $i;
 
     /**
      * Style of the message to be printed
+     *
      * @var string
      */
     private $style;
+
+    /**#@+
+     * Constants for identifing
+     */
+    const NOTICE = 1;
+
+    const SUCCESS = 2;
+
+    const ERROR = 3;
+
+    /**#@-*/
 
     /**
      * Reads the style file and creates the message object
      *
      * @param string $css_class CSS class of the message block
+     *
      * @return \skies\system\template\Message
      */
     public function __construct($css_class) {
@@ -56,7 +71,9 @@ HTML;
 
     /**
      * Adds a message to the store variable
+     *
      * @param string $msg Message
+     *
      * @return int|bool ID of the new message or false
      */
     public function add($msg) {
@@ -73,13 +90,16 @@ HTML;
 
     /**
      * Deletes the message with the ID $id from the storage variable
+     *
      * @param int $id Message ID
+     *
      * @return bool
      */
     public function del($id) {
 
-        if(!isset($this->store[$id]))
+        if(!isset($this->store[$id])) {
             return false;
+        }
 
         unset($this->store[$id]);
 

@@ -42,7 +42,7 @@ class User {
             $data = $result->fetch_array();
 
             // Write into our vars
-            $this->id   = $data['userID'];
+            $this->id = $data['userID'];
             $this->name = $data['userName'];
             $this->mail = $data['userMail'];
         }
@@ -50,7 +50,7 @@ class User {
         // Guests
         else {
 
-            $this->id   = GUEST_ID;
+            $this->id = GUEST_ID;
             $this->name = null;
             $this->mail = null;
 

@@ -14,18 +14,21 @@ class Navigation {
 
     /**
      * Entries of this navigation
+     *
      * @var array
      */
     protected $entries = [];
 
     /**
      * ID of this nav
+     *
      * @var int
      */
     protected $id = 0;
 
     /**
      * Title of this navigation
+     *
      * @var string
      */
     protected $title = '';
@@ -33,6 +36,7 @@ class Navigation {
 
     /**
      * Init the nav and fetch all data
+     *
      * @param int $id ID of the navigation
      */
     public function __construct($id) {
@@ -115,7 +119,7 @@ class Navigation {
                     }
 
                     // Make the link
-                    $link = SUBDIR.'/'.\skies\util\PageUtils::gerNameFromID($entry['pageID']);
+                    $link = SUBDIR.'/'.\skies\util\PageUtil::gerNameFromID($entry['pageID']);
 
                     break;
 
@@ -146,9 +150,10 @@ class Navigation {
             // Output
             $buffer .= "
         <li";
-            if(!empty($classes))
-                $buffer .=  " class=\"$classes\"";
-            $buffer .=  ">\n
+            if(!empty($classes)) {
+                $buffer .= " class=\"$classes\"";
+            }
+            $buffer .= ">\n
             <a href=\"$link\">".\Skies::$language->replaceVars($entry['title'])."</a>\n
         </li>\n
 ";

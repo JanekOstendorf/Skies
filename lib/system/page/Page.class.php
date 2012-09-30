@@ -64,10 +64,10 @@ abstract class Page {
         $this->data = $result->fetch_array(MYSQLI_ASSOC);
 
         // Set stuff
-        $this->id    = $id;
+        $this->id = $id;
         $this->title = $this->data['pageTitle'];
-        $this->name  = $this->data['pageName'];
-        $this->php   = ($this->data['pagePHP'] == 1);
+        $this->name = $this->data['pageName'];
+        $this->php = ($this->data['pagePHP'] == 1);
 
         $this->onInit();
 

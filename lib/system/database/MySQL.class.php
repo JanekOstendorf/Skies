@@ -58,9 +58,9 @@ class MySQL extends \mysqli {
         $this->set_charset("utf8");
 
         $this->database = $database;
-        $this->host     = $host;
+        $this->host = $host;
         $this->password = $password;
-        $this->user     = $user;
+        $this->user = $user;
 
     }
 

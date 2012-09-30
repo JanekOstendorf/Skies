@@ -30,7 +30,7 @@
     $loginForm->addInput('Submit', 'submit', 'submit');
 
     $loginForm->printForm();
-?>
+    ?>
 </fieldset>
 
 <hr />

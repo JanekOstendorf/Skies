@@ -65,7 +65,7 @@ class Language {
 
         $data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);
 
-        $this->name  = $data['langName'];
+        $this->name = $data['langName'];
         $this->title = $data['langTitle'];
 
         /*// Fetch data
@@ -75,7 +75,7 @@ class Language {
 
         // Blah blah
         $this->default = $default;
-        $this->id      = $id;
+        $this->id = $id;
 
     }
 
@@ -88,16 +88,19 @@ class Language {
         }
         else {
 
-            if(explode('.', $var)[0] == 'config')
+            if(explode('.', $var)[0] == 'config') {
                 $varData = $this->replaceVars($this->getConfig($var), $userVars);
-            else
+            }
+            else {
                 $varData = $this->replaceVars($this->getDB($var), $userVars);
+            }
 
             // Save to the buffer
             $this->buffer[$var] = $varData;
 
-            if($varData == $var)
+            if($varData == $var) {
                 $varData = '{{'.$varData.'}}';
+            }
 
             return ($nl2br ? nl2br($varData, true) : $varData);
 
@@ -191,8 +194,9 @@ class Language {
 
                 $constName = substr($tag, 2, strlen($tag) - 4);
 
-                if(defined($constName))
+                if(defined($constName)) {
                     $varData = str_replace($tag, constant($constName), $varData);
+                }
 
             }
 
@@ -202,14 +206,15 @@ class Language {
 
             $matches = [];
 
-            if(preg_match_all('/\[\[[a-z0-9\.-_]+\]\]/', $varData, $matches) > 0) {
+            if(preg_match_all('/\[\[[a-zA-Z0-9\.-_]+\]\]/', $varData, $matches) > 0) {
 
                 foreach($matches[0] as $tag) {
 
                     $varName = substr($tag, 2, strlen($tag) - 4);
 
-                    if(isset($userVars[$varName]))
+                    if(isset($userVars[$varName])) {
                         $varData = str_replace($tag, $userVars[$varName], $varData);
+                    }
 
                 }
 

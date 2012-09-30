@@ -60,8 +60,9 @@ class UserUtil {
         }
 
         $ipArray = array_pad(explode('.', $ip), 4, 0);
-        $part7   = base_convert(($ipArray[0] * 256) + $ipArray[1], 10, 16);
-        $part8   = base_convert(($ipArray[2] * 256) + $ipArray[3], 10, 16);
+        $part7 = base_convert(($ipArray[0] * 256) + $ipArray[1], 10, 16);
+        $part8 = base_convert(($ipArray[2] * 256) + $ipArray[3], 10, 16);
+
         return '::ffff:'.$part7.':'.$part8;
     }
 
@@ -87,15 +88,15 @@ class UserUtil {
 
         // check if ip is a masked IPv4 address
         if(substr($ip, 0, 7) == '::ffff:') {
-            $ip    = explode(':', substr($ip, 7));
+            $ip = explode(':', substr($ip, 7));
             $ip[0] = base_convert($ip[0], 16, 10);
             $ip[1] = base_convert($ip[1], 16, 10);
 
-            $ipParts   = array();
-            $tmp       = $ip[0] % 256;
+            $ipParts = array();
+            $tmp = $ip[0] % 256;
             $ipParts[] = ($ip[0] - $tmp) / 256;
             $ipParts[] = $tmp;
-            $tmp       = $ip[1] % 256;
+            $tmp = $ip[1] % 256;
             $ipParts[] = ($ip[1] - $tmp) / 256;
             $ipParts[] = $tmp;
 
@@ -216,7 +217,9 @@ class UserUtil {
 
     /**
      * Generates a random alphanumeric string
+     *
      * @param int $length
+     *
      * @return string
      */
     public static function randStr($length) {
@@ -225,17 +228,20 @@ class UserUtil {
 
         $return = '';
 
-        for ($i = 1; $i <= $length; $i++) {
+        for($i = 1; $i <= $length; $i++) {
             $rand = substr(str_shuffle($pool), 0, 1);
             $return .= $rand;
         }
+
         return $return;
 
     }
 
     /**
      * Generates salt and hashed password
+     *
      * @param string $password unencrypted password
+     *
      * @return object $return->salt and $return->password
      */
     public static function makePass($password) {
@@ -268,10 +274,12 @@ class UserUtil {
 
         $result = \Skies::$db->query($query);
 
-        if($result === false || $result->num_rows != 1)
+        if($result === false || $result->num_rows != 1) {
             return false;
-        else
+        }
+        else {
             return $result->fetch_array(MYSQLI_ASSOC)['userID'];
+        }
 
     }
 
