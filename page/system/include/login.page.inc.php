@@ -73,7 +73,7 @@ if($loginFormHandler->isSubmitted()) {
 
             }
             else {
-                \Skies::$message['success']->add(\Skies::$language->get('system.page.login.login.success'), ['userName' => $user->getName()]);
+                \Skies::$message['success']->add(\Skies::$language->get('system.page.login.login.success', ['userName' => $user->getName()]));
             }
 
         }
@@ -104,6 +104,65 @@ if($logoutFormHandler->isSubmitted()) {
         \Skies::$message['success']->add(\Skies::$language->get('system.page.login.logout.success'));
     }
 
+}
+
+// Sign up
+if($signUpFormHandler->isSubmitted()) {
+
+    $data = $signUpFormHandler->getData();
+
+    // Completed?
+    if($signUpFormHandler->isCompleted()) {
+
+        // Pattern?
+        if($signUpFormHandler->checkPatterns()) {
+
+            // Is the username taken already?
+            if(UserUtil::usernameToID($data['username_sign-up']) === false) {
+
+                // Does the username match the pattern?
+                if(\skies\util\UserUtil::checkUsername($data['username_sign-up'])) {
+
+                    // Does the mail match the pattern?
+                    if(\skies\util\UserUtil::checkMail($data['mail'])) {
+
+                        // TODO: do something
+                        \Skies::$message['success']->add('Good work! If this was finished yet, you\'d be the first one to be registered.');
+
+                    }
+                    else {
+
+                        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.mail-pattern'));
+
+                    }
+
+                }
+                else {
+
+                    \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.username-pattern'));
+
+                }
+
+            }
+            else {
+
+                \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.username-taken'));
+
+            }
+
+        }
+        else {
+
+            \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.pattern'));
+
+        }
+
+    }
+    else {
+
+        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.missing'));
+
+    }
 }
 
 ?>
