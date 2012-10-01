@@ -31,6 +31,13 @@ class User {
      */
     protected $mail;
 
+    /**
+     * Array holding custom data about this user
+     *
+     * @var array
+     */
+    protected $data;
+
     public function __construct($userID) {
 
         // Normal users
@@ -45,6 +52,16 @@ class User {
             $this->id = $data['userID'];
             $this->name = $data['userName'];
             $this->mail = $data['userMail'];
+
+            // Fetch custom data
+            $result = \Skies::$db->query('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldID` = `fieldID` WHERE `dataUserID` = '.escape($userID));
+
+            while($line = $result->fetch_array(MYSQLI_ASSOC)) {
+
+                $this->data[$line['fieldName']] = $line['dataValue'];
+
+            }
+
         }
 
         // Guests
@@ -117,6 +134,15 @@ class User {
     public function getMail() {
 
         return $this->mail;
+
+    }
+
+    /**
+     * @return string User's custom data
+     */
+    public function getData() {
+
+        return $this->data;
 
     }
 
