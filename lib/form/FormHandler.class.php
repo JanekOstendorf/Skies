@@ -127,7 +127,7 @@ class FormHandler {
 
         foreach($this->form->getData() as $key => $current) {
 
-            if(!empty($current['pattern']) && preg_match('/^'.$current['pattern'].'$/', $this->request[$current['name']])) {
+            if(!empty($current['pattern']) && preg_match('/^'.$current['pattern'].'$/', $this->request[$current['name']]) == 0) {
                 $matches = false;
             }
 
