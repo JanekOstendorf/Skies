@@ -72,17 +72,18 @@ HTML;
     /**
      * Adds a message to the store variable
      *
-     * @param string $msg Message
+     * @param string $msg      Message
+     * @param array  $userVars Custom variables. See \skies\system\language\Language::replaceVars()
      *
      * @return int|bool ID of the new message or false
      */
-    public function add($msg) {
+    public function add($msg, $userVars = []) {
 
         if(!is_string($msg)) {
             return false;
         }
 
-        $this->store[$this->i] = $msg;
+        $this->store[$this->i] = \Skies::$language->replaceVars($msg, $userVars);
 
         return $this->i++;
 

@@ -173,7 +173,7 @@ class Language {
         $matches = [];
 
         // Language vars (lower case)
-        if(preg_match_all('/\{\{[a-z0-9\.-_]+\}\}/', $varData, $matches) > 0) {
+        if(preg_match_all('/\{\{[a-z0-9\-\_\.]+\}\}/', $varData, $matches) > 0) {
 
             foreach($matches[0] as $tag) {
 
