@@ -1,6 +1,7 @@
 <?php
 
 namespace skies\util;
+use skies\system\user\User;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -13,7 +14,7 @@ class UserUtil {
     /**
      * Regex pattern for usernames
      */
-    const USERNAME_PATTERN = '[a-zA-Z-_0-9\(\)\[\]]+';
+    const USERNAME_PATTERN = '[a-zA-Z-_0-9\(\)\[\]\s]+';
 
     /**
      * Regex pattern for mail addresses
@@ -280,6 +281,50 @@ class UserUtil {
         else {
             return $result->fetch_array(MYSQLI_ASSOC)['userID'];
         }
+
+    }
+
+
+    /**
+     * Creates a new user
+     *
+     * @param string $user_name     Username
+     * @param string $user_mail     Mail address
+     * @param string $user_password Plaintext password
+     *
+     * @return bool|\skies\system\user\User
+     */
+    public static function createUser($user_name, $user_mail, $user_password) {
+
+        // Check the values
+        if(!self::checkMail($user_mail) || !self::checkUsername($user_name) || self::usernameToID($user_name) !== false) {
+
+            return false;
+
+        }
+
+        // Crypt the password
+        $password = self::makePass($user_password);
+
+        if($password === false) {
+            return false;
+        }
+
+        $query = 'INSERT INTO `user` (`userMail`, `userName`, `userPassword`, `userSalt`) ';
+
+        // Values
+        $query .= 'VALUES(\''.escape($user_mail).'\',
+            \''.escape($user_name).'\',
+            \''.escape($password->password).'\',
+            \''.escape($password->salt).'\')';
+
+        // Execute
+        if(!\Skies::$db->query($query)) {
+            return false;
+        }
+
+        // Fetch user object
+        return new \skies\system\user\User(self::usernameToID($user_name));
 
     }
 
