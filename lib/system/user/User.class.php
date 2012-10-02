@@ -43,6 +43,9 @@ class User {
         // Normal users
         if($userID != GUEST_ID) {
 
+            if(!\skies\util\UserUtil::userExists($userID))
+                return false;
+
             // Fetch info
             $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'user WHERE userID = '.escape($userID));
 

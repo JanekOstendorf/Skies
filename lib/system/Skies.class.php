@@ -203,7 +203,7 @@ class Skies {
         self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
 
         // TODO: get this from user's data
-        self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 2));
+        self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
 
     }
 

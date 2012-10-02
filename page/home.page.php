@@ -7,40 +7,25 @@
 
 ?>
 
-<h1>
-    Überschrift h1
-</h1>
+<h1>Skies</h1>
 
-<h2>Überschrift h2</h2>
+<p>
+    This is Skies. Obviously, there isn't much to see yet. Move along.
+</p>
 
-<h3>Überschrift h3</h3>
-
-<h4>Überschrift h4</h4>
-
-<fieldset>
-    <legend>Fieldset!</legend>
-
-    <p>Dieses Formular macht rein gar nichts.</p>
-
-    <?php
-    $loginForm = new skies\form\Form();
-
-    $loginForm->addInput('Test', 'test');
-    $loginForm->addInput('Ein Passwort:', 'pw', 'password');
-    $loginForm->addInput('Submit', 'submit', 'submit');
-
-    $loginForm->printForm();
-    ?>
-</fieldset>
+<hr />
+<a href="https://github.com/ozzy2345/Skies">
+    <img src="<?=SUBDIR?>/images/github.png" style="float: left; vertical-align: middle; padding-right: 10px;" />
+    <span style="line-height: 32px;">Skies on GitHub.</span>
+    <div class="clear"></div>
+</a>
 
 <hr />
 
-<p class="success">
-    Ich bin ein Erfolg!
-</p>
-<p class="notice">
-    Ich bin eine Meldung!
-</p>
-<p class="error">
-    Ich bin ein Fehler!
-</p>
+<img src="<?=SUBDIR?>/images/default-avatar.png" style="width: 100px; float: left; vertical-align: middle; padding-right: 10px;" />
+<span style="line-height: 100px;">This is a draft of a default avatar.</span>
+<div class="clear"></div>
+
+<hr />
+
+<button>I thought a bit orange would be good for this page.</button>

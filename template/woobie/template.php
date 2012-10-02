@@ -52,8 +52,8 @@ use skies\system\template\Message;
 
             <!-- Start footer -->
             <div id="footer-wrapper">
-                <div id="footer">
-                    Copyleft <img src="<?=\Skies::$template->getTemplateDirURL().'/images/Copyleft.svg'?>" style="width: 8px; vertical-align: middle;" alt="" /> SkyIrc 2012<?=(date('Y', NOW) > 2012 ? ' - '.date('Y', NOW) : '')?>
+                <div id="footer" style="line-height: 16px;">
+                    This is GNU GPL, do with it what you want. Hosted by SkyIrc. - <a href="https://github.com/ozzy2345/Skies"><img style="width: 16px; vertical-align: middle;" src="<?=SUBDIR?>/images/github.png"</a>
                 </div>
             </div>
             <!-- End footer -->

@@ -69,24 +69,24 @@ if($loginFormHandler->isSubmitted()) {
 
             if(!\Skies::$session->login($user->getId())) {
 
-                \Skies::$message['error']->add(\Skies::$language->get('system.page.login.error'));
+                \Skies::$message['error']->add('{{system.page.login.error}}');
 
             }
             else {
-                \Skies::$message['success']->add(\Skies::$language->get('system.page.login.login.success', ['userName' => $user->getName()]));
+                \Skies::$message['success']->add('{{system.page.login.login.success}}', ['userName' => $user->getName()]);
             }
 
         }
         else {
 
-            \Skies::$message['error']->add(\Skies::$language->get('system.page.login.error.user-pw'));
+            \Skies::$message['error']->add('{{system.page.login.error.user-pw}}');
 
         }
 
     }
     else {
 
-        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.error.user-pw'));
+        \Skies::$message['error']->add('{{system.page.login.error.user-pw}}');
 
     }
 
@@ -97,11 +97,11 @@ if($logoutFormHandler->isSubmitted()) {
 
     if(!\Skies::$session->logout()) {
 
-        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.error'));
+        \Skies::$message['error']->add('{{system.page.login.error}}');
 
     }
     else {
-        \Skies::$message['success']->add(\Skies::$language->get('system.page.login.logout.success'));
+        \Skies::$message['success']->add('{{system.page.login.logout.success}}');
     }
 
 }
@@ -117,50 +117,81 @@ if($signUpFormHandler->isSubmitted()) {
         // Pattern?
         if($signUpFormHandler->checkPatterns()) {
 
-            // Is the username taken already?
-            if(UserUtil::usernameToID($data['username_sign-up']) === false) {
+            // Do the passwords match?
+            if($data['password1'] == $data['password2']) {
 
-                // Does the username match the pattern?
-                if(\skies\util\UserUtil::checkUsername($data['username_sign-up'])) {
+                // Is the username taken already?
+                if(UserUtil::usernameToID($data['username_sign-up']) === false) {
 
-                    // Does the mail match the pattern?
-                    if(\skies\util\UserUtil::checkMail($data['mail'])) {
+                    // Does the username match the pattern?
+                    if(\skies\util\UserUtil::checkUsername($data['username_sign-up'])) {
 
-                        // TODO: do something
-                        \Skies::$message['success']->add('Good work! If this was finished yet, you\'d be the first one to be registered.');
+                        // Does the mail match the pattern?
+                        if(\skies\util\UserUtil::checkMail($data['mail'])) {
+
+                            $newUser = \skies\util\UserUtil::createUser($data['username_sign-up'], $data['mail'], $data['password1']);
+
+                            if($newUser !== false) {
+
+                                // Aaaaand start the session!
+                                if(!\Skies::$session->login($newUser->getId())) {
+
+                                    \Skies::$message['error']->add(\Skies::$language->get('system.page.login.error'));
+
+                                }
+                                else {
+
+                                    // Strike
+                                    \Skies::$message['success']->add('{{system.page.login.sign-up.success}}', ['userName' => $newUser->getName()]);
+
+                                }
+
+                            }
+                            else {
+
+                                \Skies::$message['success']->add('{{system.page.login.sign-up.error}}');
+
+                            }
+
+                        }
+                        else {
+
+                            \Skies::$message['error']->add('{{system.page.login.sign-up.error.mail-pattern}}');
+
+                        }
 
                     }
                     else {
 
-                        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.mail-pattern'));
+                        \Skies::$message['error']->add('{{system.page.login.sign-up.error.username-pattern}}');
 
                     }
 
                 }
                 else {
 
-                    \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.username-pattern'));
+                    \Skies::$message['error']->add('{{system.page.login.sign-up.error.username-taken}}');
 
                 }
 
             }
             else {
 
-                \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.username-taken'));
+                \Skies::$message['error']->add('{{system.page.login.sign-up.error.passwords-match}}');
 
             }
 
         }
         else {
 
-            \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.pattern'));
+            \Skies::$message['error']->add('{{system.page.login.sign-up.error.pattern}}');
 
         }
 
     }
     else {
 
-        \Skies::$message['error']->add(\Skies::$language->get('system.page.login.sign-up.error.missing'));
+        \Skies::$message['error']->add('{{system.page.login.sign-up.error.missing}}');
 
     }
 }
