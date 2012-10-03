@@ -136,7 +136,12 @@ class Template {
         // CSS
         foreach($this->cssFiles as $css_file) {
 
-            $buffer .= $indent_str.'<link rel="stylesheet" type="text/css" href="'.$this->getTemplateDirURL().'/'.$css_file.'" />'."\n";
+            // Local or http?
+            if(preg_match('/^http[s]{0,1}\:\/\//', $css_file) == 0) {
+                $css_file = $this->getTemplateDirURL().'/'.$css_file;
+            }
+
+            $buffer .= $indent_str.'<link rel="stylesheet" type="text/css" href="'.$css_file.'" />'."\n";
 
         }
 
@@ -145,7 +150,12 @@ class Template {
         // JS
         foreach($this->jsFiles as $js_file) {
 
-            $buffer .= $indent_str.'<script src="'.$this->getTemplateDirURL().'/'.$js_file.'"></script>'."\n";
+            // Local or http?
+            if(preg_match('/^http[s]{0,1}\:\/\//', $js_file) == 0) {
+                $js_file = $this->getTemplateDirURL().'/'.$js_file;
+            }
+
+            $buffer .= $indent_str.'<script src="'.$js_file.'"></script>'."\n";
 
         }
 
