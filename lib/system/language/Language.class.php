@@ -188,7 +188,7 @@ class Language {
         $matches = [];
 
         // Constants (upper case)
-        if(preg_match_all('/\{\{[A-Z0-9\.-_]+\}\}/', $varData, $matches) > 0) {
+        if(preg_match_all('/\{\{[A-Z0-9\.\-\_]+\}\}/', $varData, $matches) > 0) {
 
             foreach($matches[0] as $tag) {
 
@@ -206,14 +206,14 @@ class Language {
 
             $matches = [];
 
-            if(preg_match_all('/\[\[[a-zA-Z0-9\.-_]+\]\]/', $varData, $matches) > 0) {
+            if(preg_match_all('/\[\[[a-zA-Z0-9\.\-\_]+\]\]/', $varData, $matches) > 0) {
 
                 foreach($matches[0] as $tag) {
 
                     $varName = substr($tag, 2, strlen($tag) - 4);
 
                     if(isset($userVars[$varName])) {
-                        $varData = str_replace($tag, $userVars[$varName], $varData);
+                        $varData = str_replace($tag, $this->replaceVars($userVars[$varName]), $varData);
                     }
 
                 }
