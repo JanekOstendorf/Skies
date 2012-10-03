@@ -33,6 +33,13 @@ class Navigation {
      */
     protected $title = '';
 
+    /**
+     * Does this nav include the LoginForm?
+     *
+     * @var bool
+     */
+    protected $loginForm = false;
+
 
     /**
      * Init the nav and fetch all data
@@ -165,6 +172,16 @@ class Navigation {
 
         $buffer .= '
     </ul>
+
+    <!-- Login field -->
+    <div id="loginform">
+        ';
+
+        $buffer .= (new \skies\form\LoginForm())->returnHTML();
+
+       $buffer .= '
+    </div>
+    <!-- End login field -->
 
     <div class="clear"></div>
 

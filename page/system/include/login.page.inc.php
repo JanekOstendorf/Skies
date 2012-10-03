@@ -93,7 +93,7 @@ if($loginFormHandler->isSubmitted()) {
 }
 
 // Logout
-if($logoutFormHandler->isSubmitted()) {
+if($logoutFormHandler->isSubmitted() || (isset($_GET['_1']) && $_GET['_1'] == 'logout')) {
 
     if(!\Skies::$session->logout()) {
 
