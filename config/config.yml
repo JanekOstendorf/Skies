@@ -15,7 +15,7 @@ meta:
 subdir: ''
 
 # Default language
-defaultLanguage: en-UK
+defaultLanguage: de-DE
 
 # Default template (short name)
 defaultTemplate: woobie

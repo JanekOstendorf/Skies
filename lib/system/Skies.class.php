@@ -200,10 +200,10 @@ class Skies {
 
         $query = 'SELECT * FROM '.TBL_PRE.'language WHERE langName = \''.\escape(self::$config['defaultLanguage']).'\'';
 
-        self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
+        self::$language = self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
 
         // TODO: get this from user's data
-        self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
+        //self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
 
     }
 
