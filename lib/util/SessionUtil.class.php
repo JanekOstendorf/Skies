@@ -15,15 +15,17 @@ class SessionUtil {
 
         // Normal sessions
         $length = (30 * 60);
-        $timeout = $length + NOW;
 
-        $query = 'DELETE FROM `'.TBL_PRE.'session` WHERE `sessionLong` = 0 AND (`sessionLastActivity` + '.$length.') < '.$timeout.';';
+        $query = 'DELETE FROM `'.TBL_PRE.'session` WHERE `sessionLong` = 0 AND (`sessionLastActivity` + '.$length.') < '.NOW.';';
+
+        \Skies::$db->query($query);
 
         // Long sessions
         $length = (365 * 86400);
-        $timeout = $length + NOW;
 
-        $query = 'DELETE FROM `'.TBL_PRE.'session` WHERE `sessionLong` = 1 AND (`sessionLastActivity` + '.$length.') < '.$timeout.';';
+        $query = 'DELETE FROM `'.TBL_PRE.'session` WHERE `sessionLong` = 1 AND (`sessionLastActivity` + '.$length.') < '.NOW.';';
+
+        \Skies::$db->query($query);
 
     }
 

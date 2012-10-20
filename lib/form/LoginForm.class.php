@@ -50,7 +50,7 @@ class LoginForm {
          */
         if($this->user->isGuest()) {
 
-            $loginLink = '<a href="'.SUBDIR.'/login" id="link-login">{{system.page.login.login}}</a>';
+            $loginLink = '<a id="link" href="'.SUBDIR.'/login" id="link-login">{{system.page.login.login}}</a>';
 
             $this->output .= \Skies::$language->get(self::LANGVAR_LOGIN, ['link-login' => $loginLink]);
 
@@ -60,7 +60,7 @@ class LoginForm {
          */
         else {
 
-            $logoutLink = '<a href="'.SUBDIR.'/login/logout">{{system.page.login.logout}}</a>';
+            $logoutLink = '<a id="link" href="'.SUBDIR.'/login/logout">{{system.page.login.logout}}</a>';
 
             $this->output .= \Skies::$language->get(self::LANGVAR_LOGOUT, ['userName' => $this->user->getName(), 'link-logout' => $logoutLink]);
 

@@ -77,12 +77,10 @@ class Session {
         // Create new ID
         $this->id = \skies\util\StringUtil::getRandomHash();
 
-        // Is that person on the other line a guest?
-        $this->userID = \Skies::$db->query('SELECT * FROM '.TBL_PRE.'session WHERE `sessionID` = \''.$this->id.'\' LIMIT 1')->fetch_array()['userID'];
 
         $query = 'INSERT INTO '.TBL_PRE.'session
             (`sessionID`, `sessionIP`, `sessionLastActivity`, `sessionUserID`)
-            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\util\UserUtil::getIpAddress()).'\', '.\escape(NOW).', '.\escape($this->userID ? : '0').')';
+            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\util\UserUtil::getIpAddress()).'\', '.\escape(NOW).', NULL)';
 
         return !(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (365 * 86400)));
 
@@ -94,7 +92,7 @@ class Session {
      */
     protected function continueSession() {
 
-        $res = \Skies::$db->query('SELECT * FROM '.TBL_PRE.'session WHERE `sessionID` = \''.$this->id.'\' LIMIT 1');
+        $res = \Skies::$db->query('SELECT * FROM `'.TBL_PRE.'session` WHERE `sessionID` = \''.\escape($this->id).'\'');
 
         if($res->num_rows != 1) {
 
@@ -132,7 +130,7 @@ class Session {
                      * Update DB
                      */
 
-                    $query = 'UPDATE '.TBL_PRE.'session SET `sessionLastActivity` = '.NOW.', `sessionIP` = \''.\escape($this->ip).'\' WHERE sessionID = \''.\escape($this->id).'\'';
+                    $query = 'UPDATE '.TBL_PRE.'session SET `sessionLastActivity` = '.NOW.' WHERE sessionID = \''.\escape($this->id).'\'';
 
                     \Skies::$db->query($query);
 
@@ -154,14 +152,15 @@ class Session {
     /**
      * Change the user ID of this session
      *
-     * @param int $userID User ID
+     * @param int  $userID User ID
+     * @param bool $long   Long session?
      *
      * @return bool Success?
      */
-    public function login($userID) {
+    public function login($userID, $long = false) {
 
         // Write it into the DB
-        $query = 'UPDATE '.TBL_PRE.'session SET `sessionUserID` = '.\escape($userID).' WHERE `sessionID` = \''.\escape($this->id).'\'';
+        $query = 'UPDATE '.TBL_PRE.'session SET `sessionLong` = '.($long == true ? '1' : '0').', `sessionUserID` = '.\escape($userID).' WHERE `sessionID` = \''.\escape($this->id).'\'';
 
         // Some checks
         if(\Skies::$db->query($query) === false) {
@@ -187,7 +186,7 @@ class Session {
         }
 
         // Write it into the DB
-        $query = 'UPDATE '.TBL_PRE.'session SET `sessionUserID` = '.\escape(GUEST_ID).' WHERE `sessionID` = \''.\escape($this->id).'\'';
+        $query = 'UPDATE '.TBL_PRE.'session SET `sessionUserID` = NULL WHERE `sessionID` = \''.\escape($this->id).'\'';
 
         // Some checks
         if(\Skies::$db->query($query) === false) {

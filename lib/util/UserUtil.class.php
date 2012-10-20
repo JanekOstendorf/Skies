@@ -304,7 +304,13 @@ class UserUtil {
         }
 
         // Crypt the password
-        $password = self::makePass($user_password);
+        if(!empty($user_password))
+            $password = self::makePass($user_password);
+        else {
+            $password = new \stdClass();
+            $password->password = '';
+            $password->salt = '';
+        }
 
         if($password === false) {
             return false;
@@ -325,6 +331,97 @@ class UserUtil {
 
         // Fetch user object
         return new \skies\system\user\User(self::usernameToID($user_name));
+
+    }
+
+    /**
+     * Sets the data value for the given dataField and userID. Creates the dataField if not exist.
+     *
+     * @param int $userID User's ID
+     * @param string $data Data field's name
+     * @param string $value Value to set
+     *
+     * @return bool Success?
+     */
+    public static function setData($userID, $data, $value) {
+
+        if($userID == null)
+            return false;
+
+        // Does this dataField exist?
+        $query = 'SELECT * FROM `'.TBL_PRE.'user-fields` WHERE `fieldName` = \''.\escape($data).'\'';
+        $result = \Skies::$db->query($query);
+
+
+        // No, create it
+        if($result->num_rows != 1) {
+
+            $query = 'INSERT INTO `'.TBL_PRE.'user-fields` (`fieldName`) VALUES (\''.\escape($data).'\')';
+            if(\Skies::$db->query($query) === false)
+                return false;
+
+            $fieldID = \Skies::$db->insert_id;
+
+        }
+        else
+            $fieldID = $result->fetch_array(MYSQLI_ASSOC)['fieldID'];
+
+        // Is there already an data entry?
+        // No
+        if(is_null(self::getData($userID, $data))) {
+
+            $query = 'INSERT INTO `'.TBL_PRE.'user-data` (`dataFieldID`, `dataUserID`, `dataValue`)
+                    VALUES('.\escape($fieldID).',
+                           '.\escape($userID).',
+                           \''.\escape($value).'\')';
+
+        }
+        // Yes
+        else {
+
+            $query = 'UPDATE `'.TBL_PRE.'user-data` SET `dataValue` = \''.\escape($value).'\' WHERE `dataUserID` = '.\escape($userID).' AND `dataFieldID` = '.\escape($fieldID);
+
+        }
+
+        // Save
+        return \Skies::$db->query($query) === true;
+
+    }
+
+    /**
+     * Get the data field for one user
+     *
+     * @param int $userID User's ID
+     * @param string $data Data field name
+     *
+     * @return mixed|null Null if there is no value. Else the value.
+     */
+    public static function getData($userID, $data) {
+
+        if($userID == null)
+            return null;
+
+        $query = 'SELECT * FROM `'.TBL_PRE.'user-data` INNER JOIN `'.TBL_PRE.'user-fields` ON `dataFieldID` = `fieldID` WHERE `fieldName` = \''.\escape($data).'\' AND `dataUserID` = '.escape($userID);
+        $result = \Skies::$db->query($query);
+
+        if($result->num_rows != 1)
+            return null;
+        else
+            return $result->fetch_array(MYSQLI_ASSOC)['dataValue'];
+
+
+    }
+
+    public static function mail_utf8($to, $from_user, $from_email, $subject = '(No subject)', $message = '') {
+
+        $from_user = "=?UTF-8?B?".base64_encode($from_user)."?=";
+        $subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+
+        $headers = "From: $from_user <$from_email>\r\n".
+            "MIME-Version: 1.0" . "\r\n" .
+            "Content-type: text/html; charset=UTF-8" . "\r\n";
+
+        return mail($to, $subject, $message, $headers, '-r '.$from_email);
 
     }
 

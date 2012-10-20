@@ -176,6 +176,7 @@ a, a:visited {
     -moz-transition: text-shadow 0.1s, color 0.1s;
     -webkit-transition: text-shadow 0.1s, color 0.1s;
     -o-transition: text-shadow 0.1s, color 0.1s;
+    border: none;
 }
 
 a:hover {
@@ -184,6 +185,10 @@ a:hover {
 
 a:active {
     color: #000000;
+}
+
+a img {
+    border: none;
 }
 
 tt {
@@ -203,7 +208,7 @@ hr {
     border-bottom: 1px solid rgb(230, 230, 230);
 }
 
-#content hr {
+#content > hr {
 
     margin: 30px -20px 10px -20px;
 
@@ -324,4 +329,13 @@ table tr.header th, table thead tr th {
     font-family: 'URW Gothic L', sans-serif;
     font-size: 130%;
     font-weight: normal;
+}
+
+table tr.sum {
+    border-top: 3px double rgb(230, 230, 230);
+}
+
+table tr.sum td {
+    color: #000;
+    font-weight: bold;
 }

@@ -19,7 +19,7 @@ define('VERSION', '0.1');
 define('TBL_PRE', '');
 
 // Guest ID for settings-handling
-define('GUEST_ID', 0);
+define('GUEST_ID', null);
 
 // Cookie prefix
 define('COOKIE_PRE', 'skies_');

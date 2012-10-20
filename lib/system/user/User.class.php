@@ -32,7 +32,7 @@ class User {
     protected $mail;
 
     /**
-     * Array holding custom data about this user
+     * Array holding custom data about this user. (buffer)
      *
      * @var array
      */
@@ -55,15 +55,6 @@ class User {
             $this->id = $data['userID'];
             $this->name = $data['userName'];
             $this->mail = $data['userMail'];
-
-            // Fetch custom data
-            $result = \Skies::$db->query('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldID` = `fieldID` WHERE `dataUserID` = '.escape($userID));
-
-            while($line = $result->fetch_array(MYSQLI_ASSOC)) {
-
-                $this->data[$line['fieldName']] = $line['dataValue'];
-
-            }
 
         }
 
@@ -95,6 +86,9 @@ class User {
             WHERE `userID` = '.escape($this->id);
 
         \Skies::$db->query($query);
+
+        // Delete cache
+        $this->data = [];
 
         // Fetch stuff again
         $this->__construct($this->id);
@@ -141,15 +135,6 @@ class User {
     }
 
     /**
-     * @return string User's custom data
-     */
-    public function getData() {
-
-        return $this->data;
-
-    }
-
-    /**
      * Changes user's user name
      *
      * @param string $name User name
@@ -171,6 +156,57 @@ class User {
 
     }
 
+    /**
+     * Changes the user's password
+     *
+     * @param string $password Plain text password
+     *
+     * @return bool Success?
+     */
+    public function setPassword($password) {
+
+        $pwObj = \skies\util\UserUtil::makePass($password);
+
+        $query = 'UPDATE `'.TBL_PRE.'user` SET `userPassword` = \''.escape($pwObj->password).'\', `userSalt` = \''.escape($pwObj->salt).'\' WHERE `userID` = '.escape($this->id);
+
+        return \Skies::$db->query($query);
+
+    }
+
+    /**
+     * Sets the dataField for this user
+     *
+     * @param string $data Data field name
+     * @param mixed $value Value to set
+     *
+     * @return bool Success?
+     */
+    public function setData($data, $value) {
+
+        if(!\skies\util\UserUtil::setData($this->getId(), $data, $value))
+            return false;
+
+        $this->data[$data] = $value;
+
+        return true;
+
+    }
+
+    /**
+     * Get the data field for this user
+     *
+     * @param string $data Data field name
+     *
+     * @return mixed|null Null if there is no value. Else the value.
+     */
+    public function getData($data) {
+
+        if(isset($this->data[$data]))
+            return $this->data[$data];
+
+        return \skies\util\UserUtil::getData($this->id, $data);
+
+    }
 
 }
 

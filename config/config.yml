@@ -25,3 +25,6 @@ defaultPage: home
 
 # Default time zone
 defaultTimezone: Europe/Berlin
+
+# Are users allowed to register?
+registration: false

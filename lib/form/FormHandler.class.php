@@ -148,7 +148,8 @@ class FormHandler {
 
         foreach($data as $current) {
 
-            $data[$current['name']] = $this->request[$current['name']];
+            if(isset($this->request[$current['name']]))
+                $data[$current['name']] = $this->request[$current['name']];
 
         }
 

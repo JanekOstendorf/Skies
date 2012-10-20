@@ -147,7 +147,7 @@ class Form {
             $buffer .= $indent.'<tr class="nohover">'."\n";
             $buffer .= $indent.'    <td><label for="'.$id.'">'.$array['description'].(!empty($array['description']) ? ':' : '').'</label></td>'."\n";
 
-            $buffer .= $indent.'    <td><input class="full-width"';
+            $buffer .= $indent.'    <td><input '.($array['htmlType'] != 'class="checkbox" ' ? 'full-width' : '');
 
             // Attributes
             $buffer .= ' type="'.$array['htmlType'].'"';
