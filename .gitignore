@@ -1,2 +1,4 @@
 .idea/
 lib/config.inc.php
+log/*
+config/config.yml

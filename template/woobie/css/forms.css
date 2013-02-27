@@ -8,79 +8,87 @@
 
 input[type="button"], input[type="reset"], input[type="submit"], button {
 
-    background: #fd8315;
-    /* #fd4920 to #fd8315 */
-    background: -moz-linear-gradient(top, #fd8315 0%, #fd4920 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fd8315), color-stop(100%, #fd4920));
-    background: -webkit-linear-gradient(top, #fd8315 0%, #fd4920 100%);
-    background: -o-linear-gradient(top, #fd8315 0%, #fd4920 100%);
-    background: -ms-linear-gradient(top, #fd8315 0%, #fd4920 100%);
-    background: linear-gradient(top, #fd8315 0%, #fd4920 100%);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.3) inset !important;
-    color: #FFFFFF;
-    padding: 3px 8px;
-    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6);
-    border-radius: 3px;
-    border: 0;
-    cursor: pointer;
-    -moz-transition: background 0.1s, text-shadow 0.1s;
-    -webkit-transition: background 0.1s, text-shadow 0.1s;
-    -o-transition: background 0.1s, text-shadow 0.1s;
-    transition: background 0.1s, text-shadow 0.1s;
+	background: #fd8315;
+	/* #fd4920 to #fd8315 */
+	background: -moz-linear-gradient(top, #fd8315 0%, #fd4920 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fd8315), color-stop(100%, #fd4920));
+	background: -webkit-linear-gradient(top, #fd8315 0%, #fd4920 100%);
+	background: -o-linear-gradient(top, #fd8315 0%, #fd4920 100%);
+	background: -ms-linear-gradient(top, #fd8315 0%, #fd4920 100%);
+	background: linear-gradient(top, #fd8315 0%, #fd4920 100%);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.3) inset !important;
+	color: #FFFFFF;
+	padding: 3px 8px;
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6);
+	border-radius: 3px;
+	border: 0;
+	cursor: pointer;
+	-moz-transition: background 0.1s, text-shadow 0.1s;
+	-webkit-transition: background 0.1s, text-shadow 0.1s;
+	-o-transition: background 0.1s, text-shadow 0.1s;
+	transition: background 0.1s, text-shadow 0.1s;
 
 }
 
 input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, button:hover {
 
-    background: #fd4920;
-    background: -moz-linear-gradient(top, #fd4920 0%, #fd8315 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fd4920), color-stop(100%, #fd8315));
-    background: -webkit-linear-gradient(top, #fd4920 0%, #fd8315 100%);
-    background: -o-linear-gradient(top, #fd4920 0%, #fd8315 100%);
-    background: -ms-linear-gradient(top, #fd4920 0%, #fd8315 100%);
-    background: linear-gradient(top, #fd4920 0%, #fd8315 100%);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+	background: #fd4920;
+	background: -moz-linear-gradient(top, #fd4920 0%, #fd8315 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fd4920), color-stop(100%, #fd8315));
+	background: -webkit-linear-gradient(top, #fd4920 0%, #fd8315 100%);
+	background: -o-linear-gradient(top, #fd4920 0%, #fd8315 100%);
+	background: -ms-linear-gradient(top, #fd4920 0%, #fd8315 100%);
+	background: linear-gradient(top, #fd4920 0%, #fd8315 100%);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 
 }
 
 /* Text fields */
 input[type="text"], input[type="password"], input[type="email"], textarea {
 
-    border: 1px solid rgb(220, 220, 220);
-    padding: 2px 5px;
+	border: 1px solid rgb(220, 220, 220);
+	padding: 2px 5px;
 
-    background: rgb(245, 245, 245);
-    background: -moz-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(240, 240, 240)), color-stop(100%, rgb(255, 255, 255)));
-    background: -webkit-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
-    background: -o-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
-    background: -ms-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
-    background: linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
+	background: rgb(245, 245, 245);
+	background: -moz-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(240, 240, 240)), color-stop(100%, rgb(255, 255, 255)));
+	background: -webkit-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
+	background: -o-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
+	background: -ms-linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
+	background: linear-gradient(top, rgb(240, 240, 240) 0%, rgb(255, 255, 255) 100%);
 
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
 
-    -moz-transition: border 0.1s, box-shadow 0.1s;
-    -webkit-transition: border 0.1s, box-shadow 0.1s;
-    -o-transition: border 0.1s, box-shadow 0.1s;
-    transition: border 0.1s, box-shadow 0.1s;
+	-moz-transition: border 0.1s, box-shadow 0.1s;
+	-webkit-transition: border 0.1s, box-shadow 0.1s;
+	-o-transition: border 0.1s, box-shadow 0.1s;
+	transition: border 0.1s, box-shadow 0.1s;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 
 }
 
 textarea {
 
-    background: -moz-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(250, 250, 250)), color-stop(100%, rgb(255, 255, 255)));
-    background: -webkit-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
-    background: -o-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
-    background: -ms-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
-    background: linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+	background: -moz-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(250, 250, 250)), color-stop(100%, rgb(255, 255, 255)));
+	background: -webkit-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+	background: -o-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+	background: -ms-linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+	background: linear-gradient(top, rgb(250, 250, 250) 0%, rgb(255, 255, 255) 100%);
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 
 }
 
 input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, textarea:focus {
 
-    border: 1px solid rgba(253, 131, 32, .7);
+	border: 1px solid rgba(253, 131, 32, .7);
 
-    box-shadow: 0 0 2px 2px rgba(253, 131, 32, .7), inset 0 0 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 2px 2px rgba(253, 131, 32, .7), inset 0 0 4px rgba(0, 0, 0, 0.1);
 
 }

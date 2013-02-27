@@ -10,48 +10,48 @@ namespace skies\system\template;
  */
 class Message {
 
-    /**
-     * The variable the different types will be saved in
-     *
-     * @var array
-     */
-    private $store;
+	/**
+	 * The variable the different types will be saved in
+	 *
+	 * @var array
+	 */
+	private $store;
 
-    /**
-     * Control variable
-     *
-     * @var int
-     */
-    private $i;
+	/**
+	 * Control variable
+	 *
+	 * @var int
+	 */
+	private $i;
 
-    /**
-     * Style of the message to be printed
-     *
-     * @var string
-     */
-    private $style;
+	/**
+	 * Style of the message to be printed
+	 *
+	 * @var string
+	 */
+	private $style;
 
-    /**#@+
-     * Constants for identifing
-     */
-    const NOTICE = 1;
+	/**#@+
+	 * Constants for identifing
+	 */
+	const NOTICE = 1;
 
-    const SUCCESS = 2;
+	const SUCCESS = 2;
 
-    const ERROR = 3;
+	const ERROR = 3;
 
-    /**#@-*/
+	/**#@-*/
 
-    /**
-     * Reads the style file and creates the message object
-     *
-     * @param string $css_class CSS class of the message block
-     *
-     * @return \skies\system\template\Message
-     */
-    public function __construct($css_class) {
+	/**
+	 * Reads the style file and creates the message object
+	 *
+	 * @param string $css_class CSS class of the message block
+	 *
+	 * @return \skies\system\template\Message
+	 */
+	public function __construct($css_class) {
 
-        $this->style = <<<HTML
+		$this->style = <<<HTML
 
 <div class="%css_class%">
     %message%
@@ -59,84 +59,84 @@ class Message {
 
 HTML;
 
-        $this->style = str_replace('%css_class%', $css_class, $this->style);
+		$this->style = str_replace('%css_class%', $css_class, $this->style);
 
 
-        $this->i = 0;
-        $this->store = array();
+		$this->i     = 0;
+		$this->store = array();
 
-        return true;
+		return true;
 
-    }
+	}
 
-    /**
-     * Adds a message to the store variable
-     *
-     * @param string $msg      Message
-     * @param array  $userVars Custom variables. See \skies\system\language\Language::replaceVars()
-     *
-     * @return int|bool ID of the new message or false
-     */
-    public function add($msg, $userVars = []) {
+	/**
+	 * Adds a message to the store variable
+	 *
+	 * @param string $msg      Message
+	 * @param array  $userVars Custom variables. See \skies\system\language\Language::replaceVars()
+	 *
+	 * @return int|bool ID of the new message or false
+	 */
+	public function add($msg, $userVars = []) {
 
-        if(!is_string($msg)) {
-            return false;
-        }
+		if(!is_string($msg)) {
+			return false;
+		}
 
-        $this->store[$this->i] = \Skies::$language->replaceVars($msg, $userVars);
+		$this->store[$this->i] = \Skies::$language->replaceVars($msg, $userVars);
 
-        return $this->i++;
+		return $this->i++;
 
-    }
+	}
 
-    /**
-     * Deletes the message with the ID $id from the storage variable
-     *
-     * @param int $id Message ID
-     *
-     * @return bool
-     */
-    public function del($id) {
+	/**
+	 * Deletes the message with the ID $id from the storage variable
+	 *
+	 * @param int $id Message ID
+	 *
+	 * @return bool
+	 */
+	public function del($id) {
 
-        if(!isset($this->store[$id])) {
-            return false;
-        }
+		if(!isset($this->store[$id])) {
+			return false;
+		}
 
-        unset($this->store[$id]);
+		unset($this->store[$id]);
 
-        return true;
+		return true;
 
-    }
+	}
 
-    /**
-     * Prints all messages of this object
-     */
-    public function printMessages() {
+	/**
+	 * Prints all messages of this object
+	 */
+	public function printMessages() {
 
-        foreach($this->store as $id => $msg) {
+		foreach($this->store as $id => $msg) {
 
-            echo str_ireplace("%message%", $msg, $this->style);
+			echo str_ireplace("%message%", $msg, $this->style);
 
-            unset($this->store[$id]);
+			unset($this->store[$id]);
 
-        }
+		}
 
-    }
+	}
 
-    /**
-     * @static
-     *
-     * Prints all messages
-     */
-    public static function printAll() {
+	/**
+	 * @static
+	 *
+	 * Prints all messages
+	 */
+	public static function printAll() {
 
-        foreach(\Skies::$message as $message) {
+		foreach(\Skies::$message as $message) {
 
-            $message->printMessages();
+			$message->printMessages();
 
-        }
+		}
 
-    }
+	}
 
 }
 

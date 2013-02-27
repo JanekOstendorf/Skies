@@ -71,14 +71,18 @@ class Navigation {
 
         while($line = $result->fetch_array(MYSQLI_ASSOC)) {
 
+            if(!$this->entryAllowed($line)) {
+                continue;
+            }
+
             $this->entries[] = [
 
-                'id' => $line['entryID'],
-                'order' => $line['entryOrder'],
-                'pageID' => $line['entryPageID'],
-                'link' => $line['entryLink'],
-                'title' => $line['entryTitle'],
-                'type' => $line['entryType'],
+                'id'       => $line['entryID'],
+                'order'    => $line['entryOrder'],
+                'pageID'   => $line['entryPageID'],
+                'link'     => $line['entryLink'],
+                'title'    => $line['entryTitle'],
+                'type'     => $line['entryType'],
                 'pageName' => $line['entryPageName']
 
             ];
@@ -179,7 +183,7 @@ class Navigation {
 
         $buffer .= (new \skies\form\LoginForm())->returnHTML();
 
-       $buffer .= '
+        $buffer .= '
     </div>
     <!-- End login field -->
 
@@ -189,6 +193,23 @@ class Navigation {
 
         echo $buffer;
 
+
+    }
+
+    private function entryAllowed($line) {
+
+
+        if($line['entryNeedAdmin'] == 1 && \Skies::$user->getData('isAdmin') != 1)
+            return false;
+
+        if($line['entryNeedLeader'] == 1 && \Skies::$user->getData('isLeader') != 1)
+            return false;
+
+        if($line['entryNeedLogin'] == 1 && \Skies::$user->isGuest())
+            return false;
+
+
+        return true;
 
     }
 

@@ -5,15 +5,15 @@
 */
 
 html, body {
-    height: 100%;
+	height: 100%;
 
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
 
-    background-color: rgb(250, 250, 250);
+	background: rgb(250, 250, 250) url(../images/cardboard_flat-bright.png) repeat;
 
-    font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 /*
@@ -22,59 +22,64 @@ html, body {
 
 #wrapper {
 
-    position: relative;
-    min-height: 100%;
-    width: 80%;
-    min-width: 800px;
-    background-color: #ffffff;
-    margin: 0 auto;
-    padding: 0;
+	position: relative;
+	min-height: 100%;
+	width: 80%;
+	min-width: 800px;
+	background-color: #ffffff;
+	margin: 0 auto;
+	padding: 0;
 
-    z-index: 100;
+	z-index: 100;
 
-    border-left: 1px solid rgb(230, 230, 230);
-    border-right: 1px solid rgb(230, 230, 230);
+	border-left: 1px solid rgb(230, 230, 230);
+	border-right: 1px solid rgb(230, 230, 230);
 
-    box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
+	box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
+	-webkit-box-shadow: 8px 0 10px rgba(0, 0, 0, 0.05), -8px 0 10px rgba(0, 0, 0, 0.05);
 }
 
 #logo {
-    height: 180px;
-    margin: auto auto;
-    background: #fff url("../images/logo.png") center center no-repeat;
+	height: 180px;
+	margin: auto auto;
+	background: #fff;
+	text-align: center;
+}
+
+#logo  img {
+	padding: 15px 0;
 }
 
 #content {
-    padding: 20px 20px 50px;
-    background: #fff;
-    font-size: 12px;
+	padding: 20px 20px 50px;
+	background: #fff;
+	font-size: 12px;
 }
 
 #footer-wrapper {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    bottom: 0;
-    width: 100%;
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	bottom: 0;
+	width: 100%;
 }
 
 #footer {
 
-    padding: 8px 20px;
-    background-color: rgb(250, 250, 250);
-    border-top: 1px solid rgb(230, 230, 230);
-    font-size: 11px;
-    text-align: center;
+	padding: 8px 20px;
+	background-color: rgb(250, 250, 250);
+	border-top: 1px solid rgb(230, 230, 230);
+	font-size: 11px;
+	text-align: center;
 
 }
 
 /* Some stuff for positioning the footer */
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 /*
@@ -82,29 +87,31 @@ html, body {
  */
 
 .clear {
-    clear: both;
-    margin: 0;
-    padding: 0;
+	clear: both;
+	margin: 0;
+	padding: 0;
 }
 
 .strong {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 .full-width {
-    width: 100%;
+	width: 100%;
 }
 
 .full-height {
-    height: 100%;
+	height: 100%;
 }
 
 .float-left {
-    float: left;
+	display: block;
+	float: left;
 }
 
 .float-right {
-    float: right;
+	display: block;
+	float: right;
 }
 
 /*
@@ -113,55 +120,63 @@ html, body {
 
 h1, h2, h3, h4 {
 
-    font-family: "Ubuntu-L", sans-serif;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    transition: text-shadow 0.1s;
-    -moz-transition: text-shadow 0.1s;
-    -webkit-transition: text-shadow 0.1s;
-    -o-transition: text-shadow 0.1s;
+	font-family: "Ubuntu-L", sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: none;
+	text-align: left;
+	transition: text-shadow 0.1s;
+	-moz-transition: text-shadow 0.1s;
+	-webkit-transition: text-shadow 0.1s;
+	-o-transition: text-shadow 0.1s;
 
 }
 
 h1:hover, h2:hover, h3:hover, h4:hover {
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 h1, h2 {
 
-    background: rgb(250, 250, 250) url('../images/header-right.png') repeat-y right top;
-    border-top: 1px solid rgb(230, 230, 230);
-    border-bottom: 1px solid rgb(230, 230, 230);
-    margin: 30px -20px 10px -20px;
-    padding: 4px 20px;
+	background: rgb(250, 250, 250) url('../images/header-right.png') repeat-y right top;
+	border-top: 1px solid rgb(230, 230, 230);
+	border-bottom: 1px solid rgb(230, 230, 230);
+	padding: 4px 10px;
 
 }
 
 h3, h4 {
 
-    border-bottom: 1px solid rgb(230, 230, 230);
-    margin: 30px -20px 10px -20px;
-    padding: 4px 20px;
+	border-bottom: 1px solid rgb(230, 230, 230);
+	padding: 4px 10px;
 
+}
+
+#content > h1, #content > h2, #content > h3, #content > h4,
+	#content > form > h1, #content > form > h2, #content > form > h3, #content > form > h4 {
+	margin: 30px -20px 10px -20px;
+	padding: 4px 20px;
 }
 
 h1 {
-    font-size: 200%;
-    font-variant: small-caps;
+	font-size: 200%;
+	font-variant: small-caps;
 }
 
 h2, h3 {
-    font-size: 160%;
+	font-size: 160%;
 }
 
 h3 {
-    font-variant: small-caps;
+	font-variant: small-caps;
 }
 
 h4 {
-    font-size: 120%;
+	font-size: 120%;
+}
+
+small, .small {
+	font-size: 0.8em;
 }
 
 /*
@@ -170,32 +185,35 @@ h4 {
 
 /* Links */
 a, a:visited {
-    text-decoration: none;
-    color: #fd4920;
-    transition: text-shadow 0.1s, color 0.1s;
-    -moz-transition: text-shadow 0.1s, color 0.1s;
-    -webkit-transition: text-shadow 0.1s, color 0.1s;
-    -o-transition: text-shadow 0.1s, color 0.1s;
-    border: none;
+	text-decoration: none;
+	color: #fd4920;
+	transition: text-shadow 0.1s, color 0.1s;
+	-moz-transition: text-shadow 0.1s, color 0.1s;
+	-webkit-transition: text-shadow 0.1s, color 0.1s;
+	-o-transition: text-shadow 0.1s, color 0.1s;
+	border: none;
 }
 
 a:hover {
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
+	text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
 }
 
 a:active {
-    color: #000000;
+	color: #000000;
 }
 
 a img {
-    border: none;
+
+	border: none;
+
 }
 
-tt {
-    display: inline;
-    padding: 0 2px;
-    background: rgb(250, 250, 250);
-    border: 1px solid rgb(230, 230, 230);
+tt, .tt {
+	display: inline;
+	padding: 0 2px;
+	background: rgb(250, 250, 250);
+	border: 1px solid rgb(230, 230, 230);
+	font-family: monospace;
 }
 
 /*
@@ -203,83 +221,87 @@ tt {
  */
 
 hr {
-    height: 0;
-    border: none;
-    border-bottom: 1px solid rgb(230, 230, 230);
+	height: 0;
+	border: none;
+	border-bottom: 1px solid rgb(230, 230, 230);
 }
 
 #content > hr {
 
-    margin: 30px -20px 10px -20px;
+	margin: 30px -20px 10px -20px;
 
+}
+
+#content p, #content li {
+	line-height: 1.5em;
 }
 
 .error, .success, .notice {
 
-    min-width: 250px;
-    margin: 10px 5px;
-    padding: 15px 15px 15px 40px;
-    transition: box-shadow 0.3s;
-    -moz-transition: box-shadow 0.3s;
-    -webkit-transition: box-shadow 0.3s;
-    -o-transition: box-shadow 0.3s;
+	min-width: 250px;
+	margin: 10px 5px;
+	padding: 15px 15px 15px 40px;
+	transition: box-shadow 0.3s;
+	-moz-transition: box-shadow 0.3s;
+	-webkit-transition: box-shadow 0.3s;
+	-o-transition: box-shadow 0.3s;
 
 }
 
 .error:hover, .success:hover, .notice:hover {
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 
 }
 
 .error {
-    border: 1px solid #c96161;
-    background: #ffadad url('../images/icons/cross.png') no-repeat 15px center;
+	border: 1px solid #c96161;
+	background: #ffadad url('../images/icons/cross.png') no-repeat 15px center;
 }
 
 .success {
-    border: 1px solid #89c961;
-    background: #cdffad url('../images/icons/tick.png') no-repeat 15px center;
+	border: 1px solid #89c961;
+	background: #cdffad url('../images/icons/tick.png') no-repeat 15px center;
 }
 
 .notice {
-    border: 1px solid #d2cb81;
-    background: #fff79d url('../images/icons/notice.png') no-repeat 15px center;
+	border: 1px solid #d2cb81;
+	background: #fff79d url('../images/icons/notice.png') no-repeat 15px center;
 }
 
 pre, blockquote {
 
-    margin: 10px 5px;
-    padding: 10px;
-    background: rgb(250, 250, 250) url('../images/header-right.png') repeat-y right top;
-    border: 1px solid rgb(230, 230, 230);
-    transition: box-shadow 0.3s;
-    -moz-transition: box-shadow 0.3s;
-    -webkit-transition: box-shadow 0.3s;
-    -o-transition: box-shadow 0.3s;
+	margin: 10px 5px;
+	padding: 10px;
+	background: rgb(250, 250, 250) url('../images/header-right.png') repeat-y right top;
+	border: 1px solid rgb(230, 230, 230);
+	transition: box-shadow 0.3s;
+	-moz-transition: box-shadow 0.3s;
+	-webkit-transition: box-shadow 0.3s;
+	-o-transition: box-shadow 0.3s;
 
 }
 
 pre:hover, blockquote:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 fieldset {
-    border: 1px solid rgb(230, 230, 230);
-    margin: 10px 5px;
-    padding: 10px;
+	border: 1px solid rgb(230, 230, 230);
+	margin: 10px 5px;
+	padding: 10px;
 }
 
 fieldset > legend {
 
-    font-family: "Ubuntu", sans-serif;
+	font-family: "Ubuntu-L", sans-serif;
 
-    font-weight: normal;
-    font-size: 11pt;
+	font-weight: normal;
+	font-size: 11pt;
 
-    border: 1px solid rgb(230, 230, 230);
-    background: rgb(250, 250, 250);
-    padding: 2px 5px;
+	border: 1px solid rgb(230, 230, 230);
+	background: rgb(250, 250, 250);
+	padding: 2px 5px;
 
 }
 
@@ -288,54 +310,61 @@ fieldset > legend {
  */
 
 table {
-    border: none;
-    font-family: Arial, Helvetiva, sans-serif;
-    font-size: 12px;
-    border-collapse: collapse;
+	border: none;
+	font-family: Arial, Helvetiva, sans-serif;
+	font-size: 12px;
+	border-collapse: collapse;
 }
 
 table th, table td {
-    padding: 4px;
-    border: none;
-    vertical-align: text-top;
+	padding: 4px;
+	border: none;
+	vertical-align: text-top;
 }
 
 table tr {
-    background: none;
-    transition: background 0.3s;
-    -moz-transition: background 0.3s;
-    -webkit-transition: background 0.3s;
-    -o-transition: background 0.3s;
+	background: none;
+	transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	-webkit-transition: background 0.3s;
+	-o-transition: background 0.3s;
 }
 
 table tr:hover {
-    background: rgb(240, 240, 240);
+	background: rgb(240, 240, 240);
 }
 
 table tr:hover.nohover {
-    background: none;
+	background: none;
 }
 
 table th {
-    padding-bottom: 2px;
+	padding-bottom: 2px;
 }
 
 table tr.header, table thead tr {
-    border-bottom: 1px solid rgb(230, 230, 230)
+	border-bottom: 1px solid rgb(230, 230, 230)
 }
 
 table tr.header th, table thead tr th {
-    color: #000;
-    font-family: 'URW Gothic L', sans-serif;
-    font-size: 130%;
-    font-weight: normal;
+	color: #000;
+	font-family: "Ubuntu-L", sans-serif;
+	font-size: 130%;
+	font-weight: normal;
+	text-align: left;
 }
 
 table tr.sum {
-    border-top: 3px double rgb(230, 230, 230);
+	border-top: 3px double rgb(230, 230, 230)
 }
 
 table tr.sum td {
-    color: #000;
-    font-weight: bold;
+	color: #000;
+	font-weight: bold;
+}
+
+table td ul > li {
+
+	margin-left: 5px;
+
 }

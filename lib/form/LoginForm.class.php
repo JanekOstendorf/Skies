@@ -10,85 +10,85 @@ namespace skies\form;
  */
 class LoginForm {
 
-    /**
-     * Language variable for the login message
-     */
-    const LANGVAR_LOGIN = 'system.loginform.login';
+	/**
+	 * Language variable for the login message
+	 */
+	const LANGVAR_LOGIN = 'system.loginform.login';
 
-    /**
-     * Language variable for the logout message
-     */
-    const LANGVAR_LOGOUT = 'system.loginform.logout';
+	/**
+	 * Language variable for the logout message
+	 */
+	const LANGVAR_LOGOUT = 'system.loginform.logout';
 
-    /**
-     * The user, dammit
-     *
-     * @var \skies\system\user\User
-     */
-    protected $user = null;
+	/**
+	 * The user, dammit
+	 *
+	 * @var \skies\system\user\User
+	 */
+	protected $user = null;
 
-    /**
-     * Buffer
-     *
-     * @var string
-     */
-    protected $output;
+	/**
+	 * Buffer
+	 *
+	 * @var string
+	 */
+	protected $output;
 
-    /**
-     * Do it! Print the LoginForm
-     */
-    public function __construct() {
+	/**
+	 * Do it! Print the LoginForm
+	 */
+	public function __construct() {
 
-        // Fetch user
-        $this->user =& \Skies::$user;
+		// Fetch user
+		$this->user =& \Skies::$user;
 
-        // Buffer
-        $this->output = '';
+		// Buffer
+		$this->output = '';
 
-        /*
-         * User is NOT logged in
-         */
-        if($this->user->isGuest()) {
+		/*
+		 * User is NOT logged in
+		 */
+		if($this->user->isGuest()) {
 
-            $loginLink = '<a id="link" href="'.SUBDIR.'/login" id="link-login">{{system.page.login.login}}</a>';
+			$loginLink = '<a id="link" href="'.SUBDIR.'/login" id="link-login">{{system.page.login.login}}</a>';
 
-            $this->output .= \Skies::$language->get(self::LANGVAR_LOGIN, ['link-login' => $loginLink]);
+			$this->output .= \Skies::$language->get(self::LANGVAR_LOGIN, ['link-login' => $loginLink]);
 
-        }
-        /*
-         * User IS logged in
-         */
-        else {
+		}
+		/*
+		 * User IS logged in
+		 */
+		else {
 
-            $logoutLink = '<a id="link" href="'.SUBDIR.'/login/logout">{{system.page.login.logout}}</a>';
+			$logoutLink = '<a id="link" href="'.SUBDIR.'/login/logout">{{system.page.login.logout}}</a>';
 
-            $this->output .= \Skies::$language->get(self::LANGVAR_LOGOUT, ['userName' => $this->user->getName(), 'link-logout' => $logoutLink]);
+			$this->output .= \Skies::$language->get(self::LANGVAR_LOGOUT, ['userName' => $this->user->getName(), 'link-logout' => $logoutLink]);
 
-        }
+		}
 
-    }
+	}
 
-    /**
-     * Prints the form
-     *
-     * @return int
-     */
-    public function show() {
+	/**
+	 * Prints the form
+	 *
+	 * @return int
+	 */
+	public function show() {
 
-        return print($this->output);
+		return print($this->output);
 
-    }
+	}
 
-    /**
-     * Returns the HTML of the form
-     *
-     * @return string
-     */
-    public function returnHtml() {
+	/**
+	 * Returns the HTML of the form
+	 *
+	 * @return string
+	 */
+	public function returnHtml() {
 
-        return $this->output;
+		return $this->output;
 
-    }
+	}
 
 }
 

@@ -7,23 +7,6 @@
 /* Ubuntu */
 
 @font-face {
-    font-family: "Ubuntu";
-    src: url('../fonts/Ubuntu-R.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "Ubuntu";
-    font-weight: bold;
-    src: url('../fonts/Ubuntu-B.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "Ubuntu-L";
-    src: url('../fonts/Ubuntu-L.ttf') format("truetype");
-}
-
-/* URW Gothic L */
-@font-face {
-    font-family: "URC Gothic L";
-    src: url('../fonts/urw-gothic-l.ttf') format("truetype");
+	font-family: "Ubuntu-L";
+	src: url('../fonts/Ubuntu-L.ttf') format("truetype");
 }

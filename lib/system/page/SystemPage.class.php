@@ -10,56 +10,56 @@ namespace skies\system\page;
  */
 class SystemPage extends FilePage {
 
-    /**
-     * Init the system page
-     *
-     * @param string $name Page name
-     */
-    public function __construct($name) {
+	/**
+	 * Init the system page
+	 *
+	 * @param string $name Page name
+	 */
+	public function __construct($name) {
 
-        $this->data = [];
+		$this->data = [];
 
-        $this->title = \Skies::$language->get('system.page.'.$name.'.title');
-        $this->name = $name;
-        $this->php = true;
+		$this->title = \Skies::$language->get('system.page.'.$name.'.title');
+		$this->name  = $name;
+		$this->php   = true;
 
-        $this->onInit();
+		$this->onInit();
 
-    }
+	}
 
-    /**
-     * Stuff to do after __construct and init
-     *
-     * @return void
-     */
-    protected function onInit() {
+	/**
+	 * Stuff to do after __construct and init
+	 *
+	 * @return void
+	 */
+	protected function onInit() {
 
-        $this->file = 'system/'.$this->name.'.page.php';
-        $this->incFile = $this->name.'.page.inc.php';
+		$this->file    = 'system/'.$this->name.'.page.php';
+		$this->incFile = $this->name.'.page.inc.php';
 
-    }
+	}
 
-    /**
-     * Shows the page content
-     *
-     * @return void
-     */
-    public function show() {
+	/**
+	 * Shows the page content
+	 *
+	 * @return void
+	 */
+	public function show() {
 
-        parent::show();
+		parent::show();
 
-    }
+	}
 
-    /**
-     * Gets the full path to the include file
-     *
-     * @return string|bool Full path to the include file or false if there is no include file
-     */
-    public function getIncFile() {
+	/**
+	 * Gets the full path to the include file
+	 *
+	 * @return string|bool Full path to the include file or false if there is no include file
+	 */
+	public function getIncFile() {
 
-        return ROOT_DIR.'/page/system/include/'.$this->incFile;
+		return ROOT_DIR.'/page/system/include/'.$this->incFile;
 
-    }
+	}
 
 
 }

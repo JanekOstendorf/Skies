@@ -11,15 +11,15 @@ namespace skies\system\page;
 
 class PageTypes {
 
-    /**
-     * Page is read from a file
-     */
-    const FILE = 1;
+	/**
+	 * Page is read from a file
+	 */
+	const FILE = 1;
 
-    /**
-     * Page is read from the DB
-     */
-    const DB = 2;
+	/**
+	 * Page is read from the DB
+	 */
+	const DB = 2;
 
 }
 

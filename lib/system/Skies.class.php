@@ -8,16 +8,17 @@ require_once ROOT_DIR.'/lib/system_functions.inc.php';
 
 // Performance reasons ...
 define('NOW', time());
+define('MICRONOW', microtime());
 
 // set exception handler
 set_exception_handler(['\Skies', 'handleException']);
 
 // set php error handler
 if(DEBUG) {
-    error_reporting(E_ALL);
+	error_reporting(E_ALL);
 }
 else {
-    error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL ^ E_NOTICE);
 }
 
 set_error_handler(['\Skies', 'handleError'], E_ALL);
@@ -30,18 +31,17 @@ spl_autoload_register(['\Skies', 'autoload']);
  */
 
 use skies\system\database\MySQL;
+use skies\system\page\SystemPages;
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
 use skies\system\template\Template;
-use skies\system\page\PageTypes;
 use skies\system\page\DBPage;
 use skies\system\page\FilePage;
 use skies\system\page\SystemPage;
 use skies\system\template\Message;
 
 use skies\util\spyc;
-use skies\util\PageUtil;
 use skies\util\SessionUtil;
 
 /**
@@ -52,336 +52,326 @@ use skies\util\SessionUtil;
  */
 class Skies {
 
-    /**
-     * MySQL handler
+	/**
+	 * MySQL handler
+	 *
+	 * @var \skies\system\database\Database
+	 */
+	public static $db = null;
+
+	/**
+	 * Session handler
+	 *
+	 * @var \skies\system\user\Session
+	 */
+	public static $session = null;
+
+	/**
+	 * Current user
+	 *
+	 * @var \skies\system\user\User
+	 */
+	public static $user = null;
+
+	/**
+	 * Default language defined in the config file
+	 *
+	 * @var \skies\system\language\Language
+	 */
+	public static $defLanguage = null;
+
+	/**
+	 * Language of this user
+	 *
+	 * @var \skies\system\language\Language
+	 */
+	public static $language = null;
+
+	/**
+	 * Configuration array
+	 *
+	 * @var array<string|array>
+	 */
+	public static $config = null;
+
+	/**
+	 * Currently used template
+	 *
+	 * @var \skies\system\template\Template
+	 */
+	public static $template = null;
+
+	/**
+	 * Array of Message objects
+	 *
+	 * @var \skies\system\template\Message[]
+	 */
+	public static $message = [];
+
+	/**
+	 * Current page
+	 *
+	 * @var \skies\system\page\DBPage|\skies\system\page\FilePage
+	 */
+	public static $page = null;
+
+	/**
+	 * Initialize Skies
+	 */
+	public function __construct() {
+
+		$this->initConfig();
+		$this->initMysql();
+		$this->initSession();
+		$this->initLanguage();
+		$this->initTemplate();
+		$this->initPage();
+
+		$this->afterInit();
+
+		$this->initSession();
+
+		$this->showTemplate();
+
+	}
+
+	/**#@+
+	 * Init function
+	 */
+
+	/**
+	 * Connect to the MySQL server
      *
-     * @var \skies\system\database\MySQL
-     */
-    public static $db = null;
-
-    /**
-     * Session handler
-     *
-     * @var \skies\system\user\Session
-     */
-    public static $session = null;
-
-    /**
-     * Current user
-     *
-     * @var \skies\system\user\User
-     */
-    public static $user = null;
-
-    /**
-     * Default language defined in the config file
-     *
-     * @var \skies\system\language\Language
-     */
-    public static $defLanguage = null;
-
-    /**
-     * Language of this user
-     *
-     * @var \skies\system\language\Language
-     */
-    public static $language = null;
-
-    /**
-     * Configuration array
-     *
-     * @var array<string|array>
-     */
-    public static $config = null;
-
-    /**
-     * Currently used template
-     *
-     * @var \skies\system\template\Template
-     */
-    public static $template = null;
-
-    /**
-     * Array of Message objects
-     *
-     * @var array<\skies\system\template\Message>
-     */
-    public static $message = [];
-
-    /**
-     * Current page
-     *
-     * @var \skies\system\page\DBPage|\skies\system\page\FilePage
-     */
-    public static $page = null;
-
-    /**
-     * Initialize Skies
-     */
-    public function __construct() {
-
-        $this->initConfig();
-        $this->initMysql();
-        $this->initSession();
-        $this->initLanguage();
-        $this->initTemplate();
-        $this->initPage();
-
-        $this->afterInit();
-
-        $this->showTemplate();
-
-    }
-
-    /**#@+
-     * Init function
-     */
-
-    /**
-     * Connect to the MySQL server
-     */
-    private function initMysql() {
-
-        // NULL values
-        $dbHost = $dbUser = $dbPassword = $dbName = '';
-
-        // Fetch configuration
-        require_once ROOT_DIR.'/lib/config.inc.php';
+     * @throws \skies\system\exception\SystemException
+	 */
+	private function initMysql() {
 
-        self::$db = new skies\system\database\MySQL($dbHost, $dbUser, $dbPassword, $dbName);
+		// NULL values
+		$dbHost = $dbUser = $dbPassword = $dbName = '';
 
-    }
+        $dbType = 'skies\system\database\MysqlDatabase';
 
-    /**
-     * Initialize the session
-     */
-    private function initSession() {
+		// Fetch configuration
+		require_once ROOT_DIR.'/lib/config.inc.php';
 
-        // Do some clean ups
-        \skies\util\SessionUtil::cleanUp();
+		self::$db = new $dbType($dbHost, $dbUser, $dbPassword, $dbName);
 
-        self::$session = new skies\system\user\Session();
+        if(!self::$db instanceof \skies\system\database\Database || !self::$db->isSupported())
+            throw new \skies\system\exception\SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
 
-        self::$user = self::$session->getUser();
+	}
 
-    }
+	/**
+	 * Initialize the session
+	 */
+	private function initSession() {
 
-    /**
-     * Read the config
-     *
-     * @throws skies\system\exception\SystemException
-     */
-    private function initConfig() {
+		// Do some clean ups
+		\skies\util\SessionUtil::cleanUp();
 
-        self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
+		self::$session = new skies\system\user\Session();
 
-        if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'/config/config.yml') {
-            throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
-        }
+		self::$user = self::$session->getUser();
 
-        date_default_timezone_set(self::$config['defaultTimezone']);
+	}
 
-        /**#@+
-         * Config dependant constants
-         */
+	/**
+	 * Read the config
+	 *
+	 * @throws skies\system\exception\SystemException
+	 */
+	private function initConfig() {
 
-        /**
-         * Subdirectory for relative paths (mainly URLs)
-         */
-        define('SUBDIR', self::$config['subdir']);
+		self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
 
-        /**#@-*/
-    }
+		if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'/config/config.yml') {
+			throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
+		}
 
-    /**
-     * Initialize the language objects
-     */
-    private function initLanguage() {
+		date_default_timezone_set(self::$config['defaultTimezone']);
 
-        $query = 'SELECT * FROM '.TBL_PRE.'language WHERE langName = \''.\escape(self::$config['defaultLanguage']).'\'';
+		/**#@+
+		 * Config dependant constants
+		 */
 
-        self::$language = self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
+		/**
+		 * Subdirectory for relative paths (mainly URLs)
+		 */
+		define('SUBDIR', self::$config['subdir']);
 
-        // TODO: get this from user's data
-        //self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
+		/**#@-*/
+	}
 
-    }
+	/**
+	 * Initialize the language objects
+	 */
+	private function initLanguage() {
 
-    /**
-     * Initialize the template
-     */
-    private function initTemplate() {
+		$query = 'SELECT * FROM '.TBL_PRE.'language WHERE langName = \''.\escape(self::$config['defaultLanguage']).'\'';
 
-        // TODO: Get used template from user - if configured.
-        self::$template = new \skies\system\template\Template(self::$config['defaultTemplate']);
+		self::$language = self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
 
-        /**#@+
-         * Message objects
-         *
-         * @var \skies\system\template\Message
-         */
-        self::$message['error'] = new \skies\system\template\Message('error');
-        self::$message['notice'] = new \skies\system\template\Message('notice');
-        self::$message['success'] = new \skies\system\template\Message('success');
-        /**#@-*/
+		// TODO: get this from user's data
+		//self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
 
-    }
+	}
 
-    /**
-     * Initialize the current page
-     */
-    private function initPage() {
+	/**
+	 * Initialize the template
+	 */
+	private function initTemplate() {
 
-        $page_name = (isset($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']);
+		// TODO: Get used template from user - if configured.
+		self::$template = new \skies\system\template\Template(self::$config['defaultTemplate']);
 
-        $page_id = \skies\util\PageUtil::getIDFromName($page_name);
+		/**#@+
+		 * Message objects
+		 *
+		 * @var \skies\system\template\Message
+		 */
+		self::$message['error']   = new \skies\system\template\Message('error');
+		self::$message['notice']  = new \skies\system\template\Message('notice');
+		self::$message['success'] = new \skies\system\template\Message('success');
+		/**#@-*/
 
-        // If we get -1 back (system page)
-        if($page_id == -1) {
+	}
 
-            self::$page = new \skies\system\page\SystemPage($page_name);
+	/**
+	 * Initialize the current page
+	 */
+	private function initPage() {
 
-        }
-        else {
+		// Parse GET arguments
+		if(isset($_GET['__0'])) {
 
-            // Get the type of the page
-            switch(\skies\util\PageUtil::getTypeFromID($page_id)) {
+			$args = explode('/', $_GET['__0']);
 
-                case \skies\system\page\PageTypes::DB:
+			$i = 0;
 
-                    self::$page = new \skies\system\page\DBPage($page_id);
+			foreach($args as $cur_arg) {
 
-                    break;
+				$_GET['_'.$i++] = $cur_arg;
 
+			}
 
-                case \skies\system\page\PageTypes::FILE:
+		}
 
-                    self::$page = new \skies\system\page\FilePage($page_id);
+		$page_name = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
 
-                    break;
+		if(SystemPages::isSystemPage($page_name)) {
 
-            }
+			self::$page = new \skies\system\page\SystemPage($page_name);
 
-            // TODO: Make a nicer 404
-            if(!is_object(self::$page)) {
-                throw new \skies\system\exception\SystemException('404!', 404, '404!');
-            }
+		}
+		else {
 
-        }
+			// We do not have any other type here
+			self::$page = new \skies\system\page\FilePage($page_name);
 
-    }
+			// TODO: Make a nicer 404
+			if(!is_object(self::$page)) {
+				throw new \skies\system\exception\SystemException('404!', 404, '404!');
+			}
 
-    /**#@-*/
+		}
 
-    /**
-     * Performs routines to be called after all initializations
-     */
-    private function afterInit() {
+	}
 
-        // Parse GET arguments
-        if(isset($_GET['_1'])) {
+	/**#@-*/
 
-            $args = explode('/', $_GET['_1']);
+	/**
+	 * Performs routines to be called after all initializations
+	 */
+	private function afterInit() {
 
-            $i = 0;
+				// Page includes
+		if(self::$page instanceof \skies\system\page\FilePage) {
 
-            foreach($args as $cur_arg) {
+			self::$page->includeIncFile();
 
-                $_GET['_'.++$i] = $cur_arg;
+		}
 
+	}
 
-            }
+	/**
+	 * Print the template
+	 */
+	private function showTemplate() {
 
-        }
+		self::$template->printTemplate();
 
-        // Page includes
-        if(self::$page instanceof \skies\system\page\FilePage) {
+	}
 
-            self::$page->includeIncFile();
+	/**
+	 * Handle our Exceptions
+	 *
+	 * @static
+	 *
+	 * @param \Exception $e
+	 */
+	public static final function handleException(\Exception $e) {
 
-        }
+		if($e instanceof skies\system\exception\SystemException) {
 
-    }
+			$e->show();
+			exit;
 
-    /**
-     * Print the template
-     */
-    private function showTemplate() {
+		}
 
-        self::$template->printTemplate();
+		// repack Exception
+		self::handleException(new skies\system\exception\SystemException($e->getMessage(), $e->getCode(), '', $e));
+	}
 
-    }
+	/**
+	 * Catches php errors and throws instead a system exception.
+	 *
+	 * @param    integer        $errorNo
+	 * @param    string         $message
+	 * @param    string         $filename
+	 * @param    integer        $lineNo
+	 *
+	 * @throws skies\system\exception\SystemException
+	 */
+	public static final function handleError($errorNo, $message, $filename, $lineNo) {
 
-    /**
-     * Handle our Exceptions
-     *
-     * @static
-     *
-     * @param \Exception $e
-     */
-    public static final function handleException(\Exception $e) {
+		if(error_reporting() != 0) {
+			$type = 'error';
+			switch($errorNo) {
+				case 2:
+					$type = 'warning';
+					break;
+				case 8:
+					$type = 'notice';
+					break;
+			}
 
-        if($e instanceof skies\system\exception\SystemException) {
+			throw new skies\system\exception\SystemException('PHP '.$type.' in file '.$filename.' ('.$lineNo.'): '.$message, 0);
+		}
+	}
 
-            $e->show();
-            exit;
+	/**
+	 * Includes the required util or exception classes automatically.
+	 *
+	 * @param     string        $className
+	 *
+	 * @see        spl_autoload_register()
+	 */
+	public static final function autoload($className) {
 
-        }
+		$namespaces = explode('\\', $className);
 
-        // repack Exception
-        self::handleException(new skies\system\exception\SystemException($e->getMessage(), $e->getCode(), '', $e));
-    }
+		// Is it a valid import?
+		if(array_shift($namespaces) == 'skies') {
 
-    /**
-     * Catches php errors and throws instead a system exception.
-     *
-     * @param    integer        $errorNo
-     * @param    string         $message
-     * @param    string         $filename
-     * @param    integer        $lineNo
-     *
-     * @throws skies\system\exception\SystemException
-     */
-    public static final function handleError($errorNo, $message, $filename, $lineNo) {
+			$classPath = ROOT_DIR.'/lib/'.implode('/', $namespaces).'.class.php';
 
-        if(error_reporting() != 0) {
-            $type = 'error';
-            switch($errorNo) {
-                case 2:
-                    $type = 'warning';
-                    break;
-                case 8:
-                    $type = 'notice';
-                    break;
-            }
+			if(file_exists($classPath)) {
+				require_once($classPath);
+			}
 
-            throw new skies\system\exception\SystemException('PHP '.$type.' in file '.$filename.' ('.$lineNo.'): '.$message, 0);
-        }
-    }
+		}
 
-    /**
-     * Includes the required util or exception classes automatically.
-     *
-     * @param     string        $className
-     *
-     * @see        spl_autoload_register()
-     */
-    public static final function autoload($className) {
-
-        $namespaces = explode('\\', $className);
-
-        // Is it a valid import?
-        if(array_shift($namespaces) == 'skies') {
-
-            $classPath = ROOT_DIR.'/lib/'.implode('/', $namespaces).'.class.php';
-
-            if(file_exists($classPath)) {
-                require_once($classPath);
-            }
-
-        }
-
-    }
+	}
 
 }
 

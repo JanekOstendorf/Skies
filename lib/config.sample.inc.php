@@ -1,6 +1,7 @@
 <?php
-$dbHost = 'localhost';
-$dbUser = 'skies';
+$dbHost     = 'localhost';
+$dbUser     = 'skies';
 $dbPassword = '';
-$dbName = 'skies';
+$dbName     = 'skies';
+$dvType     = 'skies\system\database\MysqlDatabase';
 ?>

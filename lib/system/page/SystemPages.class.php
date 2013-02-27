@@ -11,39 +11,39 @@ namespace skies\system\page;
 
 class SystemPages {
 
-    protected static $systemPages = [
+	protected static $systemPages = [
 
-        'login',
-        'register'
+		'login',
+		'register'
 
-    ];
+	];
 
-    /**
-     * Check if this page is a system page
-     *
-     * @static
-     *
-     * @param string $page_name Page name
-     *
-     * @return bool Is this page a system page?
-     */
-    public static function isSystemPage($page_name) {
+	/**
+	 * Check if this page is a system page
+	 *
+	 * @static
+	 *
+	 * @param string $page_name Page name
+	 *
+	 * @return bool Is this page a system page?
+	 */
+	public static function isSystemPage($page_name) {
 
-        return in_array($page_name, self::$systemPages);
+		return in_array($page_name, self::$systemPages);
 
-    }
+	}
 
-    /**
-     * Get the list of system pages
-     *
-     * @static
-     * @return array List of system pages
-     */
-    public static function getSystemPages() {
+	/**
+	 * Get the list of system pages
+	 *
+	 * @static
+	 * @return array List of system pages
+	 */
+	public static function getSystemPages() {
 
-        return self::$systemPages;
+		return self::$systemPages;
 
-    }
+	}
 
 
 }

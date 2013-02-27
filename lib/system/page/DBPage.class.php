@@ -10,44 +10,44 @@ namespace skies\system\page;
  */
 class DBPage extends Page {
 
-    /**
-     * Content of the page
-     *
-     * @var string
-     */
-    protected $content;
+	/**
+	 * Content of the page
+	 *
+	 * @var string
+	 */
+	protected $content;
 
-    protected function onInit() {
+	protected function onInit() {
 
-        $this->content = $this->data['pageContent'];
+		$this->content = $this->data['pageContent'];
 
-    }
+	}
 
 
-    /**
-     * Shows the page content
-     *
-     * @throws \skies\system\exception\SystemException
-     * @return void
-     */
-    public function show() {
+	/**
+	 * Shows the page content
+	 *
+	 * @throws \skies\system\exception\SystemException
+	 * @return void
+	 */
+	public function show() {
 
-        if($this->php) {
+		if($this->php) {
 
-            if(@eval($this->content) === false) {
+			if(@eval($this->content) === false) {
 
-                throw new \skies\system\exception\SystemException('Error in the page "'.$this->name.'"', 0, 'PHP error in the content of the page "'.$this->name.'" (ID: '.$this->id.').');
+				throw new \skies\system\exception\SystemException('Error in the page "'.$this->name.'"', 0, 'PHP error in the content of the page "'.$this->name.'" (ID: '.$this->id.').');
 
-            }
+			}
 
-        }
-        else {
+		}
+		else {
 
-            return print($this->content);
+			return print($this->content);
 
-        }
+		}
 
-    }
+	}
 
 }
 
