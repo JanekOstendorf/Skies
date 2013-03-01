@@ -3,6 +3,7 @@
 namespace skies\system\navigation;
 
 use skies\system\navigation\EntryTypes;
+use skies\util\PageUtil;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -51,29 +52,24 @@ class Navigation {
         $this->id = $id;
 
         // Data about this nav
-        $query = 'SELECT * FROM '.TBL_PRE.'nav WHERE `navID` = '.\escape($this->id);
+        $query = \Skies::$db->prepare('SELECT * FROM `nav` WHERE `navID` = :id');
+		$query->execute([':id' => $this->id]);
 
-        $navResult = \Skies::$db->query($query);
-
-        if($navResult->num_rows != 1) {
+        if($query->rowCount() != 1) {
 
             return false;
 
         }
 
-        $this->title = $navResult->fetch_array(MYSQLI_ASSOC)['navTitle'];
+        $this->title = $query->fetchArray()['navTitle'];
 
 
         // Entries
-        $query = 'SELECT * FROM `'.TBL_PRE.'nav-entry` WHERE `navID` = '.\escape($this->id).' ORDER BY `entryOrder` ASC';
+        $entryQuery = \Skies::$db->prepare('SELECT * FROM `nav-entry` WHERE `navID` = :id ORDER BY `entryOrder` ASC');
 
-        $result = \Skies::$db->query($query);
+        $entryQuery->execute([':id' => $this->id]);
 
-        while($line = $result->fetch_array(MYSQLI_ASSOC)) {
-
-            if(!$this->entryAllowed($line)) {
-                continue;
-            }
+        while($line = $entryQuery->fetchArray()) {
 
             $this->entries[] = [
 
@@ -130,7 +126,7 @@ class Navigation {
                     }
 
                     // Make the link
-                    $link = SUBDIR.'/'.\skies\util\PageUtil::gerNameFromID($entry['pageID']);
+                    $link = SUBDIR.'/'.PageUtil::getNameFromId($entry['pageID']);
 
                     break;
 
@@ -193,23 +189,6 @@ class Navigation {
 
         echo $buffer;
 
-
-    }
-
-    private function entryAllowed($line) {
-
-
-        if($line['entryNeedAdmin'] == 1 && \Skies::$user->getData('isAdmin') != 1)
-            return false;
-
-        if($line['entryNeedLeader'] == 1 && \Skies::$user->getData('isLeader') != 1)
-            return false;
-
-        if($line['entryNeedLogin'] == 1 && \Skies::$user->isGuest())
-            return false;
-
-
-        return true;
 
     }
 

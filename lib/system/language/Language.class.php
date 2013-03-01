@@ -61,9 +61,10 @@ class Language {
 	public function __construct($id, $default = false) {
 
 		// Fetch info
-		$query = 'SELECT * FROM '.TBL_PRE.'language WHERE `langID` = '.\escape($id);
+		$query = \Skies::$db->prepare('SELECT * FROM `language` WHERE `langID` = :id');
+		$query->execute([':id' => $id]);
 
-		$data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);
+		$data = $query->fetchArray();
 
 		$this->name  = $data['langName'];
 		$this->title = $data['langTitle'];
@@ -117,18 +118,17 @@ class Language {
 	 */
 	protected function getDB($var) {
 
-		$query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE langID = '.\escape($this->id).' AND varName = \''.\escape($var).'\'';
+		$query = \Skies::$db->prepare('SELECT * FROM `language-data` WHERE `langID` = :id AND `varName` = :var');
+		$query->execute([':id' => $this->id, ':var' => $var]);
 
-		$result = \Skies::$db->query($query);
-
-		if($result->num_rows == 0 && !$this->default) {
+		if($query->rowCount() == 0 && !$this->default) {
 
 			return \Skies::$defLanguage->get($var);
 
 		}
-		elseif($result->num_rows == 1) {
+		elseif($query->rowCount() == 1) {
 
-			return $result->fetch_array(MYSQLI_ASSOC)['varData'];
+			return $query->fetchArray()['varData'];
 
 		}
 		else {

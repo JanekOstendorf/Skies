@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `language` (
 -- Daten für Tabelle `language`
 --
 
-INSERT INTO `language` (`langID`, `langName`, `langTitle`, `langDesc`) VALUES
+INSERT INTO `language` (langId, `langName`, `langTitle`, `langDesc`) VALUES
 (1, 'en-UK', 'British English', 'British English'),
 (2, 'de-DE', 'Deutsch (Deutschland)', 'Deutsch (Deutschland)');
 
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 -- Daten für Tabelle `session`
 --
 
-INSERT INTO `session` (`sessionID`, `sessionUserID`, `sessionIP`, `sessionLastActivity`, `sessionLong`) VALUES
+INSERT INTO `session` (sessionId, sessionUserId, sessionIp, `sessionLastActivity`, `sessionLong`) VALUES
 ('e160cac11b7e61875f7777d5b0aa3d655180e0eb', 113, '::ffff:5b60:ab42', 1359312029, 0);
 
 -- --------------------------------------------------------

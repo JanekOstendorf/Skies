@@ -33,8 +33,8 @@ class FilePage extends Page {
 
 	protected function onInit() {
 
-		$this->file    = $this->data['file'];
-		$this->incFile = $this->data['incFile'];
+		$this->file    = $this->data['pageFile'];
+		$this->incFile = $this->data['pageIncFile'];
 
 	}
 

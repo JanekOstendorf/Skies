@@ -31,7 +31,7 @@ class MysqlDatabase extends Database {
 			$this->pdo = new \PDO($dsn, $this->user, $this->password, $options);
 		}
 		catch(\PDOException $e) {
-			throw new DatabaseException('Failed to connect to the MySQL server.', $this);
+			throw new DatabaseException("Connecting to MySQL server '".$this->host."' failed:\n".$e->getMessage(), $this);
 		}
 
 	}

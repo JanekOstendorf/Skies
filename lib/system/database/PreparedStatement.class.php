@@ -81,9 +81,9 @@ class PreparedStatement {
 
 	/**
 	 * Executes the prepared statement
-	 *
 	 * @param array $parameters Parameters for the execution
 	 * @throws DatabaseException
+	 * @return void
 	 */
 	public function execute($parameters = []) {
 

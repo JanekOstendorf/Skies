@@ -41,6 +41,7 @@ use skies\system\page\FilePage;
 use skies\system\page\SystemPage;
 use skies\system\template\Message;
 
+use skies\util\LanguageUtil;
 use skies\util\spyc;
 use skies\util\SessionUtil;
 
@@ -121,7 +122,7 @@ class Skies {
 	public function __construct() {
 
 		$this->initConfig();
-		$this->initMysql();
+		$this->initDb();
 		$this->initSession();
 		$this->initLanguage();
 		$this->initTemplate();
@@ -144,17 +145,17 @@ class Skies {
      *
      * @throws \skies\system\exception\SystemException
 	 */
-	private function initMysql() {
+	private function initDb() {
 
 		// NULL values
 		$dbHost = $dbUser = $dbPassword = $dbName = '';
-
+		$dbPort = 0;
         $dbType = 'skies\system\database\MysqlDatabase';
 
 		// Fetch configuration
 		require_once ROOT_DIR.'/lib/config.inc.php';
 
-		self::$db = new $dbType($dbHost, $dbUser, $dbPassword, $dbName);
+		self::$db = new $dbType($dbHost, $dbUser, $dbPassword, $dbName, $dbPort);
 
         if(!self::$db instanceof \skies\system\database\Database || !self::$db->isSupported())
             throw new \skies\system\exception\SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
@@ -207,9 +208,7 @@ class Skies {
 	 */
 	private function initLanguage() {
 
-		$query = 'SELECT * FROM '.TBL_PRE.'language WHERE langName = \''.\escape(self::$config['defaultLanguage']).'\'';
-
-		self::$language = self::$defLanguage = new \skies\system\language\Language(self::$db->query($query)->fetch_array()['langID'], true);
+		self::$language = self::$defLanguage = LanguageUtil::getDefaultLanguage();
 
 		// TODO: get this from user's data
 		//self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
@@ -258,15 +257,33 @@ class Skies {
 
 		$page_name = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
 
-		if(SystemPages::isSystemPage($page_name)) {
+		$page_id = \skies\util\PageUtil::getIdFromName($page_name);
+
+		// If we get -1 back (system page)
+		if($page_id == -1) {
 
 			self::$page = new \skies\system\page\SystemPage($page_name);
 
 		}
 		else {
 
-			// We do not have any other type here
-			self::$page = new \skies\system\page\FilePage($page_name);
+			// Get the type of the page
+			switch(\skies\util\PageUtil::getTypeFromId($page_id)) {
+
+				case \skies\system\page\PageTypes::DB:
+
+					self::$page = new \skies\system\page\DBPage($page_id);
+
+					break;
+
+
+				case \skies\system\page\PageTypes::FILE:
+
+					self::$page = new \skies\system\page\FilePage($page_id);
+
+					break;
+
+			}
 
 			// TODO: Make a nicer 404
 			if(!is_object(self::$page)) {
@@ -370,6 +387,17 @@ class Skies {
 			}
 
 		}
+
+	}
+
+	/**
+	 * Is Skies in debug mode?
+	 *
+	 * @return bool
+	 */
+	public static final function isDebugMode() {
+
+		return (DEBUG == true);
 
 	}
 

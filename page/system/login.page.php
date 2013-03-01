@@ -149,7 +149,7 @@ else {
 </p>
 <p>
 	Diese E-Mail Adresse benutzen wir:
-	<span class="tt"><?=\skies\util\StringUtil::encodeHTML(\Skies::$user->getMail())?></span>
+	<span class="tt"><?=\skies\util\StringUtil::encodeHtml(\Skies::$user->getMail())?></span>
 </p>
 
 

@@ -7,21 +7,19 @@
  */
 
 // Debug
-define('DEBUG', false);
+define('DEBUG', true);
 
 // Show full query in exceptions
-define('DEBUG_MYSQL', false);
+define('DEBUG_MYSQL', true);
 
 // Version
 define('VERSION', '0.2');
-
-// Database table prefix
-define('TBL_PRE', '');
 
 // Guest ID for settings-handling
 define('GUEST_ID', null);
 
 // Cookie prefix
-define('COOKIE_PRE', 'der-lan_');
+define('COOKIE_PRE', 'skies_');
 
-?>
+// End of line
+define('EOL', "\n");

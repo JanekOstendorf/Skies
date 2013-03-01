@@ -19,7 +19,7 @@ class StringUtil {
 	 *
 	 * @return string
 	 */
-	public static function encodeHTML($string) {
+	public static function encodeHtml($string) {
 
 		if(is_object($string)) {
 			$string = $string->__toString();
@@ -78,11 +78,9 @@ class StringUtil {
 
 	/**
 	 * Generate a string of spaces of defined length.
-	 *     *
-	 *
-	 * @static
 	 *
 	 * @param int $indent Number of spaces to generate
+	 * @return string
 	 */
 	public static function getIndent($indent) {
 

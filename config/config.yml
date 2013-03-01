@@ -8,11 +8,11 @@
 meta:
 
     # Title of the website
-    title: Der LAN
+    title: Skies
 
 # Subdirectory on the webserver
 # Example: 'http://test.skies.net/Skies' is the Skies URL. In this case, '/Skies' is the subdir
-subdir: ''
+subdir: '/Skies'
 
 # Default language
 defaultLanguage: de-DE
@@ -28,103 +28,3 @@ defaultTimezone: Europe/Berlin
 
 # Are normal users allowed to login?
 allowNormalLogin: true
-
-# Force SSL
-forceSSL: false
-
-## LAN STUFF ##
-lan:
-
-    # Local version?
-    local: false
-
-    # Counter variable (i)
-    count: 4
-
-    # Maximum number of attendants
-    maximum: 30
-
-    # Size of teams. WITHOUT THE LEADER
-    teamSize: 5
-
-    # Full price
-    price: 13
-
-    # Reduced price
-    priceReduced: 10
-
-    # Time and date
-    date:
-        hour: 16
-        minute: 0
-        day: 28
-        month: 6
-        year: 2013
-
-    # End of the partey
-    end:
-        hour: 12
-        minute: 0
-        day: 29
-        month: 6
-        year: 2013
-
-# Name of the mail sender
-mailName: Peta-LAN
-
-# Address of the sender
-mailAddress: einladung@der-lan.de
-
-# Subject of the invitation mail
-mailSubject: Einladung zu Der Peta-LAN
-
-# Link to register. The token will be appended
-tokenLink: https://der-lan.de/zusagen/accept/
-
-# Mail text
-mailText: |
-    <html>
-        <head>
-            <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        </head>
-        <body>
-
-            Hallo %name%,<br />
-
-            <p>hiermit erhältst Du deine Einladung zu Der %prefix%-LAN. Diese findet</p>
-            <ul>
-                <li>am %date%</li>
-
-                <li>in der Ökonomie am Konvent der Dominikaner in Vechta (Dominikanerweg 45)</li>
-            </ul>
-
-            <p>statt. Die Kosten betragen %price%€ (für Pizza, Getränke, etc.).<br />
-            Bitte bringe zur LAN deinen PC/Laptop inkl. Bildschirm, Maus, Tastatur, evtl. Headset und die dazugehörigen Kabel mit.
-            </p>
-            <p>
-                Falls Du nicht vorhast, durchzuzocken, denk an eine Luftmatratze und einen Schlafsack (Übernachtung in den 5 Sterne Räumlichkeiten der Ökonomie sind gratis).
-            </p>
-
-
-            <p>
-                Falls Du vorhast zu kommen, melde dich bitte umgehend an. Benutze dazu den unten stehenden Link. Auf dieser Website musst Du nur einen Haken setzen, schon hast du dich angemeldet.
-                <br />
-                Die 10€ kannst Du einfach einem aus unserem Organisationsteam (Arne, Florian, Markus, Janek, Jan-Philipp, Tobias) geben.
-            </p>
-
-            <p>
-                Alles weitere findest Du auf der Website.
-            </p>
-
-            <a href="%link%">%link%</a>
-            <br />
-            <br />
-            <br />
-            -- Der LAN Organisationsteam
-
-            <p>
-                PS: Dies ist eine automatisch gesendete Mail, Du brauchst nicht auf sie zu antworten.
-            </p>
-
-        </body>
-    </html>

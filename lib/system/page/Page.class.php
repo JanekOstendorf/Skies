@@ -52,16 +52,15 @@ abstract class Page {
      */
     public function __construct($id) {
 
-        $query = 'SELECT * FROM '.TBL_PRE.'page WHERE pageID = '.\escape($id);
+        $query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageID` = :id');
+	    $query->execute([':id' => $id]);
 
-        $result = \Skies::$db->query($query);
-
-        if($result->num_rows != 1 || $result === false) {
+        if($query->rowCount() != 1) {
             // TODO: Add 404 error
             return false;
         }
 
-        $this->data = $result->fetch_array(MYSQLI_ASSOC);
+        $this->data = $query->fetchArray();
 
         // Set stuff
         $this->id         = $id;

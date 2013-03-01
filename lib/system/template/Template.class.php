@@ -174,7 +174,7 @@ class Template {
 		// Indent string
 		$indent_str = \skies\util\StringUtil::getIndent($indent);
 
-		echo $indent_str.'<link rel="shortcut icon" type="'.\skies\util\StringUtil::encodeHTML($this->config['fav_mime']).'" href="'.$this->getTemplateDirURL().'/'.$this->config['favicon'].'" />'."\n";
+		echo $indent_str.'<link rel="shortcut icon" type="'.\skies\util\StringUtil::encodeHtml($this->config['fav_mime']).'" href="'.SUBDIR.'/images/'.$this->config['favicon'].'" />'."\n";
 
 	}
 
@@ -196,7 +196,7 @@ class Template {
 				continue;
 			}
 
-			$buffer .= $indent_str.'<meta name="'.\skies\util\StringUtil::encodeHTML($key).'" content="'.\skies\util\StringUtil::encodeHTML($content).'" />'."\n";
+			$buffer .= $indent_str.'<meta name="'.\skies\util\StringUtil::encodeHtml($key).'" content="'.\skies\util\StringUtil::encodeHtml($content).'" />'."\n";
 
 		}
 
@@ -214,7 +214,7 @@ class Template {
 		// Indent string
 		$indent_str = \skies\util\StringUtil::getIndent($indent);
 
-		echo $indent_str.'<title>'.\skies\util\StringUtil::encodeHTML(\Skies::$config['meta']['title']).' &middot; '.\skies\util\StringUtil::encodeHTML(\Skies::$page->getTitle()).'</title>'."\n";
+		echo $indent_str.'<title>'.\skies\util\StringUtil::encodeHtml(\Skies::$config['meta']['title']).' &middot; '.\skies\util\StringUtil::encodeHtml(\Skies::$page->getTitle()).'</title>'."\n";
 
 	}
 
