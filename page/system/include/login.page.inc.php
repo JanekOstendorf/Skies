@@ -20,11 +20,22 @@ $page->store['loginForm'] = new skies\form\Form();
 
 $page->store['loginForm']->addInput('username', \Skies::$language->get('system.page.login.username'), true);
 $page->store['loginForm']->addInput('password', \Skies::$language->get('system.page.login.password'), true, 'password');
-$page->store['loginForm']->addInput('longLogin', 'Angemeldet bleiben', false, 'checkbox');
 $page->store['loginForm']->addInput('login', \Skies::$language->get('system.page.login.login'), false, 'submit');
 
 /** @var $loginFormHandler \skies\form\FormHandler */
 $loginFormHandler = $page->store['loginForm']->getHandler();
+
+// Sing up
+$page->store['signUpForm'] = new skies\form\Form();
+
+$page->store['signUpForm']->addInput('username_sign-up', \Skies::$language->get('system.page.login.username'), true);
+$page->store['signUpForm']->addInput('mail', \Skies::$language->get('system.page.login.register.mail'), true, 'text', \skies\util\UserUtil::MAIL_PATTERN);
+$page->store['signUpForm']->addInput('password1', \Skies::$language->get('system.page.login.register.password-twice'), true, 'password');
+$page->store['signUpForm']->addInput('password2', '', true, 'password');
+$page->store['signUpForm']->addInput('sign-up', \Skies::$language->get('system.page.login.sign-up'), false, 'submit');
+
+/** @var $signUpFormHandler \skies\form\FormHandler */
+$signUpFormHandler = $page->store['signUpForm']->getHandler();
 
 // Logout
 $page->store['logoutForm'] = new skies\form\Form();
@@ -34,16 +45,8 @@ $page->store['logoutForm']->addInput('logout', \Skies::$language->get('system.pa
 /** @var $logoutFormHandler \skies\form\FormHandler */
 $logoutFormHandler = $page->store['logoutForm']->getHandler();
 
-// Change password
-$page->store['changePassword'] = new skies\form\Form();
 
-$page->store['changePassword']->addInput('password1', 'Passwort (zweimal)', true, 'password');
-$page->store['changePassword']->addInput('password2', null, true, 'password');
-$page->store['changePassword']->addInput('changePassword', 'Passwort ändern', false, 'submit');
-
-/** @var $changePasswordHandler \skies\form\FormHandler */
-$changePasswordHandler = $page->store['changePassword']->getHandler();
-
+\Skies::$message['notice']->add('Please don\'t try to register or login, this page is not finished yet and you might mess up the whole system :O');
 
 /*
  * Which form has been submitted?
@@ -63,26 +66,14 @@ if($loginFormHandler->isSubmitted()) {
 		if(\skies\util\UserUtil::checkPassword($data['password'], $userID)) {
 
 			$user = new \skies\system\user\User($userID);
-			if($user->isAdmin() || !\Skies::$config['allowNormalLogin'] == false) {
 
-				if(\Skies::$session->login($user->getId(), isset($data['longLogin'])) !== false) {
+			if(!\Skies::$session->login($user->getId())) {
 
-					\Skies::$message['success']->add('{{system.page.login.login.success}}', ['userName' => $user->getName()]);
-
-					// For the LAN, redirect to the accept page
-					header('Location: '.SUBDIR.'/zusagen');
-					exit;
-
-				}
-				else {
-					\Skies::$message['error']->add('{{system.page.login.error}}');
-				}
+				\Skies::$message['error']->add('{{system.page.login.error}}');
 
 			}
 			else {
-
-				\Skies::$message['notice']->add('Der Login für normale Benutzer ist aktuell gesperrt. So kurz vor dem LAN müssen wir mit den vorhandenen Daten planen und können keine Änderungen mehr zulassen.');
-
+				\Skies::$message['success']->add('{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 			}
 
 		}
@@ -102,7 +93,7 @@ if($loginFormHandler->isSubmitted()) {
 }
 
 // Logout
-elseif($logoutFormHandler->isSubmitted() || (isset($_GET['_1']) && $_GET['_1'] == 'logout')) {
+if($logoutFormHandler->isSubmitted() || (isset($_GET['_1']) && $_GET['_1'] == 'logout')) {
 
 	if(!\Skies::$session->logout()) {
 
@@ -116,96 +107,93 @@ elseif($logoutFormHandler->isSubmitted() || (isset($_GET['_1']) && $_GET['_1'] =
 }
 
 // Sign up
-if(isset($_POST['sign_up'])) {
+if($signUpFormHandler->isSubmitted()) {
 
+	$data = $signUpFormHandler->getData();
 
-	// Do the passwords match?
-	if($_POST['password1'] == $_POST['password2']) {
+	// Completed?
+	if($signUpFormHandler->isCompleted()) {
 
-		// Check token
-		$query = 'SELECT * FROM `'.TBL_PRE.'user-data` INNER JOIN `'.TBL_PRE.'user-fields` ON `dataFieldID` = `fieldID` INNER JOIN `'.TBL_PRE.'user` ON `dataUserID` = `userID` WHERE `fieldName` = \'regToken\' AND `dataValue` = \''.escape($_POST['token']).'\'';
+		// Pattern?
+		if($signUpFormHandler->checkPatterns()) {
 
-		$result = \Skies::$db->query($query);
+			// Do the passwords match?
+			if($data['password1'] == $data['password2']) {
 
-		if($result->num_rows == 1) {
+				// Is the username taken already?
+				if(UserUtil::usernameToID($data['username_sign-up']) === false) {
 
-			$data = $result->fetch_array(MYSQLI_ASSOC);
+					// Does the username match the pattern?
+					if(\skies\util\UserUtil::checkUsername($data['username_sign-up'])) {
 
-			// Set PW
-			$user = new \skies\system\user\User($data['userID']);
+						// Does the mail match the pattern?
+						if(\skies\util\UserUtil::checkMail($data['mail'])) {
 
-			if($user->setPassword($_POST['password1']) !== false) {
+							$newUser = \skies\util\UserUtil::createUser($data['username_sign-up'], $data['mail'], $data['password1']);
 
-				// Start session
-				if(\Skies::$session->login($user->getId())) {
+							if($newUser !== false) {
 
-					\Skies::$message['success']->add('Dein Passwort wurde erfolgreich gesetzt und du bist jetzt angemeldet.<br />
-                    Dein Benutzername ist <em>'.$user->getName().'</em>. Merke ihn dir!');
+								// Aaaaand start the session!
+								if(!\Skies::$session->login($newUser->getId())) {
+
+									\Skies::$message['error']->add(\Skies::$language->get('system.page.login.error'));
+
+								}
+								else {
+
+									// Strike
+									\Skies::$message['success']->add('{{system.page.login.sign-up.success}}', ['userName' => $newUser->getName()]);
+
+								}
+
+							}
+							else {
+
+								\Skies::$message['success']->add('{{system.page.login.sign-up.error}}');
+
+							}
+
+						}
+						else {
+
+							\Skies::$message['error']->add('{{system.page.login.sign-up.error.mail-pattern}}');
+
+						}
+
+					}
+					else {
+
+						\Skies::$message['error']->add('{{system.page.login.sign-up.error.username-pattern}}');
+
+					}
 
 				}
 				else {
 
-					\Skies::$message['error']->add('{{system.page.login.error}}');
+					\Skies::$message['error']->add('{{system.page.login.sign-up.error.username-taken}}');
 
 				}
 
 			}
 			else {
 
-				\Skies::$message['error']->add('Fehler beim Setzen des Passwortes!');
+				\Skies::$message['error']->add('{{system.page.login.sign-up.error.passwords-match}}');
 
 			}
 
 		}
 		else {
 
-			\Skies::$message['error']->add('Fehler beim setzen des Passwortes!');
+			\Skies::$message['error']->add('{{system.page.login.sign-up.error.pattern}}');
 
 		}
 
 	}
 	else {
 
-		\Skies::$message['error']->add('{{system.page.login.sign-up.error.passwords-match}}');
+		\Skies::$message['error']->add('{{system.page.login.sign-up.error.missing}}');
 
 	}
-
-}
-
-// Change password
-if($changePasswordHandler->isSubmitted()) {
-
-	if($changePasswordHandler->isCompleted()) {
-
-		$data = $changePasswordHandler->getData();
-
-		// Do the passwords match?
-		if($data['password1'] == $data['password2']) {
-
-			if(\Skies::$user->setPassword($data['password1']) !== false) {
-
-				\Skies::$message['success']->add('Dein Passwort wurde erfolgreich geändert!');
-			}
-			else {
-
-				\Skies::$message['error']->add('Fehler beim setzen des Passwortes!');
-
-			}
-
-		}
-		else {
-
-			\Skies::$message['error']->add('Fehler beim setzen des Passwortes!');
-
-		}
-
-	}
-	else {
-
-		\Skies::$message['error']->add('{{system.page.login.sign-up.error.passwords-match}}');
-
-	}
-
 }
 
 ?>
