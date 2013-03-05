@@ -30,6 +30,8 @@ class HomePage extends Page {
 	 */
 	public function getTemplateName() {
 
+		return 'homePage.tpl';
+
 	}
 
 	/**

@@ -8,6 +8,7 @@ namespace skies\util;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.util
  */
+use skies\data\Page;
 use skies\system\page\SystemPages;
 
 class PageUtil {
@@ -74,6 +75,28 @@ class PageUtil {
 		}
 
 		return $query->fetchArray()['pageType'];
+
+	}
+
+	public static function getPage($pageName) {
+
+		// Fetch from the DB
+		$query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
+		$query->execute([':name' => $pageName]);
+
+		if($query->rowCount() == 1) {
+
+			$data = $query->fetchArray();
+
+			// Build the class name
+			$pageClass = 'skies\data\page\\'.$data['pageClass'];
+
+			$page = new $pageClass($data);
+
+			if($page instanceof Page)
+				return $page;
+
+		}
 
 	}
 

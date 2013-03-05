@@ -21,7 +21,7 @@
 		<div id="wrapper">
 
 			<!-- Start navigation -->
-			{*<?php (new \skies\system\navigation\Navigation(1))->printNav(); ?> *}
+			{include file="nav.tpl"}
 			<!-- End navigation -->
 
 
@@ -35,6 +35,8 @@
 			<!-- Start conent -->
 			<div id="content">
 
+				{$includePage = $page->getTemplateName()}
+				{include file="pages/$includePage"}
 
 			</div>
 			<!-- End content -->

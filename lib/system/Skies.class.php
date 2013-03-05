@@ -39,6 +39,7 @@ use skies\system\template\Message;
 
 use skies\util\Benchmark;
 use skies\util\LanguageUtil;
+use skies\util\PageUtil;
 use skies\util\spyc;
 use skies\util\SessionUtil;
 
@@ -273,19 +274,7 @@ class Skies {
 		$pageName = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
 
 		// Fetch from the DB
-		$query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
-		$query->execute([':name' => $pageName]);
-
-		if($query->rowCount() == 1) {
-
-			$data = $query->fetchArray();
-
-			// Build the class name
-			$pageClass = 'skies\data\page\\'.$data['pageClass'];
-
-			self::$page = new $pageClass($data);
-
-		}
+		self::$page = PageUtil::getPage($pageName);
 
 	}
 
@@ -307,6 +296,10 @@ class Skies {
 	 * Print everything!
 	 */
 	private function show() {
+
+		// Get nav
+		$nav = new \skies\system\navigation\Navigation(1);
+		$nav->prepareNav();
 
 		// Assign benchmark result
 		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);

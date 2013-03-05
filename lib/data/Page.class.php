@@ -53,4 +53,15 @@ abstract class Page {
 	 */
 	abstract function getTitle();
 
+	/**
+	 * Is this page active/shown?
+	 *
+	 * @return bool
+	 */
+	public function isActive() {
+
+		return $_GET['_0'] == $this->getName();
+
+	}
+
 }
