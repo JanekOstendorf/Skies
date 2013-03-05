@@ -8,7 +8,6 @@ require_once ROOT_DIR.'/lib/system_functions.inc.php';
 
 // Performance reasons ...
 define('NOW', time());
-define('MICRONOW', microtime());
 
 // set exception handler
 set_exception_handler(['\Skies', 'handleException']);
@@ -30,17 +29,15 @@ spl_autoload_register(['\Skies', 'autoload']);
  * Includes
  */
 
-use skies\system\database\MySQL;
+use skies\data\template\TemplateEngine;
 use skies\system\page\SystemPages;
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
-use skies\system\template\Template;
-use skies\system\page\DBPage;
-use skies\system\page\FilePage;
-use skies\system\page\SystemPage;
+use skies\system\style\Style;
 use skies\system\template\Message;
 
+use skies\util\Benchmark;
 use skies\util\LanguageUtil;
 use skies\util\spyc;
 use skies\util\SessionUtil;
@@ -96,11 +93,18 @@ class Skies {
 	public static $config = null;
 
 	/**
-	 * Currently used template
+	 * Template Engine
 	 *
-	 * @var \skies\system\template\Template
+	 * @var \skies\data\template\TemplateEngine
 	 */
 	public static $template = null;
+
+	/**
+	 * Currently used style
+	 *
+	 * @var \skies\system\style\Style
+	 */
+	public static $style = null;
 
 	/**
 	 * Array of Message objects
@@ -112,7 +116,7 @@ class Skies {
 	/**
 	 * Current page
 	 *
-	 * @var \skies\system\page\DBPage|\skies\system\page\FilePage
+	 * @var \skies\data\Page
 	 */
 	public static $page = null;
 
@@ -121,18 +125,20 @@ class Skies {
 	 */
 	public function __construct() {
 
+		Benchmark::start();
+
 		$this->initConfig();
 		$this->initDb();
 		$this->initSession();
 		$this->initLanguage();
+		$this->initStyle();
 		$this->initTemplate();
 		$this->initPage();
 
-		$this->afterInit();
+		$this->assignDefaults();
+		self::$page->prepare();
 
-		$this->initSession();
-
-		$this->showTemplate();
+		$this->show();
 
 	}
 
@@ -183,9 +189,9 @@ class Skies {
 	 */
 	private function initConfig() {
 
-		self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'/config/config.yml');
+		self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'config/config.yml');
 
-		if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'/config/config.yml') {
+		if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'config/config.yml') {
 			throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
 		}
 
@@ -216,12 +222,12 @@ class Skies {
 	}
 
 	/**
-	 * Initialize the template
+	 * Initialize the style
 	 */
-	private function initTemplate() {
+	private function initStyle() {
 
-		// TODO: Get used template from user - if configured.
-		self::$template = new \skies\system\template\Template(self::$config['defaultTemplate']);
+		// TODO: Get used style from user - if configured.
+		self::$style = new Style(self::$config['defaultStyle']);
 
 		/**#@+
 		 * Message objects
@@ -232,6 +238,15 @@ class Skies {
 		self::$message['notice']  = new \skies\system\template\Message('notice');
 		self::$message['success'] = new \skies\system\template\Message('success');
 		/**#@-*/
+
+	}
+
+	/**
+	 * Init the template engine and assign default values
+	 */
+	private function initTemplate() {
+
+		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getStylePath().'tpl/');
 
 	}
 
@@ -247,48 +262,28 @@ class Skies {
 
 			$i = 0;
 
-			foreach($args as $cur_arg) {
+			foreach($args as $argument) {
 
-				$_GET['_'.$i++] = $cur_arg;
+				$_GET['_'.$i++] = $argument;
 
 			}
 
 		}
 
-		$page_name = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
+		$pageName = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
 
-		$page_id = \skies\util\PageUtil::getIdFromName($page_name);
+		// Fetch from the DB
+		$query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
+		$query->execute([':name' => $pageName]);
 
-		// If we get -1 back (system page)
-		if($page_id == -1) {
+		if($query->rowCount() == 1) {
 
-			self::$page = new \skies\system\page\SystemPage($page_name);
+			$data = $query->fetchArray();
 
-		}
-		else {
+			// Build the class name
+			$pageClass = 'skies\data\page\\'.$data['pageClass'];
 
-			// Get the type of the page
-			switch(\skies\util\PageUtil::getTypeFromId($page_id)) {
-
-				case \skies\system\page\PageTypes::DB:
-
-					self::$page = new \skies\system\page\DBPage($page_id);
-
-					break;
-
-
-				case \skies\system\page\PageTypes::FILE:
-
-					self::$page = new \skies\system\page\FilePage($page_id);
-
-					break;
-
-			}
-
-			// TODO: Make a nicer 404
-			if(!is_object(self::$page)) {
-				throw new \skies\system\exception\SystemException('404!', 404, '404!');
-			}
+			self::$page = new $pageClass($data);
 
 		}
 
@@ -296,26 +291,27 @@ class Skies {
 
 	/**#@-*/
 
-	/**
-	 * Performs routines to be called after all initializations
-	 */
-	private function afterInit() {
+	private function assignDefaults() {
 
-				// Page includes
-		if(self::$page instanceof \skies\system\page\FilePage) {
-
-			self::$page->includeIncFile();
-
-		}
+		self::$template->assign([
+            'config' => self::$config,
+		    'user' => self::$user,
+		    'style' => self::$style,
+		    'page' => self::$page,
+		    'subdir' => SUBDIR
+        ]);
 
 	}
 
 	/**
-	 * Print the template
+	 * Print everything!
 	 */
-	private function showTemplate() {
+	private function show() {
 
-		self::$template->printTemplate();
+		// Assign benchmark result
+		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);
+
+		self::$template->show('index.tpl');
 
 	}
 
@@ -380,7 +376,7 @@ class Skies {
 		// Is it a valid import?
 		if(array_shift($namespaces) == 'skies') {
 
-			$classPath = ROOT_DIR.'/lib/'.implode('/', $namespaces).'.class.php';
+			$classPath = ROOT_DIR.'lib/'.implode('/', $namespaces).'.class.php';
 
 			if(file_exists($classPath)) {
 				require_once($classPath);

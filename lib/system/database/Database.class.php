@@ -158,6 +158,7 @@ abstract class Database {
 		try {
 
 			$pdoStatement = $this->pdo->query($query);
+			$this->incrementQueryCount();
 
 			if($pdoStatement instanceof PDOStatement) {
 

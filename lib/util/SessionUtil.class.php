@@ -13,21 +13,16 @@ class SessionUtil {
 
 	public static function cleanUp() {
 
-		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE `sessionLong` = :long AND (`sessionLastActivity` + :length) < :now');
+		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE (`sessionLong` = :true AND (`sessionLastActivity` + :lengthLong) < :now) OR (`sessionLong` = :false AND (`sessionLastActivity` + :lengthShort))');
 
 		// Normal sessions
 		$query->execute([
-			':long' => false,
-		    ':length' => (30 * 60),
+			':true' => true,
+			':false' => false,
+		    ':lengthLong' => (365 * 86400),
+		    ':lengthShort' => (30 * 60),
 		    ':now' => NOW
 		]);
-
-		// Long sessions
-		$query->execute([
-	        ':long' => true,
-	        ':length' => (365 * 86400),
-	        ':now' => NOW
-        ]);
 
 	}
 

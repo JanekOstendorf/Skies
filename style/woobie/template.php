@@ -1,7 +1,7 @@
 <?php
 
 // Important for IDEs
-/* @var $this \skies\system\template\Template */
+/* @var $this \skies\system\template\Style */
 
 use skies\system\navigation\Navigation;
 use skies\util\StringUtil;
@@ -57,7 +57,8 @@ use skies\system\template\Message;
             <!-- Start footer -->
             <div id="footer-wrapper">
                 <div id="footer" style="line-height: 16px;">
-                    This is GNU GPL, do with it what you want. Hosted by SkyIrc. - <a href="https://github.com/ozzyfant/Skies"><img style="width: 16px; vertical-align: middle;" src="<?=SUBDIR?>/images/github.png"</a>
+                    This is GNU GPL, do with it what you want. Hosted by SkyIrc. - <a href="https://github.com/ozzyfant/Skies"><img style="width: 16px; vertical-align: middle;" src="<?=SUBDIR?>/images/github.png" /></a> -
+	                <?=round((microtime(true) - MICRONOW)*1000)?>ms (<?=\Skies::$db->getQueryCount()?> Queries)
                 </div>
             </div>
             <!-- End footer -->

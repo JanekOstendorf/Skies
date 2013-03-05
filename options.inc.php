@@ -23,3 +23,8 @@ define('COOKIE_PRE', 'skies_');
 
 // End of line
 define('EOL', "\n");
+
+// Path constants
+define('DIR_TPL', 'template/');
+define('DIR_STYLE', 'style/');
+define('DIR_CACHE', 'cache/');

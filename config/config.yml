@@ -11,14 +11,14 @@ meta:
     title: Skies
 
 # Subdirectory on the webserver
-# Example: 'http://test.skies.net/Skies' is the Skies URL. In this case, '/Skies' is the subdir
-subdir: '/Skies'
+# Example: 'http://test.skies.net/Skies/' is the Skies URL. In this case, 'Skies/' is the subdir
+subdir: 'Skies/'
 
 # Default language
 defaultLanguage: de-DE
 
-# Default template (short name)
-defaultTemplate: woobie
+# Default style (short name)
+defaultStyle: woobie
 
 # Default page (Homepage)
 defaultPage: home

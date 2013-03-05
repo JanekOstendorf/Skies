@@ -3,6 +3,7 @@
 namespace skies\system\user;
 
 use skies\lan\Team;
+use skies\util\UserUtil;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -41,27 +42,6 @@ class User {
 	protected $lastActivity;
 
 	/**
-	 * When has this user accepted the invitation?
-	 *
-	 * @var int
-	 */
-	protected $acceptTime;
-
-	/**
-	 * Has this user paid?
-	 *
-	 * @var int
-	 */
-	protected $payTime;
-
-	/**
-	 * Is this user Admin?
-	 *
-	 * @var bool
-	 */
-	protected $isAdmin;
-
-	/**
 	 * Array holding custom data about this user. (buffer)
 	 *
 	 * @var array
@@ -74,56 +54,6 @@ class User {
 	protected $hasPassword = false;
 
 	/**
-	 * Team
-	 *
-	 * @var \skies\lan\Team
-	 */
-	protected $team = null;
-
-	/**
-	 * Does this one have a team?
-	 *
-	 * @var bool
-	 */
-	protected $hasTeam = false;
-
-	/**
-	 * Is this one a leader?
-	 *
-	 * @var bool
-	 */
-	protected $isLeader = false;
-
-	/**
-	 * Does this user has to pay the reduced price?
-	 *
-	 * @var bool
-	 */
-	protected $reducedPrice = false;
-
-	/**
-	 * Did an admin accept for him/her?
-	 *
-	 * @var bool
-	 */
-	protected $hasAdminAccepted = false;
-
-	/**
-	 * Admin who accepted for me
-	 *
-	 * @var \skies\system\user\User
-	 */
-	protected $adminAccepted = null;
-
-	/**
-	 * ID of the admin
-	 *
-	 * @var int
-	 */
-	protected $adminAcceptedId = 0;
-
-
-	/**
 	 * @param int $userID User's ID
 	 *
 	 * @return User
@@ -133,7 +63,7 @@ class User {
 		// Normal users
 		if($userID != GUEST_ID) {
 
-			if(!\skies\util\UserUtil::userExists($userID)) {
+			if(!UserUtil::userExists($userID)) {
 				return false;
 			}
 
@@ -147,46 +77,7 @@ class User {
 			$this->name        = $data['userName'];
 			$this->mail        = $data['userMail'];
 			$this->hasPassword = ($data['userPassword'] != '');
-
 			$this->lastActivity = $data['userLastActivity'];
-			$this->acceptTime   = $data['userAcceptTime'];
-			$this->payTime      = $data['userPayTime'];
-			$this->reducedPrice = ($data['userReducedPrice'] == 1);
-			$this->isAdmin      = ($data['userIsAdmin'] == 1);
-
-			$this->adminAcceptedId = $data['userAdminAcceptedId'];
-
-			// Team
-			$this->team = Team::getUsersTeam($this->id);
-
-			if($this->team === null) {
-
-				// Is he a leader instead?
-				$this->team = Team::getLeadersTeam($this->id);
-
-				if($this->team === null)
-					$this->hasTeam = false;
-				else {
-
-					$this->hasTeam = true;
-					$this->isLeader = true;
-
-				}
-
-			}
-			else
-				$this->hasTeam = true;
-
-			$this->adminAccepted = new User($this->adminAcceptedId);
-
-			if($this->adminAccepted instanceof User && $this->adminAcceptedId != 0) {
-
-				$this->hasAdminAccepted = true;
-
-			}
-			else
-				$this->hasAdminAccepted = false;
-
 
 		}
 
@@ -212,20 +103,18 @@ class User {
 		}
 
 		// Write stuff into DB
-		$query = \Skies::$db->prepare('UPDATE `'.TBL_PRE.'user` SET
-			`userMail` = ?,
-            `userName` = ?,
-            `userLastActivity` = ?,
-            `userAcceptTime` = ?,
-            `userPayTime` = ?,
-            `userIsAdmin` = ?,
-            `userReducedPrice` = ?,
-            `userAdminAcceptedId` = ?
-            WHERE `userID` = ?');
+		$query = \Skies::$db->prepare('UPDATE `user` SET
+			`userMail` = :mail,
+            `userName` = :name,
+            `userLastActivity` = :lastActivity
+            WHERE `userID` = :id');
 
-		$query->bind_param('ssiiiiiii', $this->mail, $this->name, $this->lastActivity, $this->acceptTime, $this->payTime, $this->isAdmin, $this->reducedPrice, $this->adminAcceptedId, $this->id);
-
-		$query->execute();
+		$query->execute([
+			':mail' => $this->mail,
+		    ':name' => $this->name,
+		    ':lastActivity' => $this->lastActivity,
+		    ':id' => $this->id
+		]);
 
 		// Delete cache
 		$this->data = [];
@@ -300,15 +189,18 @@ class User {
 	 * Changes the user's password
 	 *
 	 * @param string $password Plain text password
-	 * @return bool Success?
 	 */
 	public function setPassword($password) {
 
-		$pwObj = \skies\util\UserUtil::makePass($password);
+		$pwObj = UserUtil::makePass($password);
 
-		$query = 'UPDATE `'.TBL_PRE.'user` SET `userPassword` = \''.escape($pwObj->password).'\', `userSalt` = \''.escape($pwObj->salt).'\' WHERE `userID` = '.escape($this->id);
+		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password, `userSalt` = :salt WHERE `userID` = id');
 
-		return \Skies::$db->query($query);
+		$query->execute([
+			':password' => $pwObj->password,
+		    ':salt' => $pwObj->salt,
+		    ':id' => $this->id
+		]);
 
 	}
 
@@ -322,7 +214,7 @@ class User {
 	 */
 	public function setData($data, $value) {
 
-		if(!\skies\util\UserUtil::setData($this->getId(), $data, $value))
+		if(!UserUtil::setData($this->getId(), $data, $value))
 			return false;
 
 		$this->data[$data] = $value;
@@ -343,43 +235,7 @@ class User {
 		if(isset($this->data[$data]))
 			return $this->data[$data];
 
-		return \skies\util\UserUtil::getData($this->id, $data);
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isAdmin() {
-
-		return $this->isAdmin;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isLeader() {
-
-		return $this->isLeader;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasTeam() {
-
-		return $this->hasTeam;
-
-	}
-
-	/**
-	 * @return \skies\lan\Team
-	 */
-	public function getTeam() {
-
-		return $this->team;
+		return UserUtil::getData($this->id, $data);
 
 	}
 
@@ -394,81 +250,9 @@ class User {
 	/**
 	 * @return int
 	 */
-	public function getAcceptTime() {
-
-		return $this->acceptTime;
-
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getPayTime() {
-
-		return $this->payTime;
-
-	}
-
-	/**
-	 * @return int
-	 */
 	public function getLastActivity() {
 
 		return $this->lastActivity;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasAccepted() {
-
-		return $this->acceptTime > 0;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasPaid() {
-
-		return $this->payTime > 0;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasVisited() {
-
-		return $this->lastActivity > 0;
-
-	}
-
-	/**
-	 * @param int $acceptTime
-	 */
-	public function setAcceptTime($acceptTime) {
-
-		$this->acceptTime = $acceptTime;
-
-	}
-
-	/**
-	 * @param bool $isAdmin
-	 */
-	public function setIsAdmin($isAdmin) {
-
-		$this->isAdmin = $isAdmin;
-
-	}
-
-	/**
-	 * @param int $payTime
-	 */
-	public function setPayTime($payTime) {
-
-		$this->payTime = $payTime;
 
 	}
 
@@ -478,51 +262,6 @@ class User {
 	public function setLastActivity($lastActivity) {
 
 		$this->lastActivity = $lastActivity;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasReducedPrice() {
-
-		return $this->reducedPrice;
-
-	}
-
-	/**
-	 * @param bool $reducedPrice
-	 */
-	public function setReducedPrice($reducedPrice) {
-
-		$this->reducedPrice = $reducedPrice;
-
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function hasAdminAccepted() {
-
-		return $this->hasAdminAccepted;
-
-	}
-
-	/**
-	 * @param int $adminId
-	 */
-	public function setAdminAcceptedId($adminId) {
-
-		$this->adminAcceptedId = $adminId;
-
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getAdminAccepted() {
-
-		return $this->adminAccepted;
 
 	}
 
