@@ -22,6 +22,13 @@ class TemplateEngine {
 	protected $smarty = null;
 
 	/**
+	 * Our assigned variables
+	 *
+	 * @var array
+	 */
+	protected $vars = [];
+
+	/**
 	 * @param string $tplDir   Main template directory
 	 * @param string $styleDir Style dependant templates
 	 */
@@ -42,6 +49,7 @@ class TemplateEngine {
 	 */
 	public function assign($data) {
 
+		$this->vars = array_merge($this->vars, $data);
 		$this->smarty->assign($data);
 
 	}
@@ -54,6 +62,12 @@ class TemplateEngine {
 	public function show($templateName) {
 
 		$this->smarty->display($templateName);
+
+	}
+
+	public function getVars() {
+
+		return $this->vars;
 
 	}
 

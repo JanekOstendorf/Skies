@@ -282,6 +282,8 @@ class Skies {
 
 	private function assignDefaults() {
 
+
+		// TODO: More arrays!
 		self::$template->assign([
             'config' => self::$config,
 		    'user' => self::$user,
