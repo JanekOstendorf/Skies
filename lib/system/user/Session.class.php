@@ -117,9 +117,9 @@ class Session {
 
 			$data = $query->fetchArray();
 
-			$this->userId = $data['sessionUserID'];
+			$this->userId = $data['sessionUserId'];
 			$this->long   = ($data['sessionLong'] == 1);
-			$this->oldIp  = $data['sessionIP'];
+			$this->oldIp  = $data['sessionIp'];
 
 			// Check session's IP
 			//if($this->oldIP == $this->ip) {
@@ -148,7 +148,7 @@ class Session {
 
 					$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
 
-					$query->execute([':lastActivity' => NOW, ':sessionId' => $this->id]);
+					$query->execute([':lastActivity' => NOW, ':id' => $this->id]);
 
 					$this->rehashUser();
 

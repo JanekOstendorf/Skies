@@ -60,7 +60,16 @@ abstract class Page {
 	 */
 	public function isActive() {
 
-		return $_GET['_0'] == $this->getName();
+		return \Skies::$page == $this;
+
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getData() {
+
+		return $this->data;
 
 	}
 

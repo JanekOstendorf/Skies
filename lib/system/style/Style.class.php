@@ -136,6 +136,17 @@ class Style {
 
 	}
 
+	/**
+	 * Get the config of this style
+	 *
+	 * @return array
+	 */
+	public function getConfig() {
+
+		return $this->config;
+
+	}
+
 }
 
 ?>

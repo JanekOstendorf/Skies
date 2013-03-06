@@ -1,2 +1,4 @@
 <h1>Hallu!</h1>
-<p>Cheers, {$user->getName()|default:'Gast'}</p>
+<p>Cheers, {$user.name|default:'Gast'}</p>
+
+{$json|escape|nl2br}

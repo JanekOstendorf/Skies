@@ -283,14 +283,46 @@ class Skies {
 	private function assignDefaults() {
 
 
-		// TODO: More arrays!
 		self::$template->assign([
-            'config' => self::$config,
-		    'user' => self::$user,
-		    'style' => self::$style,
-		    'page' => self::$page,
-		    'subdir' => SUBDIR
-        ]);
+
+			// Config
+			'config' => self::$config,
+
+			// User
+			'user' => [
+				'name' => self::$user->getName(),
+				'mail' => self::$user->getMail(),
+				'isGuest' => self::$user->isGuest(),
+				'id' => self::$user->getId(),
+				'lastActivity' => self::$user->getLastActivity(),
+				'hasPassword' => self::$user->hasPassword()
+			],
+			'userObj' => self::$user,
+
+			// Current style
+			'style' => [
+				'config' => self::$style->getConfig(),
+				'cssFiles' => self::$style->getCssFiles(),
+				'jsFiles' => self::$style->getJsFiles(),
+				'dir' => self::$style->getStyleDirUrl()
+			],
+			'styleObj' => self::$style,
+
+			// Current page
+			'page' => [
+				'name' => self::$page->getName(),
+				'templateName' => self::$page->getTemplateName(),
+				'title' => self::$page->getTitle(),
+				'data' => self::$page->getData()
+			],
+			'pageObj' => self::$page,
+
+			// Subdirectory for URLs
+			'subdir' => SUBDIR,
+
+			// Time
+			'now' => NOW,
+		]);
 
 	}
 

@@ -1,20 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-	<head>
-
-		<title>{$config.meta.title} &bull; {$page->getTitle()}</title>
-
-		{foreach $style->getCssFiles() as $file}
-		<link rel="stylesheet" type="text/css" href="/{$style->getStyleDirUrl()}{$file}" />
-		{/foreach}
-
-		<script type="text/javascript" src="/{$subdir}js/jQuery.js"></script>
-
-		{foreach $style->getJsFiles() as $file}
-		<script type="text/javascript" src="/{$style->getStyleDirUrl()}{$file}"></script>
-		{/foreach}
-
-	</head>
+<html>
+	{include file="head.tpl"}
 	<body>
 
 		<!-- Start wrapper -->
@@ -35,7 +21,7 @@
 			<!-- Start conent -->
 			<div id="content">
 
-				{$includePage = $page->getTemplateName()}
+				{$includePage = $page.templateName}
 				{include file="pages/$includePage"}
 
 			</div>
