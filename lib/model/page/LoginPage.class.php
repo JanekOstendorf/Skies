@@ -5,21 +5,22 @@
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
  
-namespace skies\data\page;
+namespace skies\model\page;
 
 /**
- * Main page
+ * Login page
  */
-use skies\data\Page;
+use skies\model\Page;
 
-class HomePage extends Page {
-
+class LoginPage extends Page {
 
 	/**
 	 * Prepare the output
 	 * @return void
 	 */
 	public function prepare() {
+
+
 
 	}
 
@@ -29,9 +30,7 @@ class HomePage extends Page {
 	 * @return string
 	 */
 	public function getTemplateName() {
-
-		return 'homePage.tpl';
-
+		return 'loginPage.tpl';
 	}
 
 	/**
@@ -40,9 +39,7 @@ class HomePage extends Page {
 	 * @return string
 	 */
 	public function getName() {
-
-		return $this->data['pageName'];
-
+		return 'login';
 	}
 
 	/**
@@ -52,7 +49,7 @@ class HomePage extends Page {
 	 */
 	public function getTitle() {
 
-		return $this->data['pageTitle'];
+		return \Skies::$language->get('system.page.login.title');
 
 	}
 }

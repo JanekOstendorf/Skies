@@ -26,7 +26,7 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
     public $mbstring_overload = 0;
 
     /**
-    * populate Source Object with meta data from Resource
+    * populate Source Object with meta model from Resource
     *
     * @param Smarty_Template_Source   $source    source object
     * @param Smarty_Internal_Template $_template style object

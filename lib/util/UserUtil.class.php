@@ -338,7 +338,7 @@ class UserUtil {
 	}
 
 	/**
-	 * Sets the data value for the given dataField and userID. Creates the dataField if not exist.
+	 * Sets the model value for the given dataField and userID. Creates the dataField if not exist.
 	 *
 	 * @param int    $userID User's ID
 	 * @param string $data   Data field's name
@@ -372,11 +372,11 @@ class UserUtil {
 			$fieldID = $result->fetch_array(MYSQLI_ASSOC)['fieldID'];
 		}
 
-		// Is there already an data entry?
+		// Is there already an model entry?
 		// No
 		if(is_null(self::getData($userID, $data))) {
 
-			$query = 'INSERT INTO `'.TBL_PRE.'user-data` (`dataFieldID`, `dataUserID`, `dataValue`)
+			$query = 'INSERT INTO `'.TBL_PRE.'user-model` (`dataFieldID`, `dataUserID`, `dataValue`)
                     VALUES('.\escape($fieldID).',
                            '.\escape($userID).',
                            \''.\escape($value).'\')';
@@ -385,7 +385,7 @@ class UserUtil {
 		// Yes
 		else {
 
-			$query = 'UPDATE `'.TBL_PRE.'user-data` SET `dataValue` = \''.\escape($value).'\' WHERE `dataUserID` = '.\escape($userID).' AND `dataFieldID` = '.\escape($fieldID);
+			$query = 'UPDATE `'.TBL_PRE.'user-model` SET `dataValue` = \''.\escape($value).'\' WHERE `dataUserID` = '.\escape($userID).' AND `dataFieldID` = '.\escape($fieldID);
 
 		}
 
@@ -395,7 +395,7 @@ class UserUtil {
 	}
 
 	/**
-	 * Get the data field for one user
+	 * Get the model field for one user
 	 *
 	 * @param int    $userID User's ID
 	 * @param string $data   Data field name

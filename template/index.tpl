@@ -21,6 +21,8 @@
 			<!-- Start conent -->
 			<div id="content">
 
+				{include file="notifications.tpl"}
+
 				{$includePage = $page.templateName}
 				{include file="pages/$includePage"}
 

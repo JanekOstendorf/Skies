@@ -43,7 +43,7 @@ class Navigation {
 
 
     /**
-     * Init the nav and fetch all data
+     * Init the nav and fetch all model
      *
      * @param int $id ID of the navigation
      */

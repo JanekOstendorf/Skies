@@ -127,11 +127,11 @@ abstract class Smarty_Internal_CompileBase {
     /**
      * Push opening tag name on stack
      *
-     * Optionally additional data can be saved on stack
+     * Optionally additional model can be saved on stack
      *
      * @param object    $compiler   compiler object
      * @param string    $openTag    the opening tag's name
-     * @param mixed     $data       optional data saved
+     * @param mixed     $data       optional model saved
      */
     public function openTag($compiler, $openTag, $data = null)
     {
@@ -145,7 +145,7 @@ abstract class Smarty_Internal_CompileBase {
      *
      * @param object       $compiler    compiler object
      * @param array|string $expectedTag the expected opening tag names
-     * @return mixed any type the opening tag's name or saved data
+     * @return mixed any type the opening tag's name or saved model
      */
     public function closeTag($compiler, $expectedTag)
     {
@@ -158,7 +158,7 @@ abstract class Smarty_Internal_CompileBase {
                     // return opening tag
                     return $_openTag;
                 } else {
-                    // return restored data
+                    // return restored model
                     return $_data;
                 }
             }

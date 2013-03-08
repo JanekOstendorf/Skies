@@ -6,6 +6,6 @@
  */
 function smarty_function_lang($params, Smarty_Internal_Template $template) {
 
-	return \Skies::$language->get($params['node']);
+	return \Skies::$language->get($params['node'], isset($params['userVars']) ? $params['userVars'] : []);
 
 }

@@ -399,10 +399,10 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     }
 
     /**
-     * creates a data object
+     * creates a model object
      *
      * @param object $parent next higher level of Smarty variables
-     * @returns Smarty_Data data object
+     * @returns Smarty_Data model object
      */
     public function createData($parent = null)
     {

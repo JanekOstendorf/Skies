@@ -32,11 +32,11 @@ class Language {
 	protected $title = '';
 
 	/**
-	 * Array holding all the data
+	 * Array holding all the model
 	 *
 	 * @var array<mixed>
 	 */
-	//protected $data = [];
+	//protected $model = [];
 
 	/**
 	 * Default language?
@@ -69,10 +69,10 @@ class Language {
 		$this->name  = $data['langName'];
 		$this->title = $data['langTitle'];
 
-		/*// Fetch data
-		$query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE `langID` = '.\escape($id);
+		/*// Fetch model
+		$query = 'SELECT * FROM `'.TBL_PRE.'language-model` WHERE `langID` = '.\escape($id);
 
-		$this->data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
+		$this->model = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
 
 		// Blah blah
 		$this->default = $default;

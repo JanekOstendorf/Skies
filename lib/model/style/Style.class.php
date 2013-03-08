@@ -1,6 +1,6 @@
 <?php
 
-namespace skies\system\style;
+namespace skies\model\style;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>

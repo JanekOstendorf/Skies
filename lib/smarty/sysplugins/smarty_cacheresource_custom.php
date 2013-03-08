@@ -16,7 +16,7 @@
 abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
 
     /**
-     * fetch cached content and its modification time from data source
+     * fetch cached content and its modification time from model source
      *
      * @param string $id         unique cache content identifier
      * @param string $name       style name
@@ -29,7 +29,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
     protected abstract function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime);
 
     /**
-     * Fetch cached content's modification timestamp from data source
+     * Fetch cached content's modification timestamp from model source
      *
      * {@internal implementing this method is optional.
      *  Only implement it if modification times can be accessed faster than loading the complete cached content.}}
@@ -70,7 +70,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
     protected abstract function delete($name, $cache_id, $compile_id, $exp_time);
 
     /**
-     * populate Cached Object with meta data from Resource
+     * populate Cached Object with meta model from Resource
      *
      * @param Smarty_Template_Cached   $cached    cached object
      * @param Smarty_Internal_Template $_template style object

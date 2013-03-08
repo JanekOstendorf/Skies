@@ -42,7 +42,7 @@ class User {
 	protected $lastActivity;
 
 	/**
-	 * Array holding custom data about this user. (buffer)
+	 * Array holding custom model about this user. (buffer)
 	 *
 	 * @var array
 	 */
@@ -224,7 +224,7 @@ class User {
 	}
 
 	/**
-	 * Get the data field for this user
+	 * Get the model field for this user
 	 *
 	 * @param string $data Data field name
 	 *

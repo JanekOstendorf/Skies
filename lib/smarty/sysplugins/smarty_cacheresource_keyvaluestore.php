@@ -45,7 +45,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     protected $timestamps = array();
 
     /**
-     * populate Cached Object with meta data from Resource
+     * populate Cached Object with meta model from Resource
      *
      * @param Smarty_Template_Cached   $cached    cached object
      * @param Smarty_Internal_Template $_template style object

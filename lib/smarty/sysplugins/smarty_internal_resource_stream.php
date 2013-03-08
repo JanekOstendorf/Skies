@@ -22,7 +22,7 @@
 class Smarty_Internal_Resource_Stream extends Smarty_Resource_Recompiled {
 
     /**
-    * populate Source Object with meta data from Resource
+    * populate Source Object with meta model from Resource
     *
     * @param Smarty_Template_Source   $source    source object
     * @param Smarty_Internal_Template $_template style object

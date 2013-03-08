@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Debug
  *
- * Class to collect data for the Smarty Debugging Consol
+ * Class to collect model for the Smarty Debugging Consol
  *
  * @package Smarty
  * @subpackage Debug
@@ -18,7 +18,7 @@
 class Smarty_Internal_Debug extends Smarty_Internal_Data {
 
     /**
-     * style data
+     * style model
      *
      * @var array
      */
@@ -91,7 +91,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     }
 
     /**
-     * Opens a window for the Smarty Debugging Consol and display the data
+     * Opens a window for the Smarty Debugging Consol and display the model
      *
      * @param Smarty_Internal_Template|Smarty $obj object to debug
      */
@@ -136,7 +136,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     }
 
     /**
-     * Recursively gets variables from all style/data scopes
+     * Recursively gets variables from all style/model scopes
      *
      * @param Smarty_Internal_Template|Smarty_Data $obj object to debug
      * @return StdClass

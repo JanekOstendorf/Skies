@@ -1235,7 +1235,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
                 $tpl = new $this->template_class($template, $this, $parent, $cache_id, $compile_id);
             }
         }
-        // fill data if present
+        // fill model if present
         if (!empty($data) && is_array($data)) {
             // set up variable values
             foreach ($data as $_key => $_val) {

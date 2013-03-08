@@ -18,7 +18,7 @@
 abstract class Smarty_Resource_Custom extends Smarty_Resource {
 
     /**
-     * fetch style and its modification time from data source
+     * fetch style and its modification time from model source
      *
      * @param string  $name    style name
      * @param string  &$source style source
@@ -27,7 +27,7 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource {
     protected abstract function fetch($name, &$source, &$mtime);
 
     /**
-     * Fetch style's modification timestamp from data source
+     * Fetch style's modification timestamp from model source
      *
      * {@internal implementing this method is optional.
      *  Only implement it if modification times can be accessed faster than loading the complete style source.}}
@@ -41,7 +41,7 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource {
     }
 
     /**
-     * populate Source Object with meta data from Resource
+     * populate Source Object with meta model from Resource
      *
      * @param Smarty_Template_Source   $source    source object
      * @param Smarty_Internal_Template $_template style object

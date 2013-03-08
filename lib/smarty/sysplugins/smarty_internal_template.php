@@ -10,7 +10,7 @@
  */
 
 /**
- * Main class with style data structures and methods
+ * Main class with style model structures and methods
  *
  * @package Smarty
  * @subpackage Template
@@ -100,7 +100,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     public $_capture_stack = array(0 => array());
 
     /**
-     * Create style data object
+     * Create style model object
      *
      * Some of the global Smarty settings copied to style scope
      * It load the required style resources and cacher plugins
@@ -126,7 +126,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         $this->parent = $_parent;
         // Template resource
         $this->template_resource = $template_resource;
-        // copy block data of style inheritance
+        // copy block model of style inheritance
         if ($this->parent instanceof Smarty_Internal_Template) {
             $this->block_data = $this->parent->block_data;
         }
@@ -237,7 +237,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      * @param mixed   $cache_id       cache id to be used with this style
      * @param mixed   $compile_id     compile id to be used with this style
      * @param integer $caching        cache mode
-     * @param integer $cache_lifetime life time of cache data
+     * @param integer $cache_lifetime life time of cache model
      * @param array   $vars optional  variables to assign
      * @param int     $parent_scope   scope in which {include} should execute
      * @returns string style content
@@ -293,7 +293,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      * @param mixed   $cache_id       cache id to be used with this style
      * @param mixed   $compile_id     compile id to be used with this style
      * @param integer $caching        cache mode
-     * @param integer $cache_lifetime life time of cache data
+     * @param integer $cache_lifetime life time of cache model
      * @param array   $vars optional  variables to assign
      * @param int     $parent_scope   scope in which {include} should execute
      * @param string  $hash           nocache hash code
@@ -471,7 +471,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         } else {
             $this->mustCompile = !$is_valid;
         }
-        // store data in reusable Smarty_Template_Compiled
+        // store model in reusable Smarty_Template_Compiled
         if (!$cache) {
             $this->compiled->_properties = $properties;
         }
@@ -677,7 +677,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Template data object destrutor
+     * Template model object destrutor
      *
      */
     public function __destruct()

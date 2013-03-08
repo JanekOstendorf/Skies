@@ -47,7 +47,7 @@ class Smarty_Internal_Config_File_Compiler {
     public $config;
 
     /**
-     * Compiled config data sections and variables
+     * Compiled config model sections and variables
      *
      * @var array
      */

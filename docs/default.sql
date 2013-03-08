@@ -55,7 +55,7 @@ INSERT INTO `language` (langId, `langName`, `langTitle`, `langDesc`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `language-data`
+-- Tabellenstruktur für Tabelle `language-model`
 --
 
 CREATE TABLE IF NOT EXISTS `language-data` (
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `language-data` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
--- Daten für Tabelle `language-data`
+-- Daten für Tabelle `language-model`
 --
 
 INSERT INTO `language-data` (`varID`, `varName`, `varData`, `langID`) VALUES
@@ -260,7 +260,7 @@ INSERT INTO `user` (`userID`, `userName`, `userMail`, `userSalt`, `userPassword`
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user-data`
+-- Tabellenstruktur für Tabelle `user-model`
 --
 
 CREATE TABLE IF NOT EXISTS `user-data` (
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `user-data` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=368 ;
 
 --
--- Daten für Tabelle `user-data`
+-- Daten für Tabelle `user-model`
 --
 
 INSERT INTO `user-data` (`dataID`, `dataFieldID`, `dataUserID`, `dataValue`) VALUES

@@ -29,12 +29,13 @@ spl_autoload_register(['\Skies', 'autoload']);
  * Includes
  */
 
-use skies\data\template\TemplateEngine;
-use skies\system\page\SystemPages;
+use skies\model\template\Notification;
+use skies\model\template\TemplateEngine;
+
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
-use skies\system\style\Style;
+use skies\model\style\Style;
 use skies\system\template\Message;
 
 use skies\util\Benchmark;
@@ -96,28 +97,28 @@ class Skies {
 	/**
 	 * Template Engine
 	 *
-	 * @var \skies\data\template\TemplateEngine
+	 * @var \skies\model\template\TemplateEngine
 	 */
 	public static $template = null;
 
 	/**
 	 * Currently used style
 	 *
-	 * @var \skies\system\style\Style
+	 * @var \skies\model\style\Style
 	 */
 	public static $style = null;
 
 	/**
 	 * Array of Message objects
 	 *
-	 * @var \skies\system\template\Message[]
+	 * @var \skies\model\template\Notification
 	 */
-	public static $message = [];
+	public static $notification = null;
 
 	/**
 	 * Current page
 	 *
-	 * @var \skies\data\Page
+	 * @var \skies\model\Page
 	 */
 	public static $page = null;
 
@@ -217,8 +218,8 @@ class Skies {
 
 		self::$language = self::$defLanguage = LanguageUtil::getDefaultLanguage();
 
-		// TODO: get this from user's data
-		//self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
+		// TODO: get this from user's model
+		self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
 
 	}
 
@@ -230,15 +231,13 @@ class Skies {
 		// TODO: Get used style from user - if configured.
 		self::$style = new Style(self::$config['defaultStyle']);
 
-		/**#@+
-		 * Message objects
-		 *
-		 * @var \skies\system\template\Message
-		 */
-		self::$message['error']   = new \skies\system\template\Message('error');
-		self::$message['notice']  = new \skies\system\template\Message('notice');
-		self::$message['success'] = new \skies\system\template\Message('success');
-		/**#@-*/
+		// Notification
+		self::$notification = new Notification([
+			Notification::ERROR => 'error.tpl',
+			Notification::NOTICE => 'notice.tpl',
+			Notification::SUCCESS => 'success.tpl',
+			Notification::WARNING => 'warning.tpl'
+		]);
 
 	}
 
@@ -331,12 +330,15 @@ class Skies {
 	 */
 	private function show() {
 
+		self::$notification->add(Notification::ERROR, 'Test!');
+
 		// Get nav
 		$nav = new \skies\system\navigation\Navigation(1);
 		$nav->prepareNav();
 
 		// Assign benchmark result
 		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);
+		self::$notification->assign();
 
 		self::$template->show('index.tpl');
 

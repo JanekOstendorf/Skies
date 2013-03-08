@@ -201,7 +201,7 @@ class Smarty_Internal_Data {
      * Returns a single or all style variables
      *
      * @param string  $varname        variable name or null
-     * @param string  $_ptr           optional pointer to data object
+     * @param string  $_ptr           optional pointer to model object
      * @param boolean $search_parents include parent templates?
      * @return string variable value or or array of variables
      */
@@ -290,8 +290,8 @@ class Smarty_Internal_Data {
      * gets the object of a Smarty variable
      *
      * @param string  $variable the name of the Smarty variable
-     * @param object  $_ptr     optional pointer to data object
-     * @param boolean $search_parents search also in parent data
+     * @param object  $_ptr     optional pointer to model object
+     * @param boolean $search_parents search also in parent model
      * @return object the object of the variable
      */
     public function getVariable($variable, $_ptr = null, $search_parents = true, $error_enable = true)
@@ -421,9 +421,9 @@ class Smarty_Internal_Data {
 }
 
 /**
- * class for the Smarty data object
+ * class for the Smarty model object
  *
- * The Smarty data object will hold Smarty variables in the current scope
+ * The Smarty model object will hold Smarty variables in the current scope
  *
  * @package Smarty
  * @subpackage Template
@@ -438,7 +438,7 @@ class Smarty_Data extends Smarty_Internal_Data {
     public $smarty = null;
 
     /**
-     * create Smarty data object
+     * create Smarty model object
      *
      * @param Smarty|array $_parent  parent style
      * @param Smarty       $smarty   global smarty instance
