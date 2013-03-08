@@ -53,6 +53,13 @@ use skies\util\SessionUtil;
 class Skies {
 
 	/**
+	 * Is Skies in the api mode?
+	 *
+	 * @var bool
+	 */
+	protected static $api = false;
+
+	/**
 	 * MySQL handler
 	 *
 	 * @var \skies\system\database\Database
@@ -124,10 +131,14 @@ class Skies {
 
 	/**
 	 * Initialize Skies
+	 *
+	 * @param bool $api Is Skies in the API mode?
 	 */
-	public function __construct() {
+	public function __construct($api = false) {
 
 		Benchmark::start();
+
+		self::$api = ($api == true);
 
 		$this->initConfig();
 		$this->initDb();
@@ -248,6 +259,9 @@ class Skies {
 
 		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getStylePath().'tpl/');
 
+		if(isset($_GET['flushCache']))
+			self::$template->flushCache();
+
 	}
 
 	/**
@@ -330,7 +344,10 @@ class Skies {
 	 */
 	private function show() {
 
-		self::$notification->add(Notification::ERROR, 'Test!');
+		self::$notification->add(Notification::NOTICE, 'test!');
+		self::$notification->add(Notification::SUCCESS, 'test!');
+		self::$notification->add(Notification::ERROR, 'test!');
+		self::$notification->add(Notification::WARNING, 'test!');
 
 		// Get nav
 		$nav = new \skies\system\navigation\Navigation(1);
@@ -340,7 +357,12 @@ class Skies {
 		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);
 		self::$notification->assign();
 
-		self::$template->show('index.tpl');
+		if(self::isApiMode())
+			print json_encode(self::$template->getVars());
+		else
+			self::$template->show('index.tpl');
+
+		var_dump(\skies\util\UserUtil::makePass('abc'));
 
 	}
 
@@ -423,6 +445,17 @@ class Skies {
 	public static final function isDebugMode() {
 
 		return (DEBUG == true);
+
+	}
+
+	/**
+	 * Is Skies in the API mode?
+	 *
+	 * @return bool
+	 */
+	public static final function isApiMode() {
+
+		return (self::$api == true);
 
 	}
 

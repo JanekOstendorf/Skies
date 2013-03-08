@@ -236,7 +236,7 @@ hr {
 	line-height: 1.5em;
 }
 
-.error, .success, .notice {
+.error, .success, .notice, .warning {
 
 	min-width: 250px;
 	margin: 10px 5px;
@@ -248,7 +248,7 @@ hr {
 
 }
 
-.error:hover, .success:hover, .notice:hover {
+.error:hover, .success:hover, .notice:hover, .warning:hover {
 
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 
@@ -264,9 +264,14 @@ hr {
 	background: #cdffad url('../images/icons/tick.png') no-repeat 15px center;
 }
 
-.notice {
+.warning {
 	border: 1px solid #d2cb81;
-	background: #fff79d url('../images/icons/notice.png') no-repeat 15px center;
+	background: #fff79d url('../images/icons/warning.png') no-repeat 15px center;
+}
+
+.notice {
+	border: 1px solid #288be0;
+	background: #b7d1e8 url('../images/icons/notice.png') no-repeat 15px center;
 }
 
 pre, blockquote {

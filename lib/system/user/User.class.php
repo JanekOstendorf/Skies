@@ -54,26 +54,27 @@ class User {
 	protected $hasPassword = false;
 
 	/**
-	 * @param int $userID User's ID
+	 * @param int $userId User's ID
 	 *
 	 * @return User
 	 */
-	public function __construct($userID) {
+	public function __construct($userId) {
 
 		// Normal users
-		if($userID != GUEST_ID) {
+		if($userId != GUEST_ID) {
 
-			if(!UserUtil::userExists($userID)) {
+			if(!UserUtil::userExists($userId)) {
 				return false;
 			}
 
 			// Fetch info
-			$result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'user WHERE userID = '.escape($userID));
+			$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE userId = :userId');
+			$query->execute([':userId' => $userId]);
 
-			$data = $result->fetch_array();
+			$data = $query->fetchArray();
 
 			// Write into our vars
-			$this->id          = $data['userID'];
+			$this->id          = $data['userId'];
 			$this->name        = $data['userName'];
 			$this->mail        = $data['userMail'];
 			$this->hasPassword = ($data['userPassword'] != '');
@@ -107,7 +108,7 @@ class User {
 			`userMail` = :mail,
             `userName` = :name,
             `userLastActivity` = :lastActivity
-            WHERE `userID` = :id');
+            WHERE `userId` = :id');
 
 		$query->execute([
 			':mail' => $this->mail,
@@ -122,6 +123,16 @@ class User {
 		// Fetch stuff again
 		$this->__construct($this->id);
 
+
+	}
+
+	/**
+	 * @param stirng $password Password to check
+	 * @return bool
+	 */
+	public function checkPassword($password) {
+
+		return UserUtil::checkPassword($password, $this->id);
 
 	}
 

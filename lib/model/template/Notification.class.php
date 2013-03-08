@@ -13,13 +13,13 @@ class Notification {
 	/**#@+
 	 * Constants for identifying
 	 */
-	const NOTICE = 1;
+	const ERROR = 1;
 
 	const WARNING = 2;
 
-	const SUCCESS = 3;
+	const NOTICE = 3;
 
-	const ERROR = 4;
+	const SUCCESS = 4;
 
 	/**#@-*/
 
@@ -55,10 +55,7 @@ class Notification {
 	 */
 	public function add($type, $message, $userVars = []) {
 
-		if(!empty($userVars))
-			$message = \Skies::$language->replaceVars($message, $userVars);
-
-		$this->storage[$type][] = $message;
+		$this->storage[$type][] = \Skies::$language->replaceVars($message, $userVars);
 
 	}
 

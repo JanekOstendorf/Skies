@@ -65,6 +65,12 @@ class TemplateEngine {
 
 	}
 
+	public function flushCache() {
+
+		$this->smarty->clearAllCache();
+
+	}
+
 	public function getVars() {
 
 		return $this->vars;

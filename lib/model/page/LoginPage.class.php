@@ -11,6 +11,9 @@ namespace skies\model\page;
  * Login page
  */
 use skies\model\Page;
+use skies\model\template\Notification;
+use skies\system\user\User;
+use skies\util\UserUtil;
 
 class LoginPage extends Page {
 
@@ -20,7 +23,55 @@ class LoginPage extends Page {
 	 */
 	public function prepare() {
 
+		/*
+		 * Check forms
+		 */
 
+		// Login
+		if(isset($_POST['login'])) {
+
+			$userId = UserUtil::usernameToID($_POST['username']);
+
+			if($userId !== false) {
+
+				$user = new User($userId);
+
+				// Check password
+				if($user->checkPassword($_POST['password'])) {
+
+					if(!\Skies::$session->login($user->getId())) {
+
+						\Skies::$notification->add(Notification::ERROR, '{{system.page.login.error}}');
+
+					}
+					else {
+						\Skies::$notification->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
+					}
+
+				}
+				else {
+
+					\Skies::$notification->add(Notification::ERROR, '{{system.page.login.error.user-pw}}');
+
+				}
+
+			}
+			else {
+
+				\Skies::$notification->add(Notification::ERROR, '{{system.page.login.error.user-pw}}');
+
+			}
+
+		}
+
+
+		// Mail and username pattern
+		\Skies::$template->assign([
+			'loginPage' => [
+				'mailPattern' => UserUtil::MAIL_PATTERN,
+				'usernamePattern' => UserUtil::USERNAME_PATTERN
+			]
+		]);
 
 	}
 

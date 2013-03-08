@@ -163,19 +163,16 @@ class UserUtil {
 	/**
 	 * Does the user exist?
 	 *
-	 * @param int $user_id User ID
+	 * @param int $userId User ID
 	 *
 	 * @return bool
 	 */
-	public static function userExists($user_id) {
+	public static function userExists($userId) {
 
-		$query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE `userID` = '.\escape($user_id);
+		$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE `userID` = :id');
+		$query->execute([':id' => $userId]);
 
-		if(!$res = \Skies::$db->query($query)) {
-			return false;
-		}
-
-		if($res->num_rows != 1) {
+		if($query->rowCount() != 1) {
 			return false;
 		}
 
@@ -187,30 +184,25 @@ class UserUtil {
 	 * Checks the password
 	 *
 	 * @param string $password Clear text password to check
-	 * @param int    $user_id  User ID
+	 * @param int    $userId  User ID
 	 *
 	 * @return bool
 	 */
-	public static function checkPassword($password, $user_id) {
+	public static function checkPassword($password, $userId) {
 
-		if(!self::userExists($user_id)) {
+		if(!self::userExists($userId)) {
 			return false;
 		}
 
-		// Get the password and the salt
-		$query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE userID = '.\escape($user_id);
+		$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE `userID` = :id');
+		$query->execute([':id' => $userId]);
 
-		if(!$res = \Skies::$db->query($query)) {
+		if(!$data = $query->fetchObject())
 			return false;
-		}
 
-		if(!$data = $res->fetch_object()) {
-			return false;
-		}
+		$pwObj = self::makePass($password, $data->userSalt);
 
-		// Password (as stored in the db): md5(md5(%password%).%salt%)
-
-		if(md5(md5($password).$data->userSalt) != $data->userPassword) {
+		if($pwObj->password != $data->userPassword) {
 			return false;
 		}
 		else {
@@ -244,12 +236,15 @@ class UserUtil {
 	 * Generates salt and hashed password
 	 *
 	 * @param string $password unencrypted password
+	 * @param string $salt     optional salt
 	 *
 	 * @return object $return->salt and $return->password
 	 */
-	public static function makePass($password) {
+	public static function makePass($password, $salt = null) {
 
-		$salt     = md5(self::randStr(128));
+		if($salt === null)
+			$salt = md5(self::randStr(128));
+
 		$password = md5(md5($password).$salt);
 
 		// Save salt and password in an obj
@@ -267,21 +262,20 @@ class UserUtil {
 	 *
 	 * Gets the ID of the user with the specified userName
 	 *
-	 * @param string $user_name Name of the user
+	 * @param string $userName Name of the user
 	 *
 	 * @return int ID of the user
 	 */
-	public static function usernameToID($user_name) {
+	public static function usernameToID($userName) {
 
-		$query = 'SELECT * FROM `'.TBL_PRE.'user` WHERE `userName` = \''.\escape($user_name).'\'';
+		$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE `userName` = :userName');
+		$query->execute([':userName' => $userName]);
 
-		$result = \Skies::$db->query($query);
-
-		if($result === false || $result->num_rows != 1) {
+		if($query->rowCount() != 1) {
 			return false;
 		}
 		else {
-			return $result->fetch_array(MYSQLI_ASSOC)['userID'];
+			return $query->fetchArray()['userId'];
 		}
 
 	}
@@ -290,24 +284,24 @@ class UserUtil {
 	/**
 	 * Creates a new user
 	 *
-	 * @param string $user_name     Username
-	 * @param string $user_mail     Mail address
-	 * @param string $user_password Plaintext password
+	 * @param string $userName     Username
+	 * @param string $userMail     Mail address
+	 * @param string $userPassword Plaintext password
 	 *
 	 * @return bool|\skies\system\user\User
 	 */
-	public static function createUser($user_name, $user_mail, $user_password) {
+	public static function createUser($userName, $userMail, $userPassword) {
 
 		// Check the values
-		if(!self::checkMail($user_mail) || !self::checkUsername($user_name) || self::usernameToID($user_name) !== false) {
+		if(!self::checkMail($userMail) || !self::checkUsername($userName) || self::usernameToID($userName) !== false) {
 
 			return false;
 
 		}
 
 		// Crypt the password
-		if(!empty($user_password)) {
-			$password = self::makePass($user_password);
+		if(!empty($userPassword)) {
+			$password = self::makePass($userPassword);
 		}
 		else {
 			$password           = new \stdClass();
@@ -319,73 +313,72 @@ class UserUtil {
 			return false;
 		}
 
-		$query = 'INSERT INTO `user` (`userMail`, `userName`, `userPassword`, `userSalt`) ';
-
-		// Values
-		$query .= 'VALUES(\''.escape($user_mail).'\',
-            \''.escape($user_name).'\',
-            \''.escape($password->password).'\',
-            \''.escape($password->salt).'\')';
-
-		// Execute
-		if(!\Skies::$db->query($query)) {
-			return false;
-		}
+		$query = \Skies::$db->prepare('INSERT INTO `user` (`userMail`, `userName`, `userPassword`, `userSalt`)
+			VALUES(:mail, :name, :password, :salt)');
+		$query->execute([
+			'mail' => $userMail,
+			'name' => $userName,
+			'password' => $password->password,
+			'salt' => $password->salt
+		]);
 
 		// Fetch user object
-		return new \skies\system\user\User(self::usernameToID($user_name));
+		return new User(self::usernameToID($userName));
 
 	}
 
 	/**
 	 * Sets the model value for the given dataField and userID. Creates the dataField if not exist.
 	 *
-	 * @param int    $userID User's ID
+	 * @param int    $userId User's ID
 	 * @param string $data   Data field's name
 	 * @param string $value  Value to set
 	 *
 	 * @return bool Success?
 	 */
-	public static function setData($userID, $data, $value) {
+	public static function setData($userId, $data, $value) {
 
-		if($userID == null) {
+		if($userId == null) {
 			return false;
 		}
 
 		// Does this dataField exist?
-		$query  = 'SELECT * FROM `'.TBL_PRE.'user-fields` WHERE `fieldName` = \''.\escape($data).'\'';
-		$result = \Skies::$db->query($query);
+		$query  = \Skies::$db->prepare('SELECT * FROM `user-fields` WHERE `fieldName` = :data');
+		$query->execute([':data' => $data]);
 
 
 		// No, create it
-		if($result->num_rows != 1) {
+		if($query->rowCount() != 1) {
 
-			$query = 'INSERT INTO `'.TBL_PRE.'user-fields` (`fieldName`) VALUES (\''.\escape($data).'\')';
-			if(\Skies::$db->query($query) === false) {
-				return false;
-			}
+			$query = \Skies::$db->prepare('INSERT INTO `user-fields` (`fieldName`) VALUES (:data)');
+			$query->execute([':data' => $data]);
 
-			$fieldID = \Skies::$db->insert_id;
+
+			$fieldID = \Skies::$db->getInsertId();
 
 		}
 		else {
-			$fieldID = $result->fetch_array(MYSQLI_ASSOC)['fieldID'];
+			$fieldID = $query->fetchArray()['fieldId'];
 		}
 
-		// Is there already an model entry?
+		// Is there already an data entry?
 		// No
-		if(is_null(self::getData($userID, $data))) {
+		if(is_null(self::getData($userId, $data))) {
 
-			$query = 'INSERT INTO `'.TBL_PRE.'user-model` (`dataFieldID`, `dataUserID`, `dataValue`)
-                    VALUES('.\escape($fieldID).',
-                           '.\escape($userID).',
-                           \''.\escape($value).'\')';
+			$query = \Skies::$db->prepare('INSERT INTO `user-data` (`dataFieldId`, `dataUserId`, `dataValue`)
+                    VALUES(:fieldId, :userId, :value)');
+			$query->execute([
+				':fieldId' => $fieldID,
+				':userId' => $userId,
+				':value' => $value
+			]);
 
 		}
 		// Yes
 		else {
 
-			$query = 'UPDATE `'.TBL_PRE.'user-model` SET `dataValue` = \''.\escape($value).'\' WHERE `dataUserID` = '.\escape($userID).' AND `dataFieldID` = '.\escape($fieldID);
+			$query = \Skies::$db->prepare('UPDATE `user-data` SET `dataValue` = :value WHERE `dataUserId` = :userId AND `dataFieldId` = :fieldId');
+			$query->execute([':value' => $value, ':userId' => $userId]);
 
 		}
 
@@ -397,40 +390,27 @@ class UserUtil {
 	/**
 	 * Get the model field for one user
 	 *
-	 * @param int    $userID User's ID
+	 * @param int    $userId User's ID
 	 * @param string $data   Data field name
 	 *
 	 * @return mixed|null Null if there is no value. Else the value.
 	 */
-	public static function getData($userID, $data) {
+	public static function getData($userId, $data) {
 
-		if($userID == null) {
+		if($userId == null) {
 			return null;
 		}
 
-		$query  = 'SELECT * FROM `'.TBL_PRE.'user-data` INNER JOIN `'.TBL_PRE.'user-fields` ON `dataFieldID` = `fieldID` WHERE `fieldName` = \''.\escape($data).'\' AND `dataUserID` = '.escape($userID);
-		$result = \Skies::$db->query($query);
+		$query  = \Skies::$db->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = `fieldId` WHERE `fieldName` = :data AND `dataUserId` = :userId');
+		$query->execute([':data' => $data, ':userId' => $userId]);
 
-		if($result->num_rows != 1) {
+		if($query->rowCount() != 1) {
 			return null;
 		}
 		else {
-			return $result->fetch_array(MYSQLI_ASSOC)['dataValue'];
+			return $query->fetchArray()['dataValue'];
 		}
 
-
-	}
-
-	public static function mail_utf8($to, $from_user, $from_email, $subject = '(No subject)', $message = '') {
-
-		$from_user = "=?UTF-8?B?".base64_encode($from_user)."?=";
-		$subject   = "=?UTF-8?B?".base64_encode($subject)."?=";
-
-		$headers = "From: $from_user <$from_email>\n".
-		           "MIME-Version: 1.0"."\n".
-		           "Content-type: text/html; charset=UTF-8"."\n";
-
-		return mail($to, $subject, $message, $headers, '-f '.$from_email);
 
 	}
 
