@@ -310,6 +310,19 @@ fieldset > legend {
 
 }
 
+p.description {
+
+	margin-top: 0;
+	margin-bottom: 20px;
+
+}
+
+fieldset table tr:hover {
+
+	background: none;
+
+}
+
 /*
  *  Tables
  */
