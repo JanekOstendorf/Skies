@@ -56,10 +56,10 @@ class Session {
 		$this->ip = UserUtil::getIpAddress();
 
 		// Fetch session ID
-		if(isset($_COOKIE[COOKIE_PRE.'sessionID']) && !empty($_COOKIE[COOKIE_PRE.'sessionID']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionID'])) {
+		if(isset($_COOKIE[COOKIE_PRE.'sessionId']) && !empty($_COOKIE[COOKIE_PRE.'sessionId']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionId'])) {
 
 
-			$this->id = $_COOKIE[COOKIE_PRE.'sessionID'];
+			$this->id = $_COOKIE[COOKIE_PRE.'sessionId'];
 			$this->continueSession();
 
 		}
@@ -94,7 +94,7 @@ class Session {
 		]);
 
 
-		return setcookie(COOKIE_PRE.'sessionId', $this->id, NOW + (365 * 86400), '/') !== false;
+		return setcookie(COOKIE_PRE.'sessionId', $this->id, NOW + (365 * 86400), '/'.SUBDIR) !== false;
 
 
 	}
@@ -183,31 +183,23 @@ class Session {
 	public function login($userId, $long = false) {
 
 		// Write it into the DB
-		$query = 'UPDATE `session` SET `sessionLong` = :long, `sessionUserId` = :userId WHERE `sessionID` = :id';
+		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLong` = :long, `sessionUserId` = :userId WHERE `sessionId` = :id');
 
-		$params = [
+		$query->execute([
 			':long' => $long == true,
 			':userId' => $userId,
 			':id' => $this->id
-		];
+		]);
 
-		// Some checks
-		if(\Skies::$db->query($query) === false) {
-			return false;
-		}
-		else {
+		$this->userId = $userId;
 
-			$this->userId = $userId;
+		// Update the global user object
+		$this->rehashUser();
 
-			// Update the global user object
-			$this->rehashUser();
+		\Skies::$user->setLastActivity(NOW);
+		\Skies::$user->update();
 
-			\Skies::$user->setLastActivity(NOW);
-			\Skies::$user->update();
-
-			return true;
-
-		}
+		return true;
 
 	}
 
@@ -219,7 +211,7 @@ class Session {
 		}
 
 		// Write it into the DB
-		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionUserID` = NULL WHERE `sessionID` = :id');
+		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionUserId` = NULL WHERE `sessionId` = :id');
 
 		$query->execute([':id' => $this->id]);
 
@@ -246,9 +238,9 @@ class Session {
 	 */
 	protected function closeSession() {
 
-		UserUtil::deleteCookie(COOKIE_PRE.'sessionID');
+		UserUtil::deleteCookie(COOKIE_PRE.'sessionId');
 
-		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE `sessionID` = :id');
+		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
 
 		$query->execute([':id' => $this->id]);
 

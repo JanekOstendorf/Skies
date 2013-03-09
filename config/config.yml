@@ -28,3 +28,6 @@ defaultTimezone: Europe/Berlin
 
 # Are normal users allowed to login?
 allowNormalLogin: true
+
+# Salt for password generation
+salt: Mm2zTloKiuGqYIw/DgVtB

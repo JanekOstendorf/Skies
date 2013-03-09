@@ -3,6 +3,7 @@
 namespace skies\system\user;
 
 use skies\lan\Team;
+use skies\util\SecureUtil;
 use skies\util\UserUtil;
 
 /**
@@ -33,6 +34,13 @@ class User {
 	 * @var string
 	 */
 	protected $mail;
+
+	/**
+	 * Password string
+	 *
+	 * @var string
+	 */
+	protected $password;
 
 	/**
 	 * Last user activity (UNIX)
@@ -79,6 +87,7 @@ class User {
 			$this->mail        = $data['userMail'];
 			$this->hasPassword = ($data['userPassword'] != '');
 			$this->lastActivity = $data['userLastActivity'];
+			$this->password    = $data['userPassword'];
 
 		}
 
@@ -127,12 +136,12 @@ class User {
 	}
 
 	/**
-	 * @param stirng $password Password to check
+	 * @param string $password Password to check
 	 * @return bool
 	 */
 	public function checkPassword($password) {
 
-		return UserUtil::checkPassword($password, $this->id);
+		return SecureUtil::CheckPassword($password, $this->mail, $this->password);
 
 	}
 
@@ -188,11 +197,26 @@ class User {
 	/**
 	 * Changes user's mail address
 	 *
-	 * @param string $mail User's mail address
+	 * @param string $mail     User's mail address
+	 * @param string $password The user's password
+	 *
+	 * @return bool Is the password correct? (Success)
 	 */
-	public function setMail($mail) {
+	public function setMail($mail, $password) {
 
-		$this->mail = $mail;
+		if($this->checkPassword($password)) {
+
+			$this->mail = $mail;
+
+			// Rehash the password
+			$this->setPassword($password);
+
+			return true;
+
+		}
+
+		// Nope, you're wrong
+		return false;
 
 	}
 
@@ -203,13 +227,12 @@ class User {
 	 */
 	public function setPassword($password) {
 
-		$pwObj = UserUtil::makePass($password);
+		$passwordHash = SecureUtil::EncryptPassword($password, $this->mail);
 
-		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password, `userSalt` = :salt WHERE `userID` = id');
+		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = id');
 
 		$query->execute([
-			':password' => $pwObj->password,
-		    ':salt' => $pwObj->salt,
+			':password' => $passwordHash,
 		    ':id' => $this->id
 		]);
 

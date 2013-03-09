@@ -80,6 +80,6 @@
 
 {else}
 	<p>
-		{lang node="system.page.login-weltome-title" userVars=["userName" => $user.name]}
+		{lang node="system.page.login.welcome-title" userVars=["userName" => $user.name]}
 	</p>
 {/if}

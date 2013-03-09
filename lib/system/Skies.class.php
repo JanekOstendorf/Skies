@@ -344,11 +344,6 @@ class Skies {
 	 */
 	private function show() {
 
-		self::$notification->add(Notification::NOTICE, 'test!');
-		self::$notification->add(Notification::SUCCESS, 'test!');
-		self::$notification->add(Notification::ERROR, 'test!');
-		self::$notification->add(Notification::WARNING, 'test!');
-
 		// Get nav
 		$nav = new \skies\system\navigation\Navigation(1);
 		$nav->prepareNav();
@@ -361,8 +356,6 @@ class Skies {
 			print json_encode(self::$template->getVars());
 		else
 			self::$template->show('index.tpl');
-
-		var_dump(\skies\util\UserUtil::makePass('abc'));
 
 	}
 

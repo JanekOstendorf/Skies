@@ -8,7 +8,6 @@ use skies\system\user\User;
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @package   skies.util
  */
 class UserUtil {
 
@@ -46,9 +45,8 @@ class UserUtil {
 	/**
 	 * Converts given ipv4 to ipv6.
 	 *
-	 * @param    string        $ip
-	 *
-	 * @return    string
+	 * @param string $ip
+	 * @return string
 	 */
 	public static function convertIPv4To6($ip) {
 
@@ -114,11 +112,7 @@ class UserUtil {
 
 	/**
 	 * Check mail address for validity
-	 *
-	 * @static
-	 *
 	 * @param string $mail Mail address to check
-	 *
 	 * @return bool Is this address valid?
 	 */
 	public static function checkMail($mail) {
@@ -130,11 +124,9 @@ class UserUtil {
 
 	/**
 	 * Check user name for validity
-	 *
 	 * @static
-	 *
+	 * @param        $username
 	 * @param string $username Mail address to check
-	 *
 	 * @return bool Is this name valid?
 	 */
 	public static function checkUsername($username) {
@@ -145,9 +137,7 @@ class UserUtil {
 
 	/**
 	 * Deletes the cookie and clears the session variable
-	 *
-	 * @static
-	 *
+	 * @return void
 	 * @param string $cookie Name of the cookie
 	 */
 	public static function deleteCookie($cookie) {
@@ -208,53 +198,6 @@ class UserUtil {
 		else {
 			return true;
 		}
-	}
-
-	/**
-	 * Generates a random alphanumeric string
-	 *
-	 * @param int $length
-	 *
-	 * @return string
-	 */
-	public static function randStr($length) {
-
-		$pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
-
-		$return = '';
-
-		for($i = 1; $i <= $length; $i++) {
-			$rand = substr(str_shuffle($pool), 0, 1);
-			$return .= $rand;
-		}
-
-		return $return;
-
-	}
-
-	/**
-	 * Generates salt and hashed password
-	 *
-	 * @param string $password unencrypted password
-	 * @param string $salt     optional salt
-	 *
-	 * @return object $return->salt and $return->password
-	 */
-	public static function makePass($password, $salt = null) {
-
-		if($salt === null)
-			$salt = md5(self::randStr(128));
-
-		$password = md5(md5($password).$salt);
-
-		// Save salt and password in an obj
-		$return = new \stdClass();
-
-		$return->salt     = $salt;
-		$return->password = $password;
-
-		return $return;
-
 	}
 
 	/**
