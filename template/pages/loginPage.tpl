@@ -69,7 +69,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="signUp" id="signUp" value="{lang node="system.page.login.sign-up"}" />
+						<input type="submit" name="signUpSubmit" id="signUpSubmit" value="{lang node="system.page.login.sign-up"}" />
 					</td>
 				</tr>
 			</table>
@@ -89,6 +89,8 @@
 		<p class="description">
 			{lang node="system.page.login.change.mail.description"}
 		</p>
+
+		<hr />
 
 		<form method="post">
 
@@ -111,7 +113,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="changeMail" id="changeMail" value="{lang node="system.page.login.change"}" />
+						<input type="submit" name="changeMailSubmit" id="changeMailSubmit" value="{lang node="system.page.login.change"}" />
 					</td>
 				</tr>
 			</table>
@@ -128,6 +130,8 @@
 			{lang node="system.page.login.change.password.description"}
 		</p>
 
+		<hr />
+
 		<form method="post">
 
 			<table>
@@ -142,7 +146,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="changePassword" id="changePassword" value="{lang node="system.page.login.change"}" />
+						<input type="submit" name="changePasswordSubmit" id="changePasswordSubmit" value="{lang node="system.page.login.change"}" />
 					</td>
 				</tr>
 			</table>
@@ -152,5 +156,22 @@
 	</fieldset>
 
 	<br class="clear" />
+
+	<fieldset style="width: 45%;">
+
+		<legend>{lang node="system.page.login.avatar.title"}</legend>
+
+		<p class="description">
+!
+			<img src="http://gravatar.com/avatar/{$user.mail|trim|strtolower|md5}.png?s=200" alt="avatar" class="float-left" id="avatar" />
+
+			{lang node="system.page.login.avatar.description"}
+
+			<div class="clear"></div>
+
+		</p>
+
+
+	</fieldset>
 
 {/if}

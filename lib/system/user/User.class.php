@@ -229,7 +229,7 @@ class User {
 
 		$passwordHash = SecureUtil::EncryptPassword($password, $this->mail);
 
-		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = id');
+		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = :id');
 
 		$query->execute([
 			':password' => $passwordHash,

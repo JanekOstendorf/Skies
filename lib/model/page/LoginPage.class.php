@@ -64,6 +64,64 @@ class LoginPage extends Page {
 
 		}
 
+		// Logout
+		if((isset($_GET['_1']) && $_GET['_1'] == 'logout') || isset($_GET['logout'])) {
+
+			if(!\Skies::$user->isGuest()) {
+
+				\Skies::$session->logout();
+				header('Location: /'.SUBDIR);
+
+			}
+			else {
+
+				\Skies::$notification->add(Notification::ERROR, '{{system.page.login.logout.error.guest}}');
+
+			}
+
+		}
+
+		// Change email
+		if(isset($_POST['changeMailSubmit'])) {
+
+			// Everything set?
+			if(isset($_POST['changeMail']) && isset($_POST['changeMailPassword'])) {
+
+				// Check mail pattern
+				if(UserUtil::checkMail($_POST['changeMail'])) {
+
+					// Check password
+					if(\Skies::$user->checkPassword($_POST['changeMailPassword'])) {
+
+						// Everything's right, change the mail
+						\Skies::$user->setMail($_POST['changeMail'], $_POST['changeMailPassword']);
+						\Skies::$user->update();
+
+						\Skies::$notification->add(Notification::SUCCESS, '{{system.page.login.change.mail.success}}', ['newMail' => \Skies::$user->getMail()]);
+
+					}
+					else {
+
+						\Skies::$notification->add(Notification::ERROR, '{{system.page.login.change.mail.error.wrong-password}}');
+
+					}
+
+				}
+				else {
+
+					\Skies::$notification->add(Notification::ERROR, '{{system.page.login.change.mail.error.mail-pattern}}');
+
+				}
+
+			}
+			else {
+
+				\Skies::$notification->add(Notification::ERROR, '{{system.page.login.change.mail.error.missing}}');
+
+			}
+
+		}
+
 
 		// Mail and username pattern
 		\Skies::$template->assign([

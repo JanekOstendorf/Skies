@@ -148,8 +148,10 @@ class Skies {
 		$this->initTemplate();
 		$this->initPage();
 
-		$this->assignDefaults();
 		self::$page->prepare();
+		$this->initSession(false);
+
+		$this->assignDefaults();
 
 		$this->show();
 
@@ -184,10 +186,11 @@ class Skies {
 	/**
 	 * Initialize the session
 	 */
-	private function initSession() {
+	private function initSession($clean = true) {
 
 		// Do some clean ups
-		\skies\util\SessionUtil::cleanUp();
+		if($clean)
+			\skies\util\SessionUtil::cleanUp();
 
 		self::$session = new skies\system\user\Session();
 
