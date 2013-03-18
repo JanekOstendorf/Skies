@@ -60,7 +60,7 @@ abstract class Page {
 	 */
 	public function isActive() {
 
-		return \Skies::$page == $this;
+		return \Skies::getPage() == $this;
 
 	}
 

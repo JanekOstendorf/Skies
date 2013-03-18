@@ -19,8 +19,8 @@ class LanguageUtil {
 	 */
 	public static function getDefaultLanguage() {
 
-		$query = \Skies::$db->prepare('SELECT * FROM `language` WHERE `langName` = :name');
-		$query->execute([':name' => \Skies::$config['defaultLanguage']]);
+		$query = \Skies::getDb()->prepare('SELECT * FROM `language` WHERE `langName` = :name');
+		$query->execute([':name' => \Skies::getConfig()['defaultLanguage']]);
 		$langId = $query->fetchArray()['langId'];
 
 		$language = new Language($langId, true);

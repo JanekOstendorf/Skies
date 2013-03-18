@@ -55,7 +55,7 @@ class Notification {
 	 */
 	public function add($type, $message, $userVars = []) {
 
-		$this->storage[$type][] = \Skies::$language->replaceVars($message, $userVars);
+		$this->storage[$type][] = \Skies::getLanguage()->replaceVars($message, $userVars);
 
 	}
 
@@ -64,7 +64,7 @@ class Notification {
 	 */
 	public function assign() {
 
-		\Skies::$template->assign(['notifications' => $this->storage, 'notificationTemplates' => $this->templates]);
+		\Skies::getTemplate()->assign(['notifications' => $this->storage, 'notificationTemplates' => $this->templates]);
 
 	}
 

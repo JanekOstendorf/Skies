@@ -7,7 +7,7 @@
  */
 
 /**
- * Alias for Skies::$db->escape_string($string)
+ * Alias for Skies::getDb()->escape_string($string)
  *
  * @param $string
  *
@@ -16,7 +16,7 @@
  */
 function escape($string) {
 
-	return Skies::$db->escapeString($string);
+	return Skies::getDb()->escapeString($string);
 
 }
 

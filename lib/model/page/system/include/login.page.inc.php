@@ -18,9 +18,9 @@ use skies\form\Form;
 // Login
 $page->store['loginForm'] = new skies\form\Form();
 
-$page->store['loginForm']->addInput('username', \Skies::$language->get('system.page.login.username'), true);
-$page->store['loginForm']->addInput('password', \Skies::$language->get('system.page.login.password'), true, 'password');
-$page->store['loginForm']->addInput('login', \Skies::$language->get('system.page.login.login'), false, 'submit');
+$page->store['loginForm']->addInput('username', \Skies::getLanguage()->get('system.page.login.username'), true);
+$page->store['loginForm']->addInput('password', \Skies::getLanguage()->get('system.page.login.password'), true, 'password');
+$page->store['loginForm']->addInput('login', \Skies::getLanguage()->get('system.page.login.login'), false, 'submit');
 
 /** @var $loginFormHandler \skies\form\FormHandler */
 $loginFormHandler = $page->store['loginForm']->getHandler();
@@ -28,11 +28,11 @@ $loginFormHandler = $page->store['loginForm']->getHandler();
 // Sing up
 $page->store['signUpForm'] = new skies\form\Form();
 
-$page->store['signUpForm']->addInput('username_sign-up', \Skies::$language->get('system.page.login.username'), true);
-$page->store['signUpForm']->addInput('mail', \Skies::$language->get('system.page.login.register.mail'), true, 'text', \skies\util\UserUtil::MAIL_PATTERN);
-$page->store['signUpForm']->addInput('password1', \Skies::$language->get('system.page.login.register.password-twice'), true, 'password');
+$page->store['signUpForm']->addInput('username_sign-up', \Skies::getLanguage()->get('system.page.login.username'), true);
+$page->store['signUpForm']->addInput('mail', \Skies::getLanguage()->get('system.page.login.register.mail'), true, 'text', \skies\util\UserUtil::MAIL_PATTERN);
+$page->store['signUpForm']->addInput('password1', \Skies::getLanguage()->get('system.page.login.register.password-twice'), true, 'password');
 $page->store['signUpForm']->addInput('password2', '', true, 'password');
-$page->store['signUpForm']->addInput('sign-up', \Skies::$language->get('system.page.login.sign-up'), false, 'submit');
+$page->store['signUpForm']->addInput('sign-up', \Skies::getLanguage()->get('system.page.login.sign-up'), false, 'submit');
 
 /** @var $signUpFormHandler \skies\form\FormHandler */
 $signUpFormHandler = $page->store['signUpForm']->getHandler();
@@ -40,7 +40,7 @@ $signUpFormHandler = $page->store['signUpForm']->getHandler();
 // Logout
 $page->store['logoutForm'] = new skies\form\Form();
 
-$page->store['logoutForm']->addInput('logout', \Skies::$language->get('system.page.login.logout'), false, 'submit');
+$page->store['logoutForm']->addInput('logout', \Skies::getLanguage()->get('system.page.login.logout'), false, 'submit');
 
 /** @var $logoutFormHandler \skies\form\FormHandler */
 $logoutFormHandler = $page->store['logoutForm']->getHandler();
@@ -67,7 +67,7 @@ if($loginFormHandler->isSubmitted()) {
 
 			$user = new \skies\system\user\User($userID);
 
-			if(!\Skies::$session->login($user->getId())) {
+			if(!\Skies::getSession()->login($user->getId())) {
 
 				\Skies::$message['error']->add('{{system.page.login.error}}');
 
@@ -95,7 +95,7 @@ if($loginFormHandler->isSubmitted()) {
 // Logout
 if($logoutFormHandler->isSubmitted() || (isset($_GET['_1']) && $_GET['_1'] == 'logout')) {
 
-	if(!\Skies::$session->logout()) {
+	if(!\Skies::getSession()->logout()) {
 
 		\Skies::$message['error']->add('{{system.page.login.error}}');
 
@@ -134,9 +134,9 @@ if($signUpFormHandler->isSubmitted()) {
 							if($newUser !== false) {
 
 								// Aaaaand start the session!
-								if(!\Skies::$session->login($newUser->getId())) {
+								if(!\Skies::getSession()->login($newUser->getId())) {
 
-									\Skies::$message['error']->add(\Skies::$language->get('system.page.login.error'));
+									\Skies::$message['error']->add(\Skies::getLanguage()->get('system.page.login.error'));
 
 								}
 								else {

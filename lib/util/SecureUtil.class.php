@@ -20,7 +20,7 @@ class SecureUtil {
 	 * @return  string  Password
 	 */
 	public static function EncryptPassword($password, $email, $rounds = '08') {
-		$string = hash_hmac('whirlpool', str_pad($password, strlen($password) * 4, sha1($email), STR_PAD_BOTH), \Skies::$config['salt'], false);
+		$string = hash_hmac('whirlpool', str_pad($password, strlen($password) * 4, sha1($email), STR_PAD_BOTH), \Skies::getConfig()['salt'], false);
 		$salt   = substr(str_shuffle('./0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 22);
 		return crypt($string, '$2a$'.$rounds.'$'.$salt);
 	}
@@ -33,7 +33,7 @@ class SecureUtil {
 	 * @return  bool
 	 */
 	public static function CheckPassword($password, $email, $stored) {
-		$string = hash_hmac('whirlpool', str_pad($password, strlen($password) * 4, sha1($email), STR_PAD_BOTH), \Skies::$config['salt'], false);
+		$string = hash_hmac('whirlpool', str_pad($password, strlen($password) * 4, sha1($email), STR_PAD_BOTH), \Skies::getConfig()['salt'], false);
 		return crypt($string, substr($stored, 0, 30)) == $stored;
 	}
 

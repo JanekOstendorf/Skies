@@ -28,6 +28,13 @@ class Session {
 	protected $userId = 0;
 
 	/**
+	 * User
+	 *
+	 * @var User
+	 */
+	protected $user = null;
+
+	/**
 	 * Is this a long login?
 	 *
 	 * @var bool
@@ -82,7 +89,7 @@ class Session {
 		// Create new ID
 		$this->id = StringUtil::getRandomHash();
 
-		$query = \Skies::$db->prepare('INSERT INTO `session`
+		$query = \Skies::getDb()->prepare('INSERT INTO `session`
 			(`sessionId`, `sessionIp`, `sessionLastActivity`, `sessionUserId`)
 			VALUES(:id, :ip, :lastActivity, :userId)');
 
@@ -104,7 +111,7 @@ class Session {
 	 */
 	protected function continueSession() {
 
-		$query = \Skies::$db->prepare('SELECT * FROM `session` WHERE `sessionId` = :id');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `session` WHERE `sessionId` = :id');
 		$query->execute([':id' => $this->id]);
 
 		if($query->rowCount() != 1) {
@@ -146,15 +153,13 @@ class Session {
 					 * Update DB
 					 */
 
-					$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
+					$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
 
 					$query->execute([':lastActivity' => NOW, ':id' => $this->id]);
 
-					$this->rehashUser();
-
-					if(!\Skies::$user->isGuest()) {
-						\Skies::$user->setLastActivity(NOW);
-						\Skies::$user->update();
+					if(!$this->getUser()->isGuest()) {
+						$this->getUser()->setLastActivity(NOW);
+						$this->getUser()->update();
 					}
 
 				}
@@ -183,7 +188,7 @@ class Session {
 	public function login($userId, $long = false) {
 
 		// Write it into the DB
-		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLong` = :long, `sessionUserId` = :userId WHERE `sessionId` = :id');
+		$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionLong` = :long, `sessionUserId` = :userId WHERE `sessionId` = :id');
 
 		$query->execute([
 			':long' => $long == true,
@@ -193,11 +198,8 @@ class Session {
 
 		$this->userId = $userId;
 
-		// Update the global user object
-		$this->rehashUser();
-
-		\Skies::$user->setLastActivity(NOW);
-		\Skies::$user->update();
+		$this->getUser()->setLastActivity(NOW);
+		$this->getUser()->update();
 
 		return true;
 
@@ -211,14 +213,11 @@ class Session {
 		}
 
 		// Write it into the DB
-		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionUserId` = NULL WHERE `sessionId` = :id');
+		$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionUserId` = NULL WHERE `sessionId` = :id');
 
 		$query->execute([':id' => $this->id]);
 
 		$this->userId = GUEST_ID;
-
-		// Update the global user object
-		$this->rehashUser();
 
 		return true;
 
@@ -229,7 +228,10 @@ class Session {
 	 */
 	public function getUser() {
 
-		return new User($this->userId);
+		if($this->user === null)
+			$this->user = new User($this->userId);
+
+		return $this->user;
 
 	}
 
@@ -240,18 +242,9 @@ class Session {
 
 		UserUtil::deleteCookie(COOKIE_PRE.'sessionId');
 
-		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
+		$query = \Skies::getDb()->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
 
 		$query->execute([':id' => $this->id]);
-
-	}
-
-	/**
-	 * Updates the global user object
-	 */
-	public function rehashUser() {
-
-		\Skies::$user = $this->getUser();
 
 	}
 

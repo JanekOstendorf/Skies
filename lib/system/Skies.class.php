@@ -31,12 +31,11 @@ spl_autoload_register(['\Skies', 'autoload']);
 
 use skies\model\template\Notification;
 use skies\model\template\TemplateEngine;
+use skies\model\style\Style;
 
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
-use skies\model\style\Style;
-use skies\system\template\Message;
 
 use skies\util\Benchmark;
 use skies\util\LanguageUtil;
@@ -57,84 +56,84 @@ class Skies {
 	 *
 	 * @var bool
 	 */
-	protected static $api = false;
+	private static $api = false;
 
 	/**
 	 * MySQL handler
 	 *
 	 * @var \skies\system\database\Database
 	 */
-	public static $db = null;
+	private static $db = null;
 
 	/**
 	 * Session handler
 	 *
 	 * @var \skies\system\user\Session
 	 */
-	public static $session = null;
+	private static $session = null;
 
 	/**
 	 * Current user
 	 *
 	 * @var \skies\system\user\User
 	 */
-	public static $user = null;
+	private static $user = null;
 
 	/**
 	 * Default language defined in the config file
 	 *
 	 * @var \skies\system\language\Language
 	 */
-	public static $defLanguage = null;
+	private static $defaultLanguage = null;
 
 	/**
 	 * Language of this user
 	 *
 	 * @var \skies\system\language\Language
 	 */
-	public static $language = null;
+	private static $language = null;
 
 	/**
 	 * Configuration array
 	 *
 	 * @var array<string|array>
 	 */
-	public static $config = null;
+	private static $config = null;
 
 	/**
 	 * Template Engine
 	 *
 	 * @var \skies\model\template\TemplateEngine
 	 */
-	public static $template = null;
+	private static $template = null;
 
 	/**
 	 * Currently used style
 	 *
 	 * @var \skies\model\style\Style
 	 */
-	public static $style = null;
+	private static $style = null;
 
 	/**
 	 * Array of Message objects
 	 *
 	 * @var \skies\model\template\Notification
 	 */
-	public static $notification = null;
+	private static $notification = null;
 
 	/**
 	 * Current page
 	 *
 	 * @var \skies\model\Page
 	 */
-	public static $page = null;
+	private static $page = null;
 
 	/**
 	 * Initialize Skies
 	 *
 	 * @param bool $api Is Skies in the API mode?
 	 */
-	public function __construct($api = false) {
+	public final function __construct($api = false) {
 
 		Benchmark::start();
 
@@ -166,7 +165,7 @@ class Skies {
      *
      * @throws \skies\system\exception\SystemException
 	 */
-	private function initDb() {
+	private final function initDb() {
 
 		// NULL values
 		$dbHost = $dbUser = $dbPassword = $dbName = '';
@@ -186,7 +185,7 @@ class Skies {
 	/**
 	 * Initialize the session
 	 */
-	private function initSession($clean = true) {
+	private final function initSession($clean = true) {
 
 		// Do some clean ups
 		if($clean)
@@ -194,7 +193,7 @@ class Skies {
 
 		self::$session = new skies\system\user\Session();
 
-		self::$user = self::$session->getUser();
+		self::updateUser();
 
 	}
 
@@ -203,7 +202,7 @@ class Skies {
 	 *
 	 * @throws skies\system\exception\SystemException
 	 */
-	private function initConfig() {
+	private final function initConfig() {
 
 		self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'config/config.yml');
 
@@ -228,9 +227,9 @@ class Skies {
 	/**
 	 * Initialize the language objects
 	 */
-	private function initLanguage() {
+	private final function initLanguage() {
 
-		self::$language = self::$defLanguage = LanguageUtil::getDefaultLanguage();
+		self::$language = self::$defaultLanguage = LanguageUtil::getDefaultLanguage();
 
 		// TODO: get this from user's model
 		self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
@@ -240,7 +239,7 @@ class Skies {
 	/**
 	 * Initialize the style
 	 */
-	private function initStyle() {
+	private final function initStyle() {
 
 		// TODO: Get used style from user - if configured.
 		self::$style = new Style(self::$config['defaultStyle']);
@@ -258,7 +257,7 @@ class Skies {
 	/**
 	 * Init the template engine and assign default values
 	 */
-	private function initTemplate() {
+	private final function initTemplate() {
 
 		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getStylePath().'tpl/');
 
@@ -270,7 +269,7 @@ class Skies {
 	/**
 	 * Initialize the current page
 	 */
-	private function initPage() {
+	private final function initPage() {
 
 		// Parse GET arguments
 		if(isset($_GET['__0'])) {
@@ -296,7 +295,7 @@ class Skies {
 
 	/**#@-*/
 
-	private function assignDefaults() {
+	private final function assignDefaults() {
 
 
 		self::$template->assign([
@@ -345,7 +344,7 @@ class Skies {
 	/**
 	 * Print everything!
 	 */
-	private function show() {
+	private final function show() {
 
 		// Get nav
 		$nav = new \skies\system\navigation\Navigation(1);
@@ -359,6 +358,15 @@ class Skies {
 			print json_encode(self::$template->getVars());
 		else
 			self::$template->show('index.tpl');
+
+	}
+
+	/**
+	 * Update the global user
+	 */
+	public static final function updateUser() {
+
+		self::$user = self::$session->getUser();
 
 	}
 
@@ -452,6 +460,97 @@ class Skies {
 	public static final function isApiMode() {
 
 		return (self::$api == true);
+
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public final static function getConfig() {
+
+		return self::$config;
+
+	}
+
+	/**
+	 * @return \skies\system\database\Database
+	 */
+	public final static function getDb() {
+
+		return self::$db;
+
+	}
+
+	/**
+	 * @return \skies\system\language\Language
+	 */
+	public final static function getDefaultLanguage() {
+
+		return self::$defaultLanguage;
+
+	}
+
+	/**
+	 * @return \skies\system\language\Language
+	 */
+	public final static function getLanguage() {
+
+		return self::$language;
+
+	}
+
+	/**
+	 * @return \skies\model\template\Notification
+	 */
+	public final static function getNotification() {
+
+		return self::$notification;
+
+	}
+
+	/**
+	 * @return \skies\model\Page
+	 */
+	public final static function getPage() {
+
+		return self::$page;
+
+	}
+
+	/**
+	 * @return \skies\system\user\Session
+	 */
+	public final static function getSession() {
+
+		return self::$session;
+
+	}
+
+	/**
+	 * @return \skies\model\style\Style
+	 */
+	public final static function getStyle() {
+
+		return self::$style;
+
+	}
+
+	/**
+	 * @return \skies\model\template\TemplateEngine
+	 */
+	public final static function getTemplate() {
+
+		return self::$template;
+
+	}
+
+	/**
+	 * @return \skies\system\user\User
+	 */
+	public final static function getUser() {
+
+		return self::$user;
 
 	}
 

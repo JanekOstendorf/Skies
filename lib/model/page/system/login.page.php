@@ -16,17 +16,17 @@ use skies\form\Form;
 <?php
 
 // Login, user is guest
-if(\Skies::$user->isGuest()) {
+if(\Skies::getUser()->isGuest()) {
 
 	?>
 
 	<p>
-		<?=\Skies::$language->get('system.page.login.introduction', true)?>
+		<?=\Skies::getLanguage()->get('system.page.login.introduction', true)?>
 	</p>
 
 	<fieldset class="float-left" style="width: 45%;">
 
-		<legend><?=\Skies::$language->get('system.page.login.login')?></legend>
+		<legend><?=\Skies::getLanguage()->get('system.page.login.login')?></legend>
 
 		<?php
 
@@ -37,7 +37,7 @@ if(\Skies::$user->isGuest()) {
 	</fieldset>
 	<fieldset class="float-right" style="width: 45%;">
 
-		<legend><?=\Skies::$language->get('system.page.login.sign-up')?></legend>
+		<legend><?=\Skies::getLanguage()->get('system.page.login.sign-up')?></legend>
 
 		<?php
 
@@ -56,7 +56,7 @@ else {
 	?>
 
 	<p>
-		<?=\Skies::$language->get('system.page.login.welcome-title', ['userName' => \Skies::$user->getName()])?>
+		<?=\Skies::getLanguage()->get('system.page.login.welcome-title', ['userName' => \Skies::getUser()->getName()])?>
 	</p>
 	<?php
 

@@ -76,7 +76,7 @@ class User {
 			}
 
 			// Fetch info
-			$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE userId = :userId');
+			$query = \Skies::getDb()->prepare('SELECT * FROM `user` WHERE userId = :userId');
 			$query->execute([':userId' => $userId]);
 
 			$data = $query->fetchArray();
@@ -113,7 +113,7 @@ class User {
 		}
 
 		// Write stuff into DB
-		$query = \Skies::$db->prepare('UPDATE `user` SET
+		$query = \Skies::getDb()->prepare('UPDATE `user` SET
 			`userMail` = :mail,
             `userName` = :name,
             `userLastActivity` = :lastActivity
@@ -229,7 +229,7 @@ class User {
 
 		$passwordHash = SecureUtil::EncryptPassword($password, $this->mail);
 
-		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = :id');
+		$query = \Skies::getDb()->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = :id');
 
 		$query->execute([
 			':password' => $passwordHash,

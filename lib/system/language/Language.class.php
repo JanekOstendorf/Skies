@@ -61,7 +61,7 @@ class Language {
 	public function __construct($id, $default = false) {
 
 		// Fetch info
-		$query = \Skies::$db->prepare('SELECT * FROM `language` WHERE `langID` = :id');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `language` WHERE `langID` = :id');
 		$query->execute([':id' => $id]);
 
 		$data = $query->fetchArray();
@@ -72,7 +72,7 @@ class Language {
 		/*// Fetch model
 		$query = 'SELECT * FROM `'.TBL_PRE.'language-model` WHERE `langID` = '.\escape($id);
 
-		$this->model = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
+		$this->model = \Skies::getDb()->query($query)->fetch_array(MYSQLI_ASSOC);*/
 
 		// Blah blah
 		$this->default = $default;
@@ -118,12 +118,12 @@ class Language {
 	 */
 	protected function getDB($var) {
 
-		$query = \Skies::$db->prepare('SELECT * FROM `language-data` WHERE `langID` = :id AND `varName` = :var');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `language-data` WHERE `langID` = :id AND `varName` = :var');
 		$query->execute([':id' => $this->id, ':var' => $var]);
 
 		if($query->rowCount() == 0 && !$this->default) {
 
-			return \Skies::$defLanguage->get($var);
+			return \Skies::getDefaultLanguage()->get($var);
 
 		}
 		elseif($query->rowCount() == 1) {
@@ -149,7 +149,7 @@ class Language {
 		$var_arr = array_slice($var_arr, 1);
 
 		// temporary array
-		$tmp = \Skies::$config;
+		$tmp = \Skies::getConfig();
 
 		// Try to get the string, recurse deeper and deeper ...
 		foreach($var_arr as $cur) {

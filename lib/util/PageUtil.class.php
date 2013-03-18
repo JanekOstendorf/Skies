@@ -15,7 +15,7 @@ class PageUtil {
 	public static function getPage($pageName) {
 
 		// Fetch from the DB
-		$query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
 		$query->execute([':name' => $pageName]);
 
 		if($query->rowCount() == 1) {

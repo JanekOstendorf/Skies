@@ -52,7 +52,7 @@ class Navigation {
         $this->id = $id;
 
         // Data about this nav
-        $query = \Skies::$db->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
+        $query = \Skies::getDb()->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
 		$query->execute([':id' => $this->id]);
 
         if($query->rowCount() != 1) {
@@ -65,7 +65,7 @@ class Navigation {
 
 
         // Entries
-        $entryQuery = \Skies::$db->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
+        $entryQuery = \Skies::getDb()->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
 
         $entryQuery->execute([':id' => $this->id]);
 
@@ -137,7 +137,7 @@ class Navigation {
 
         }
 
-	    \Skies::$template->assign(['nav' => ['entries' => $entries]]);
+	    \Skies::getTemplate()->assign(['nav' => ['entries' => $entries]]);
 
     }
 
