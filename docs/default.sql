@@ -1,6 +1,39 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.2.2
+-- http://www.phpmyadmin.net
 --
--- Default SQL database for Skies
--- Table prefix: none ("")
+-- Host: localhost
+-- Erstellungszeit: 27. Jan 2013 um 18:40
+-- Server Version: 5.1.63-0+squeeze1
+-- PHP-Version: 5.4.10-1~dotdeb.0
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Datenbank: `ozzysql6`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `article`
+--
+
+CREATE TABLE IF NOT EXISTS `article` (
+  `articleID` int(255) NOT NULL AUTO_INCREMENT,
+  `articleTitle` longtext NOT NULL,
+  `articleAuthorID` int(255) NOT NULL,
+  `articleTime` bigint(255) NOT NULL,
+  `articleBlogID` int(255) NOT NULL,
+  `articleText` longtext NOT NULL,
+  PRIMARY KEY (`articleID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `language`
 --
 
 CREATE TABLE IF NOT EXISTS `language` (
@@ -11,17 +44,32 @@ CREATE TABLE IF NOT EXISTS `language` (
   PRIMARY KEY (`langID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
-INSERT INTO `language` (`langID`, `langName`, `langTitle`, `langDesc`) VALUES
+--
+-- Daten für Tabelle `language`
+--
+
+INSERT INTO `language` (langId, `langName`, `langTitle`, `langDesc`) VALUES
 (1, 'en-UK', 'British English', 'British English'),
 (2, 'de-DE', 'Deutsch (Deutschland)', 'Deutsch (Deutschland)');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `language-model`
+--
 
 CREATE TABLE IF NOT EXISTS `language-data` (
   `varID` int(255) NOT NULL AUTO_INCREMENT,
   `varName` varchar(500) NOT NULL,
   `varData` text NOT NULL,
   `langID` int(255) NOT NULL,
-  PRIMARY KEY (`varID`)
+  PRIMARY KEY (`varID`),
+  KEY `langID` (`langID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
+
+--
+-- Daten für Tabelle `language-model`
+--
 
 INSERT INTO `language-data` (`varID`, `varName`, `varData`, `langID`) VALUES
 (1, 'system.page.login.title', 'Login', 1),
@@ -68,8 +116,14 @@ INSERT INTO `language-data` (`varID`, `varName`, `varData`, `langID`) VALUES
 (42, 'system.page.login.sign-up.error', 'Fehler beim Erstellen des Accounts. :(', 2),
 (43, 'system.loginform.login', 'You''re not logged in. [[link-login]]', 1),
 (44, 'system.loginform.login', 'Du bist nicht eingeloggt. [[link-login]]', 2),
-(45, 'system.loginform.logout', 'You''re logged in as [[userName]]. [[link-logout]]', 1),
-(46, 'system.loginform.logout', 'Du bist als [[userName] eingeloggt. [[link-logout]]', 2);
+(45, 'system.loginform.logout', 'You''re logged in as <a href="{{SUBDIR}}/login">[[userName]]</a>. [[link-logout]]', 1),
+(46, 'system.loginform.logout', 'Du bist als <a href="{{SUBDIR}}/login">[[userName]]</a> eingeloggt. [[link-logout]]', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `nav`
+--
 
 CREATE TABLE IF NOT EXISTS `nav` (
   `navID` int(255) NOT NULL AUTO_INCREMENT,
@@ -79,8 +133,18 @@ CREATE TABLE IF NOT EXISTS `nav` (
   KEY `navID` (`navID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
+--
+-- Daten für Tabelle `nav`
+--
+
 INSERT INTO `nav` (`navID`, `navTitle`, `navLoginForm`) VALUES
 (1, 'Main navigation, horizontal', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `nav-entry`
+--
 
 CREATE TABLE IF NOT EXISTS `nav-entry` (
   `entryID` int(255) NOT NULL AUTO_INCREMENT,
@@ -90,13 +154,34 @@ CREATE TABLE IF NOT EXISTS `nav-entry` (
   `entryLink` int(11) DEFAULT NULL,
   `entryPageID` int(11) DEFAULT NULL,
   `entryPageName` varchar(500) DEFAULT NULL,
-  `navID` int(255) NOT NULL,
-  PRIMARY KEY (`entryID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  `navID` int(255) DEFAULT NULL,
+  `entryNeedAdmin` tinyint(1) NOT NULL,
+  `entryNeedLeader` tinyint(1) NOT NULL,
+  `entryNeedLogin` tinyint(1) NOT NULL,
+  PRIMARY KEY (`entryID`),
+  KEY `entryPageID` (`entryPageID`),
+  KEY `navID` (`navID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
-INSERT INTO `nav-entry` (`entryID`, `entryOrder`, `entryTitle`, `entryType`, `entryLink`, `entryPageID`, `entryPageName`, `navID`) VALUES
-(1, 1, 'Home', 1, NULL, 1, NULL, 1),
-(2, 2, '{{system.page.login.login}}', 2, NULL, NULL, 'login', 1);
+--
+-- Daten für Tabelle `nav-entry`
+--
+
+INSERT INTO `nav-entry` (`entryID`, `entryOrder`, `entryTitle`, `entryType`, `entryLink`, `entryPageID`, `entryPageName`, `navID`, `entryNeedAdmin`, `entryNeedLeader`, `entryNeedLogin`) VALUES
+(1, 1, 'Home', 1, NULL, 1, NULL, 1, 0, 0, 0),
+(2, 10, '{{system.page.login.login}}', 2, NULL, NULL, 'login', NULL, 0, 0, 0),
+(8, 2, 'Infos', 1, NULL, 9, NULL, 1, 0, 0, 1),
+(9, 3, 'Regeln', 1, NULL, 10, NULL, 1, 0, 0, 1),
+(10, 4, 'Bezahlung', 1, NULL, 8, NULL, 1, 0, 0, 1),
+(11, 5, 'Zusagen', 1, NULL, 11, NULL, 1, 0, 0, 1),
+(12, 6, 'Admin', 1, NULL, 7, NULL, 1, 1, 0, 1),
+(13, 7, 'Leader', 1, NULL, 13, NULL, 1, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `page`
+--
 
 CREATE TABLE IF NOT EXISTS `page` (
   `pageID` int(255) NOT NULL AUTO_INCREMENT,
@@ -107,49 +192,52 @@ CREATE TABLE IF NOT EXISTS `page` (
   `pageIncFile` text,
   `pageContent` text,
   `pagePHP` tinyint(1) DEFAULT NULL,
+  `pageNeedAdmin` tinyint(1) NOT NULL,
+  `pageNeedLeader` tinyint(1) NOT NULL,
+  `pageNeedLogin` tinyint(1) NOT NULL,
   PRIMARY KEY (`pageID`),
   KEY `pageID` (`pageID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
-INSERT INTO `page` (`pageID`, `pageName`, `pageTitle`, `pageType`, `pageFile`, `pageIncFile`, `pageContent`, `pagePHP`) VALUES
-(1, 'home', 'Home', 1, 'home.page.php', NULL, NULL, 1);
+--
+-- Daten für Tabelle `page`
+--
+
+INSERT INTO `page` (`pageID`, `pageName`, `pageTitle`, `pageType`, `pageFile`, `pageIncFile`, `pageContent`, `pagePHP`, `pageNeedAdmin`, `pageNeedLeader`, `pageNeedLogin`) VALUES
+(1, 'home', 'Home', 1, 'home.page.php', 'home.page.inc.php', NULL, 1, 0, 0, 0),
+(7, 'admin', 'Admin', 1, 'admin.page.php', 'admin.inc.page.php', NULL, 1, 1, 0, 1),
+(9, 'infos', 'Infos', 1, 'infos.page.php', NULL, NULL, 1, 0, 0, 1),
+(11, 'zusagen', 'Zusagen', 1, 'zusagen.page.php', 'zusagen.inc.page.php', NULL, 1, 0, 0, 0),
+(12, 'mail', 'Mail', 1, 'mail.page.php', 'mail.inc.page.php', '', 1, 1, 0, 1),
+(13, 'leader', 'Leader', 1, 'leader.page.php', 'leader.inc.page.php', NULL, 1, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `session`
+--
 
 CREATE TABLE IF NOT EXISTS `session` (
   `sessionID` varchar(40) NOT NULL,
-  `sessionUserID` int(255) NOT NULL,
+  `sessionUserID` int(255) DEFAULT NULL,
   `sessionIP` varchar(500) NOT NULL,
   `sessionLastActivity` bigint(255) NOT NULL,
   `sessionLong` tinyint(1) NOT NULL,
   PRIMARY KEY (`sessionID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `session` (`sessionID`, `sessionUserID`, `sessionIP`, `sessionLastActivity`, `sessionLong`) VALUES
-('0760a6eef47276a2e0fcf9e33ecf0efc21618daf', 0, '::ffff:4d17:fa63', 1344446914, 0),
-('079eacadeaf3ec61dfa73963a79ede3bcd5d8687', 0, '::ffff:5b60:a149', 1349203405, 0),
-('1a1f76c36132a8b6ade76acd1184d9d67e97249c', 0, '::ffff:5481:8d03', 1345846219, 0),
-('218b39c7427c7829352cecb3233de08a288ef604', 0, '::ffff:5c1d:5875', 1345807188, 0),
-('23ffc5524339643a0002cbff8346e0558339332d', 0, '::ffff:5481:86ae', 1348999680, 0),
-('259f4a16b70300bd2579a3a83507cfe2b47bb4a8', 0, '::ffff:5b60:e82c', 1344461325, 0),
-('2d9f5c7cdd047f090a0ac3a834f23a951e8edb1a', 0, '::ffff:bc68:9685', 1344446924, 0),
-('2e8cca040577120b1b56603b527a5071a4662eff', 0, '::ffff:d95f:f851', 1349204525, 0),
-('3d06bafbf344f97e4c28af9759c28b47b0105222', 0, '::ffff:3e18:fc85', 1345805870, 0),
-('3f3db052f6f88a28039602444e642c8d00339878', 0, '::ffff:bc68:93d7', 1344504632, 0),
-('749add5be2bfdaf891c33773c31559b537566ed4', 0, '::ffff:5481:8c6b', 1346494787, 0),
-('7dc99a0cf1fc1ebf11a1cb189d7f93ee1d62378f', 0, '::ffff:d95f:c4d3', 1344446938, 0),
-('7e1e6fb7e6e4f86e5383039b9d4a306db4e610a1', 0, '::ffff:560e:4ca9', 1345805806, 0),
-('98f98026a6f2d569c141837a06638345d88cf5fc', 0, '::ffff:5b60:f69d', 1349037421, 0),
-('9a53a32f8dd878b478c04f82679740e4a688498b', 0, '::ffff:d95f:c4d3', 1344446932, 0),
-('9bdded4afaa815c51dffcf2f876f39dabffbd188', 0, '::ffff:5481:8d03', 1345846061, 0),
-('a178ca968fe12bc40ce6cd9735ac318794a9e8e8', 0, '::ffff:d95f:c4d3', 1344429295, 0),
-('a45dd8f9ee9ec865d46749538e0b2850c93ba7cd', 0, '::ffff:5481:8390', 1344532208, 0),
-('a72314d205805ffce95899f957cf5a8f2a3fea91', 6, '::ffff:5b60:f153', 1349204479, 0),
-('a7da1fac467bf8223517780e7694224af059807d', 0, '::ffff:d95f:c4d3', 1344431632, 0),
-('b24073cd2f77c6dc0fe68b755b4af55ab75b1f1d', 2, '::ffff:5481:8d03', 1345847581, 0),
-('cc0450028fd591c6082d3687e407c2f9df3db010', 0, '::ffff:58c6:b66e', 1349202556, 0),
-('d30bfb12afc15ed949970a25b50243c1c76a44d9', 0, '::ffff:5b60:ff2a', 1344588366, 0),
-('ef953caf52939938fd49fcd44a5218cae6c2bf0a', 0, '2001:6f8:900:8db8:205b:dea0:57b7:8976', 1344521414, 0),
-('f53a453702283fcf8580a045ffc656d6d462d75f', 0, '::ffff:bc68:9e0d', 1349204490, 0),
-('fcc40d75917c5a8ea1a3d8879b46ab5a56a05f2d', 0, '::ffff:d95f:f851', 1349204525, 0);
+--
+-- Daten für Tabelle `session`
+--
+
+INSERT INTO `session` (sessionId, sessionUserId, sessionIp, `sessionLastActivity`, `sessionLong`) VALUES
+('e160cac11b7e61875f7777d5b0aa3d655180e0eb', 113, '::ffff:5b60:ab42', 1359312029, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user`
+--
 
 CREATE TABLE IF NOT EXISTS `user` (
   `userID` int(255) NOT NULL AUTO_INCREMENT,
@@ -158,18 +246,79 @@ CREATE TABLE IF NOT EXISTS `user` (
   `userSalt` text NOT NULL,
   `userPassword` text NOT NULL,
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=118 ;
+
+--
+-- Daten für Tabelle `user`
+--
+
+INSERT INTO `user` (`userID`, `userName`, `userMail`, `userSalt`, `userPassword`) VALUES
+(113, 'Janek Ostendorf', 'janek@der-lan.de', 'efb82997b8e6f523e337c2f0cb5b2e05', 'c09a205beb11d8d47da91a962d363cd3'),
+(116, 'Florian Thie', 'florian@der-lan.de', '', ''),
+(117, 'Janek Testostendorf', 'ozzy2345de+test@gmail.com', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user-model`
+--
 
 CREATE TABLE IF NOT EXISTS `user-data` (
   `dataID` int(255) NOT NULL AUTO_INCREMENT,
   `dataFieldID` int(255) NOT NULL,
   `dataUserID` int(255) NOT NULL,
   `dataValue` longtext NOT NULL,
-  PRIMARY KEY (`dataID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`dataID`),
+  KEY `dataUserID` (`dataUserID`),
+  KEY `dataFieldID` (`dataFieldID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=368 ;
+
+--
+-- Daten für Tabelle `user-model`
+--
+
+INSERT INTO `user-data` (`dataID`, `dataFieldID`, `dataUserID`, `dataValue`) VALUES
+(332, 13, 113, '666888ce658533ee9357ca0719a6c58a470e7436'),
+(341, 14, 113, '1359312029'),
+(342, 15, 113, 'overview'),
+(343, 16, 113, '1356961983'),
+(344, 18, 113, 'Champignons, Salami'),
+(345, 19, 113, '5'),
+(346, 20, 113, '1'),
+(347, 21, 113, '1'),
+(360, 13, 116, '3b9fd443f5ea6812adeced9668e96bd22f489e1f'),
+(361, 21, 116, '1'),
+(362, 22, 116, ''),
+(363, 13, 117, 'af18f5b67b44c44500039ad564ba5ea219e2cc79'),
+(364, 21, 117, ''),
+(365, 22, 117, ''),
+(366, 14, 117, '1359311996'),
+(367, 15, 117, 'overview');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user-fields`
+--
 
 CREATE TABLE IF NOT EXISTS `user-fields` (
   `fieldID` int(255) NOT NULL AUTO_INCREMENT,
   `fieldName` varchar(500) NOT NULL,
   PRIMARY KEY (`fieldID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+
+--
+-- Daten für Tabelle `user-fields`
+--
+
+INSERT INTO `user-fields` (`fieldID`, `fieldName`) VALUES
+(13, 'regToken'),
+(14, 'lastActivity'),
+(15, 'acceptPart'),
+(16, 'acceptTime'),
+(17, 'accept'),
+(18, 'pizza'),
+(19, 'plugs'),
+(20, 'ethernet'),
+(21, 'isAdmin'),
+(22, 'isLeader');

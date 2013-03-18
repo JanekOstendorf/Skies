@@ -10,221 +10,221 @@ namespace skies\system\language;
  */
 class Language {
 
-    /**
-     * Language ID
-     *
-     * @var int
-     */
-    protected $id = 0;
-
-    /**
-     * Short language identifier
-     *
-     * @var string
-     */
-    protected $name = '';
-
-    /**
-     * Detailed name
-     *
-     * @var string
-     */
-    protected $title = '';
+	/**
+	 * Language ID
+	 *
+	 * @var int
+	 */
+	protected $id = 0;
+
+	/**
+	 * Short language identifier
+	 *
+	 * @var string
+	 */
+	protected $name = '';
+
+	/**
+	 * Detailed name
+	 *
+	 * @var string
+	 */
+	protected $title = '';
 
-    /**
-     * Array holding all the data
-     *
-     * @var array<mixed>
-     */
-    //protected $data = [];
+	/**
+	 * Array holding all the model
+	 *
+	 * @var array<mixed>
+	 */
+	//protected $model = [];
 
-    /**
-     * Default language?
-     *
-     * @var bool
-     */
-    protected $default = false;
+	/**
+	 * Default language?
+	 *
+	 * @var bool
+	 */
+	protected $default = false;
 
-    /**
-     * Buffer for already fetched language vars
-     *
-     * @var array
-     */
-    protected $buffer = [];
+	/**
+	 * Buffer for already fetched language vars
+	 *
+	 * @var array
+	 */
+	protected $buffer = [];
 
-    /**
-     * Hm, what do you think this __construct does ... coffee?
-     *
-     * @param int  $id      Language ID
-     * @param bool $default Is this the default language?
-     */
-    public function __construct($id, $default = false) {
+	/**
+	 * Hm, what do you think this __construct does ... coffee?
+	 *
+	 * @param int  $id      Language ID
+	 * @param bool $default Is this the default language?
+	 */
+	public function __construct($id, $default = false) {
 
-        // Fetch info
-        $query = 'SELECT * FROM '.TBL_PRE.'language WHERE `langID` = '.\escape($id);
+		// Fetch info
+		$query = \Skies::$db->prepare('SELECT * FROM `language` WHERE `langID` = :id');
+		$query->execute([':id' => $id]);
 
-        $data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);
+		$data = $query->fetchArray();
 
-        $this->name = $data['langName'];
-        $this->title = $data['langTitle'];
+		$this->name  = $data['langName'];
+		$this->title = $data['langTitle'];
 
-        /*// Fetch data
-        $query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE `langID` = '.\escape($id);
+		/*// Fetch model
+		$query = 'SELECT * FROM `'.TBL_PRE.'language-model` WHERE `langID` = '.\escape($id);
 
-        $this->data = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
+		$this->model = \Skies::$db->query($query)->fetch_array(MYSQLI_ASSOC);*/
 
-        // Blah blah
-        $this->default = $default;
-        $this->id = $id;
+		// Blah blah
+		$this->default = $default;
+		$this->id      = $id;
 
-    }
+	}
 
-    public function get($var, $userVars = [], $nl2br = false) {
+	public function get($var, $userVars = [], $nl2br = false) {
 
-        if(isset($this->buffer[$var])) {
+		if(isset($this->buffer[$var])) {
 
-            return ($nl2br ? nl2br($this->buffer[$var], true) : $this->buffer[$var]);
+			return ($nl2br ? nl2br($this->buffer[$var], true) : $this->buffer[$var]);
 
-        }
-        else {
+		}
+		else {
 
-            if(explode('.', $var)[0] == 'config') {
-                $varData = $this->replaceVars($this->getConfig($var), $userVars);
-            }
-            else {
-                $varData = $this->replaceVars($this->getDB($var), $userVars);
-            }
+			if(explode('.', $var)[0] == 'config') {
+				$varData = $this->replaceVars($this->getConfig($var), $userVars);
+			}
+			else {
+				$varData = $this->replaceVars($this->getDB($var), $userVars);
+			}
 
-            // Save to the buffer
-            $this->buffer[$var] = $varData;
+			// Save to the buffer
+			$this->buffer[$var] = $varData;
 
-            if($varData == $var) {
-                $varData = '{{'.$varData.'}}';
-            }
+			if($varData == $var) {
+				$varData = '{{'.$varData.'}}';
+			}
 
-            return ($nl2br ? nl2br($varData, true) : $varData);
+			return ($nl2br ? nl2br($varData, true) : $varData);
 
-        }
+		}
 
-    }
+	}
 
-    /**
-     * Fetch the language variable form the DB
-     *
-     * @param string $var language variable
-     *
-     * @return string Content of the language variable
-     */
-    protected function getDB($var) {
+	/**
+	 * Fetch the language variable form the DB
+	 *
+	 * @param string $var language variable
+	 *
+	 * @return string Content of the language variable
+	 */
+	protected function getDB($var) {
 
-        $query = 'SELECT * FROM `'.TBL_PRE.'language-data` WHERE langID = '.\escape($this->id).' AND varName = \''.\escape($var).'\'';
+		$query = \Skies::$db->prepare('SELECT * FROM `language-data` WHERE `langID` = :id AND `varName` = :var');
+		$query->execute([':id' => $this->id, ':var' => $var]);
 
-        $result = \Skies::$db->query($query);
+		if($query->rowCount() == 0 && !$this->default) {
 
-        if($result->num_rows == 0 && !$this->default) {
+			return \Skies::$defLanguage->get($var);
 
-            return \Skies::$defLanguage->get($var);
+		}
+		elseif($query->rowCount() == 1) {
 
-        }
-        elseif($result->num_rows == 1) {
+			return $query->fetchArray()['varData'];
 
-            return $result->fetch_array(MYSQLI_ASSOC)['varData'];
+		}
+		else {
 
-        }
-        else {
+			return $var;
 
-            return $var;
+		}
 
-        }
 
+	}
 
-    }
+	protected function getConfig($var) {
 
-    protected function getConfig($var) {
+		// Explode
+		$var_arr = explode('.', $var);
 
-        // Explode
-        $var_arr = explode('.', $var);
+		// Remove the 'config' from the start
+		$var_arr = array_slice($var_arr, 1);
 
-        // Remove the 'config' from the start
-        $var_arr = array_slice($var_arr, 1);
+		// temporary array
+		$tmp = \Skies::$config;
 
-        // temporary array
-        $tmp = \Skies::$config;
+		// Try to get the string, recurse deeper and deeper ...
+		foreach($var_arr as $cur) {
 
-        // Try to get the string, recurse deeper and deeper ...
-        foreach($var_arr as $cur) {
+			if(isset($tmp[$cur])) {
+				$tmp = $tmp[$cur];
+			}
+			else {
+				$tmp = null;
+				break;
+			}
+		}
 
-            if(isset($tmp[$cur])) {
-                $tmp = $tmp[$cur];
-            }
-            else {
-                $tmp = null;
-                break;
-            }
-        }
+		return $tmp;
 
-        return $tmp;
+	}
 
-    }
 
+	public function replaceVars($varData, $userVars = []) {
 
-    public function replaceVars($varData, $userVars = []) {
+		$matches = [];
 
-        $matches = [];
+		// Language vars (lower case)
+		if(preg_match_all('/\{\{[a-z0-9\-\_\.]+\}\}/', $varData, $matches) > 0) {
 
-        // Language vars (lower case)
-        if(preg_match_all('/\{\{[a-z0-9\-\_\.]+\}\}/', $varData, $matches) > 0) {
+			foreach($matches[0] as $tag) {
 
-            foreach($matches[0] as $tag) {
+				$varName = substr($tag, 2, strlen($tag) - 4);
 
-                $varName = substr($tag, 2, strlen($tag) - 4);
+				$varData = str_replace($tag, $this->get($varName), $varData);
 
-                $varData = str_replace($tag, $this->get($varName), $varData);
+			}
 
-            }
+		}
 
-        }
+		$matches = [];
 
-        $matches = [];
+		// Constants (upper case)
+		if(preg_match_all('/\{\{[A-Z0-9\.\-\_]+\}\}/', $varData, $matches) > 0) {
 
-        // Constants (upper case)
-        if(preg_match_all('/\{\{[A-Z0-9\.\-\_]+\}\}/', $varData, $matches) > 0) {
+			foreach($matches[0] as $tag) {
 
-            foreach($matches[0] as $tag) {
+				$constName = substr($tag, 2, strlen($tag) - 4);
 
-                $constName = substr($tag, 2, strlen($tag) - 4);
+				if(defined($constName)) {
+					$varData = str_replace($tag, constant($constName), $varData);
+				}
 
-                if(defined($constName)) {
-                    $varData = str_replace($tag, constant($constName), $varData);
-                }
+			}
 
-            }
+		}
 
-        }
+		if(!empty($userVars)) {
 
-        if(!empty($userVars)) {
+			$matches = [];
 
-            $matches = [];
+			if(preg_match_all('/\[\[[a-zA-Z0-9\.\-\_]+\]\]/', $varData, $matches) > 0) {
 
-            if(preg_match_all('/\[\[[a-zA-Z0-9\.\-\_]+\]\]/', $varData, $matches) > 0) {
+				foreach($matches[0] as $tag) {
 
-                foreach($matches[0] as $tag) {
+					$varName = substr($tag, 2, strlen($tag) - 4);
 
-                    $varName = substr($tag, 2, strlen($tag) - 4);
+					if(isset($userVars[$varName])) {
+						$varData = str_replace($tag, $this->replaceVars($userVars[$varName]), $varData);
+					}
 
-                    if(isset($userVars[$varName])) {
-                        $varData = str_replace($tag, $this->replaceVars($userVars[$varName]), $varData);
-                    }
+				}
 
-                }
+			}
 
-            }
+		}
 
-        }
+		return $varData;
 
-        return $varData;
-
-    }
+	}
 
 }
 

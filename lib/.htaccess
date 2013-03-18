@@ -8,5 +8,5 @@
 # @package skies.system
 
 # Blocking this directory
-Order allow, deny
+Order allow,deny
 Deny from all

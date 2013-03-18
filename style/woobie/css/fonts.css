@@ -1,0 +1,12 @@
+/*
+ * author:      SkyIrc development team <skyirc@skyirc.net>
+ * copyright:   Copyright (c) SkyIrc
+ * license:     http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
+ */
+
+/* Ubuntu */
+
+@font-face {
+	font-family: "Ubuntu-L";
+	src: url('../fonts/Ubuntu-L.ttf') format("truetype");
+}

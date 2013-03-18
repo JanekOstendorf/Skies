@@ -8,82 +8,32 @@ namespace skies\util;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.util
  */
+use skies\model\Page;
+
 class PageUtil {
 
-    /**
-     * Gets the ID of the page with the given short name
-     *
-     * @static
-     *
-     * @param string $page_name Short name of the page
-     *
-     * @return int ID of the page. `-1` for system pages
-     */
-    public static function getIDFromName($page_name) {
+	public static function getPage($pageName) {
 
-        if(\skies\system\page\SystemPages::isSystemPage($page_name)) {
-            return -1;
-        }
+		// Fetch from the DB
+		$query = \Skies::$db->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
+		$query->execute([':name' => $pageName]);
 
-        $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageName` = \''.\escape($page_name).'\'';
+		if($query->rowCount() == 1) {
 
-        $result = \Skies::$db->query($query);
+			$data = $query->fetchArray();
 
-        if($result === false) {
-            return false;
-        }
+			// Build the class name
+			$pageClass = 'skies\model\page\\'.$data['pageClass'];
 
-        return $result->fetch_array(MYSQL_ASSOC)['pageID'];
+			$page = new $pageClass($data);
 
-    }
+			if($page instanceof Page)
+				return $page;
 
-    /**
-     * Gets the name of the page with the given ID
-     *
-     * @static
-     *
-     * @param int $page_id ID of the page
-     *
-     * @return string Short name of the page
-     */
-    public static function gerNameFromID($page_id) {
+		}
 
-        $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageID` = \''.\escape($page_id).'\'';
+	}
 
-        $result = \Skies::$db->query($query);
-
-        if($result === false) {
-            return false;
-        }
-
-        return $result->fetch_array(MYSQL_ASSOC)['pageName'];
-
-    }
-
-    /**
-     * Gets the type of the page with the given ID
-     *
-     * @static
-     *
-     * @param int $id ID of the page
-     *
-     * @return int Type of the page
-     * @see \skies\system\page\PageTypes
-     */
-    public static function getTypeFromID($id) {
-
-
-        $query = 'SELECT * FROM '.TBL_PRE.'page WHERE `pageID` = \''.\escape($id).'\'';
-
-        $result = \Skies::$db->query($query);
-
-        if($result === false) {
-            return false;
-        }
-
-        return $result->fetch_array(MYSQL_ASSOC)['pageType'];
-
-    }
 
 }
 

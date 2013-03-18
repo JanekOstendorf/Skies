@@ -10,11 +10,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Root directory
-define('ROOT_DIR', dirname(__FILE__));
+define('ROOT_DIR', dirname(__FILE__).'/');
 
 // Start Skies up!
 require ROOT_DIR.'/lib/system/Skies.class.php';
 
-new \Skies();
-
-?>
+new \Skies(false);

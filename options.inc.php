@@ -13,10 +13,7 @@ define('DEBUG', true);
 define('DEBUG_MYSQL', true);
 
 // Version
-define('VERSION', '0.1');
-
-// Database table prefix
-define('TBL_PRE', '');
+define('VERSION', '0.2');
 
 // Guest ID for settings-handling
 define('GUEST_ID', null);
@@ -24,4 +21,10 @@ define('GUEST_ID', null);
 // Cookie prefix
 define('COOKIE_PRE', 'skies_');
 
-?>
+// End of line
+define('EOL', "\n");
+
+// Path constants
+define('DIR_TPL', 'template/');
+define('DIR_STYLE', 'style/');
+define('DIR_CACHE', 'cache/');

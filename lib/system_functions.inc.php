@@ -16,7 +16,7 @@
  */
 function escape($string) {
 
-    return Skies::$db->escape_string($string);
+	return Skies::$db->escapeString($string);
 
 }
 

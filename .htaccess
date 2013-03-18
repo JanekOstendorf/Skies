@@ -14,10 +14,9 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 
 # Page given
-# Pagename => $_GET['_0']
-RewriteRule ^([-a-zA-Z0-9]+)/$ index.php?_0=$1
-RewriteRule ^([-a-zA-Z0-9]+)$ index.php?_0=$1&%{QUERY_STRING}
+# Everything => $_GET['_0']
+RewriteRule ^(.*)$ index.php?__0=$1&%{QUERY_STRING}
 
-# Page and Subpage / Argument given
-RewriteRule ^([-a-zA-Z0-9]+)/([-a-zA-Z0-9/]+)/$ index.php?_0=$1&_1=$2
-RewriteRule ^([-a-zA-Z0-9]+)/([-a-zA-Z0-9/]+)$ index.php?_0=$1&_1=$2&%{QUERY_STRING}
+
+## Redirect
+#Redirect 302 / https://der-lan.de/

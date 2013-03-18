@@ -2,6 +2,10 @@
 
 namespace skies\system\user;
 
+use skies\lan\Team;
+use skies\util\SecureUtil;
+use skies\util\UserUtil;
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
@@ -10,203 +14,290 @@ namespace skies\system\user;
  */
 class User {
 
-    /**
-     * User ID
-     *
-     * @var int
-     */
-    protected $id;
+	/**
+	 * User ID
+	 *
+	 * @var int
+	 */
+	protected $id;
 
-    /**
-     * User name
-     *
-     * @var string
-     */
-    protected $name;
+	/**
+	 * User name
+	 *
+	 * @var string
+	 */
+	protected $name;
 
-    /**
-     * User's mail address
-     *
-     * @var string
-     */
-    protected $mail;
+	/**
+	 * User's mail address
+	 *
+	 * @var string
+	 */
+	protected $mail;
 
-    /**
-     * Array holding custom data about this user. (buffer)
-     *
-     * @var array
-     */
-    protected $data;
+	/**
+	 * Password string
+	 *
+	 * @var string
+	 */
+	protected $password;
 
-    public function __construct($userID) {
+	/**
+	 * Last user activity (UNIX)
+	 *
+	 * @var int
+	 */
+	protected $lastActivity;
 
-        // Normal users
-        if($userID != GUEST_ID) {
+	/**
+	 * Array holding custom model about this user. (buffer)
+	 *
+	 * @var array
+	 */
+	protected $data;
 
-            if(!\skies\util\UserUtil::userExists($userID))
-                return false;
+	/**
+	 * @var bool
+	 */
+	protected $hasPassword = false;
 
-            // Fetch info
-            $result = \Skies::$db->query("SELECT * FROM ".TBL_PRE.'user WHERE userID = '.escape($userID));
+	/**
+	 * @param int $userId User's ID
+	 *
+	 * @return User
+	 */
+	public function __construct($userId) {
 
-            $data = $result->fetch_array();
+		// Normal users
+		if($userId != GUEST_ID) {
 
-            // Write into our vars
-            $this->id = $data['userID'];
-            $this->name = $data['userName'];
-            $this->mail = $data['userMail'];
+			if(!UserUtil::userExists($userId)) {
+				return false;
+			}
 
-        }
+			// Fetch info
+			$query = \Skies::$db->prepare('SELECT * FROM `user` WHERE userId = :userId');
+			$query->execute([':userId' => $userId]);
 
-        // Guests
-        else {
+			$data = $query->fetchArray();
 
-            $this->id = GUEST_ID;
-            $this->name = null;
-            $this->mail = null;
+			// Write into our vars
+			$this->id          = $data['userId'];
+			$this->name        = $data['userName'];
+			$this->mail        = $data['userMail'];
+			$this->hasPassword = ($data['userPassword'] != '');
+			$this->lastActivity = $data['userLastActivity'];
+			$this->password    = $data['userPassword'];
 
-        }
+		}
 
-    }
+		// Guests
+		else {
 
-    /**
-     * Update user's info. Writes to DB first and then fetches new stuff
-     */
-    public function update() {
+			$this->id   = GUEST_ID;
+			$this->name = null;
+			$this->mail = null;
 
-        // No need for this if we're a guest
-        if($this->isGuest()) {
-            return;
-        }
+		}
 
-        // Write stuff into DB
-        $query = 'UPDATE '.TBL_PRE.'user
-            SET `userMail` = \''.escape($this->mail).'\',
-            `userName` = \''.escape($this->name).'\'
-            WHERE `userID` = '.escape($this->id);
+	}
 
-        \Skies::$db->query($query);
+	/**
+	 * Update user's info. Writes to DB first and then fetches new stuff
+	 */
+	public function update() {
 
-        // Delete cache
-        $this->data = [];
+		// No need for this if we're a guest
+		if($this->isGuest()) {
+			return;
+		}
 
-        // Fetch stuff again
-        $this->__construct($this->id);
+		// Write stuff into DB
+		$query = \Skies::$db->prepare('UPDATE `user` SET
+			`userMail` = :mail,
+            `userName` = :name,
+            `userLastActivity` = :lastActivity
+            WHERE `userId` = :id');
+
+		$query->execute([
+			':mail' => $this->mail,
+		    ':name' => $this->name,
+		    ':lastActivity' => $this->lastActivity,
+		    ':id' => $this->id
+		]);
+
+		// Delete cache
+		$this->data = [];
+
+		// Fetch stuff again
+		$this->__construct($this->id);
 
 
-    }
+	}
 
-    /**
-     * Is this user a guest?
-     *
-     * @return bool
-     */
-    public function isGuest() {
+	/**
+	 * @param string $password Password to check
+	 * @return bool
+	 */
+	public function checkPassword($password) {
 
-        return $this->id == GUEST_ID;
+		return SecureUtil::CheckPassword($password, $this->mail, $this->password);
 
-    }
+	}
 
-    /**
-     * @return string User name
-     */
-    public function getName() {
+	/**
+	 * Is this user a guest?
+	 *
+	 * @return bool
+	 */
+	public function isGuest() {
 
-        return $this->name;
+		return $this->id == GUEST_ID;
 
-    }
+	}
 
-    /**
-     * @return int User ID
-     */
-    public function getId() {
+	/**
+	 * @return string User name
+	 */
+	public function getName() {
 
-        return $this->id;
+		return $this->name;
 
-    }
+	}
 
-    /**
-     * @return string User's mail address
-     */
-    public function getMail() {
+	/**
+	 * @return int User ID
+	 */
+	public function getId() {
 
-        return $this->mail;
+		return $this->id;
 
-    }
+	}
 
-    /**
-     * Changes user's user name
-     *
-     * @param string $name User name
-     */
-    public function setName($name) {
+	/**
+	 * @return string User's mail address
+	 */
+	public function getMail() {
 
-        $this->name = $name;
+		return $this->mail;
 
-    }
+	}
 
-    /**
-     * Changes user's mail address
-     *
-     * @param string $mail User's mail address
-     */
-    public function setMail($mail) {
+	/**
+	 * Changes user's user name
+	 *
+	 * @param string $name User name
+	 */
+	public function setName($name) {
 
-        $this->mail = $mail;
+		$this->name = $name;
 
-    }
+	}
 
-    /**
-     * Changes the user's password
-     *
-     * @param string $password Plain text password
-     *
-     * @return bool Success?
-     */
-    public function setPassword($password) {
+	/**
+	 * Changes user's mail address
+	 *
+	 * @param string $mail     User's mail address
+	 * @param string $password The user's password
+	 *
+	 * @return bool Is the password correct? (Success)
+	 */
+	public function setMail($mail, $password) {
 
-        $pwObj = \skies\util\UserUtil::makePass($password);
+		if($this->checkPassword($password)) {
 
-        $query = 'UPDATE `'.TBL_PRE.'user` SET `userPassword` = \''.escape($pwObj->password).'\', `userSalt` = \''.escape($pwObj->salt).'\' WHERE `userID` = '.escape($this->id);
+			$this->mail = $mail;
 
-        return \Skies::$db->query($query);
+			// Rehash the password
+			$this->setPassword($password);
 
-    }
+			return true;
 
-    /**
-     * Sets the dataField for this user
-     *
-     * @param string $data Data field name
-     * @param mixed $value Value to set
-     *
-     * @return bool Success?
-     */
-    public function setData($data, $value) {
+		}
 
-        if(!\skies\util\UserUtil::setData($this->getId(), $data, $value))
-            return false;
+		// Nope, you're wrong
+		return false;
 
-        $this->data[$data] = $value;
+	}
 
-        return true;
+	/**
+	 * Changes the user's password
+	 *
+	 * @param string $password Plain text password
+	 */
+	public function setPassword($password) {
 
-    }
+		$passwordHash = SecureUtil::EncryptPassword($password, $this->mail);
 
-    /**
-     * Get the data field for this user
-     *
-     * @param string $data Data field name
-     *
-     * @return mixed|null Null if there is no value. Else the value.
-     */
-    public function getData($data) {
+		$query = \Skies::$db->prepare('UPDATE `user` SET `userPassword` = :password WHERE `userID` = :id');
 
-        if(isset($this->data[$data]))
-            return $this->data[$data];
+		$query->execute([
+			':password' => $passwordHash,
+		    ':id' => $this->id
+		]);
 
-        return \skies\util\UserUtil::getData($this->id, $data);
+	}
 
-    }
+	/**
+	 * Sets the dataField for this user
+	 *
+	 * @param string $data  Data field name
+	 * @param mixed  $value Value to set
+	 *
+	 * @return bool Success?
+	 */
+	public function setData($data, $value) {
+
+		if(!UserUtil::setData($this->getId(), $data, $value))
+			return false;
+
+		$this->data[$data] = $value;
+
+		return true;
+
+	}
+
+	/**
+	 * Get the model field for this user
+	 *
+	 * @param string $data Data field name
+	 *
+	 * @return mixed|null Null if there is no value. Else the value.
+	 */
+	public function getData($data) {
+
+		if(isset($this->data[$data]))
+			return $this->data[$data];
+
+		return UserUtil::getData($this->id, $data);
+
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasPassword() {
+
+		return $this->hasPassword;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLastActivity() {
+
+		return $this->lastActivity;
+
+	}
+
+	/**
+	 * @param int $lastActivity
+	 */
+	public function setLastActivity($lastActivity) {
+
+		$this->lastActivity = $lastActivity;
+
+	}
 
 }
 

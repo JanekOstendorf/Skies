@@ -10,20 +10,15 @@ namespace skies\system\navigation;
  */
 class EntryTypes {
 
-    /**
-     * Entry with given pageID
-     */
-    const PAGE_ID = 1;
+	/**
+	 * Entry with given page
+	 */
+	const PAGE = 1;
 
-    /**
-     * Entry with given pageName. E.g. for system pages
-     */
-    const PAGE_NAME = 2;
-
-    /**
-     * Entry with given link URL
-     */
-    const EXTERNAL_LINK = 3;
+	/**
+	 * Entry with given link URL
+	 */
+	const EXTERNAL_LINK = 2;
 
 }
 

@@ -3,6 +3,7 @@
 namespace skies\system\navigation;
 
 use skies\system\navigation\EntryTypes;
+use skies\util\PageUtil;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -42,7 +43,7 @@ class Navigation {
 
 
     /**
-     * Init the nav and fetch all data
+     * Init the nav and fetch all model
      *
      * @param int $id ID of the navigation
      */
@@ -51,34 +52,32 @@ class Navigation {
         $this->id = $id;
 
         // Data about this nav
-        $query = 'SELECT * FROM '.TBL_PRE.'nav WHERE `navID` = '.\escape($this->id);
+        $query = \Skies::$db->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
+		$query->execute([':id' => $this->id]);
 
-        $navResult = \Skies::$db->query($query);
-
-        if($navResult->num_rows != 1) {
+        if($query->rowCount() != 1) {
 
             return false;
 
         }
 
-        $this->title = $navResult->fetch_array(MYSQLI_ASSOC)['navTitle'];
+        $this->title = $query->fetchArray()['navTitle'];
 
 
         // Entries
-        $query = 'SELECT * FROM `'.TBL_PRE.'nav-entry` WHERE `navID` = '.\escape($this->id).' ORDER BY `entryOrder` ASC';
+        $entryQuery = \Skies::$db->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
 
-        $result = \Skies::$db->query($query);
+        $entryQuery->execute([':id' => $this->id]);
 
-        while($line = $result->fetch_array(MYSQLI_ASSOC)) {
+        while($line = $entryQuery->fetchArray()) {
 
             $this->entries[] = [
 
-                'id' => $line['entryID'],
-                'order' => $line['entryOrder'],
-                'pageID' => $line['entryPageID'],
-                'link' => $line['entryLink'],
-                'title' => $line['entryTitle'],
-                'type' => $line['entryType'],
+                'id'       => $line['entryId'],
+                'order'    => $line['entryOrder'],
+                'link'     => $line['entryLink'],
+                'title'    => $line['entryTitle'],
+                'type'     => $line['entryType'],
                 'pageName' => $line['entryPageName']
 
             ];
@@ -87,108 +86,58 @@ class Navigation {
 
     }
 
-    public function printNav() {
-
-        $buffer = '
-<nav id="nav'.$this->id.'">
-
-    <ul>';
+    public function prepareNav() {
 
         $i = 0;
 
         $entryCount = count($this->entries);
 
+	    $entries = [];
+
         foreach($this->entries as $entry) {
 
-            // CSS classes
-            $classes = '';
-
-            // Link
-            $link = '';
+            // Tpl variables
+            $vars = [];
 
             // Determine css classes of this entry
             if($i == 0) {
-                $classes .= "first ";
+                $vars['first'] = true;
             }
 
             if($i == $entryCount - 1) {
-                $classes .= "last ";
+	            $vars['last'] = false;
             }
 
             // Type (internal/external link) dependant stuff
             switch($entry['type']) {
 
-                case EntryTypes::PAGE_ID:
+                case EntryTypes::PAGE:
 
                     // Is this the current page?
-                    if($entry['pageID'] == \Skies::$page->getId()) {
-                        $classes .= "active ";
+                    if(PageUtil::getPage($entry['pageName'])->isActive()) {
+	                    $vars['active'] = true;
                     }
 
                     // Make the link
-                    $link = SUBDIR.'/'.\skies\util\PageUtil::gerNameFromID($entry['pageID']);
-
-                    break;
-
-                case EntryTypes::PAGE_NAME:
-
-                    // Is this the current page?
-                    if($entry['pageName'] == \Skies::$page->getName()) {
-                        $classes .= "active ";
-                    }
-
-                    // Make the link
-                    $link = SUBDIR.'/'.$entry['pageName'];
+	                $vars['link'] = '/'.SUBDIR.$entry['pageName'];
 
                     break;
 
                 case EntryTypes::EXTERNAL_LINK:
 
                     // Make the link
-                    $link = $entry['link'];
+	                $vars['link'] = $entry['link'];
 
                     break;
 
             }
+	        $vars['title'] = $entry['title'];
 
-            // Remove last space
-            $classes = trim($classes);
-
-            // Output
-            $buffer .= "
-        <li";
-            if(!empty($classes)) {
-                $buffer .= " class=\"$classes\"";
-            }
-            $buffer .= ">\n
-            <a href=\"$link\">".\Skies::$language->replaceVars($entry['title'])."</a>\n
-        </li>\n
-";
-
-            $i++;
+            $entries[$i++] = $vars;
 
         }
 
-
-        $buffer .= '
-    </ul>
-
-    <!-- Login field -->
-    <div id="loginform">
-        ';
-
-        $buffer .= (new \skies\form\LoginForm())->returnHTML();
-
-       $buffer .= '
-    </div>
-    <!-- End login field -->
-
-    <div class="clear"></div>
-
-</nav>';
-
-        echo $buffer;
-
+	    \Skies::$template->assign(['nav' => ['entries' => $entries]]);
 
     }
 

@@ -8,229 +8,252 @@ namespace skies\system\user;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.user
  */
+use skies\util\StringUtil;
+use skies\util\UserUtil;
+
 class Session {
 
-    /**
-     * Session ID
-     *
-     * @var string
-     */
-    protected $id = '';
+	/**
+	 * Session ID
+	 *
+	 * @var string
+	 */
+	protected $id = '';
 
-    /**
-     * User ID
-     *
-     * @var string
-     */
-    protected $userID = 0;
+	/**
+	 * User ID
+	 *
+	 * @var string
+	 */
+	protected $userId = 0;
 
-    /**
-     * Is this a long login?
-     *
-     * @var bool
-     */
-    protected $long = 0;
+	/**
+	 * Is this a long login?
+	 *
+	 * @var bool
+	 */
+	protected $long = 0;
 
-    /**
-     * IPv6 of the user
-     *
-     * @var string
-     */
-    protected $ip;
+	/**
+	 * IPv6 of the user
+	 *
+	 * @var string
+	 */
+	protected $ip;
 
-    /**
-     * IP fetched from the DB
-     *
-     * @var string
-     */
-    protected $oldIP;
+	/**
+	 * IP fetched from the DB
+	 *
+	 * @var string
+	 */
+	protected $oldIp;
 
-    /**
-     * Starts session and handles login
-     */
-    public function __construct() {
+	/**
+	 * Starts session and handles login
+	 */
+	public function __construct() {
 
-        $this->ip = \skies\util\UserUtil::getIpAddress();
+		$this->ip = UserUtil::getIpAddress();
 
-        // Fetch session ID
-        if(isset($_COOKIE[COOKIE_PRE.'sessionID']) && !empty($_COOKIE[COOKIE_PRE.'sessionID']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionID'])) {
+		// Fetch session ID
+		if(isset($_COOKIE[COOKIE_PRE.'sessionId']) && !empty($_COOKIE[COOKIE_PRE.'sessionId']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionId'])) {
 
-            $this->id = $_COOKIE[COOKIE_PRE.'sessionID'];
-            $this->continueSession();
 
-        }
-        else {
+			$this->id = $_COOKIE[COOKIE_PRE.'sessionId'];
+			$this->continueSession();
 
-            $this->newSession();
-            $this->continueSession();
+		}
+		else {
 
-        }
 
+			$this->newSession();
+			$this->continueSession();
 
-    }
+		}
 
-    /**
-     * Start a new session
-     */
-    protected function newSession($long = false) {
 
-        // Create new ID
-        $this->id = \skies\util\StringUtil::getRandomHash();
+	}
 
+	/**
+	 * Start a new session
+	 */
+	protected function newSession() {
 
-        $query = 'INSERT INTO '.TBL_PRE.'session
-            (`sessionID`, `sessionIP`, `sessionLastActivity`, `sessionUserID`)
-            VALUES(\''.\escape($this->id).'\', \''.\escape(\skies\util\UserUtil::getIpAddress()).'\', '.\escape(NOW).', NULL)';
+		// Create new ID
+		$this->id = StringUtil::getRandomHash();
 
-        return !(!\Skies::$db->query($query) || !setcookie(COOKIE_PRE.'sessionID', $this->id, NOW + (365 * 86400)));
+		$query = \Skies::$db->prepare('INSERT INTO `session`
+			(`sessionId`, `sessionIp`, `sessionLastActivity`, `sessionUserId`)
+			VALUES(:id, :ip, :lastActivity, :userId)');
 
+		$query->execute([
+			':id' => $this->id,
+			':ip' => UserUtil::getIpAddress(),
+			':lastActivity' => NOW,
+			':userId' => null
+		]);
 
-    }
 
-    /**
-     * Do all stuff for ongoing sessions
-     */
-    protected function continueSession() {
+		return setcookie(COOKIE_PRE.'sessionId', $this->id, NOW + (365 * 86400), '/'.SUBDIR) !== false;
 
-        $res = \Skies::$db->query('SELECT * FROM `'.TBL_PRE.'session` WHERE `sessionID` = \''.\escape($this->id).'\'');
 
-        if($res->num_rows != 1) {
+	}
 
-            $this->newSession();
+	/**
+	 * Do all stuff for ongoing sessions
+	 */
+	protected function continueSession() {
 
-        }
-        else {
+		$query = \Skies::$db->prepare('SELECT * FROM `session` WHERE `sessionId` = :id');
+		$query->execute([':id' => $this->id]);
 
-            $data = $res->fetch_array();
+		if($query->rowCount() != 1) {
 
-            $this->userID = $data['sessionUserID'];
-            $this->long = ($data['sessionLong'] == 1);
-            $this->oldIP = $data['sessionIP'];
+			$this->closeSession();
+			$this->newSession();
 
-            // Check session's IP
-            if($this->oldIP == $this->ip) {
+		}
+		else {
 
-                // Check if the session timed out
-                if($this->long) {
-                    $length = (365 * 86400);
-                }
-                else {
-                    $length = (30 * 60);
-                }
+			$data = $query->fetchArray();
 
-                if($data['sessionLastActivity'] + $length < NOW) {
+			$this->userId = $data['sessionUserId'];
+			$this->long   = ($data['sessionLong'] == 1);
+			$this->oldIp  = $data['sessionIp'];
 
-                    $this->closeSession();
-                    $this->newSession();
+			// Check session's IP
+			//if($this->oldIP == $this->ip) {
 
-                }
-                else {
+				// Check if the session timed out
+				if($this->long) {
+					$length = (365 * 86400);
+				}
+				else {
+					$length = (30 * 60);
+				}
 
-                    /*
-                     * Update DB
-                     */
+				// Session's dead
+				if($data['sessionLastActivity'] + $length < NOW) {
 
-                    $query = 'UPDATE '.TBL_PRE.'session SET `sessionLastActivity` = '.NOW.' WHERE sessionID = \''.\escape($this->id).'\'';
 
-                    \Skies::$db->query($query);
+					$this->closeSession();
+					$this->newSession();
 
-                }
+				}
+				else {
 
-            }
-            else {
+					/*
+					 * Update DB
+					 */
 
-                // Damn, session's invalid :/
-                $this->closeSession();
-                $this->newSession();
+					$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
 
-            }
+					$query->execute([':lastActivity' => NOW, ':id' => $this->id]);
 
-        }
+					$this->rehashUser();
 
-    }
+					if(!\Skies::$user->isGuest()) {
+						\Skies::$user->setLastActivity(NOW);
+						\Skies::$user->update();
+					}
 
-    /**
-     * Change the user ID of this session
-     *
-     * @param int  $userID User ID
-     * @param bool $long   Long session?
-     *
-     * @return bool Success?
-     */
-    public function login($userID, $long = false) {
+				}
 
-        // Write it into the DB
-        $query = 'UPDATE '.TBL_PRE.'session SET `sessionLong` = '.($long == true ? '1' : '0').', `sessionUserID` = '.\escape($userID).' WHERE `sessionID` = \''.\escape($this->id).'\'';
+			/*}
+			else {
 
-        // Some checks
-        if(\Skies::$db->query($query) === false) {
-            return false;
-        }
-        else {
-            $this->userID = $userID;
+				// Damn, session's invalid :/
+				$this->closeSession();
+				$this->newSession();
 
-            // Update the global user object
-            $this->rehashUser();
+			}*/
 
-            return true;
-        }
+		}
 
+	}
 
-    }
+	/**
+	 * Change the user ID of this session
+	 *
+	 * @param int  $userId User ID
+	 * @param bool $long   Long session?
+	 *
+	 * @return bool Success?
+	 */
+	public function login($userId, $long = false) {
 
-    public function logout() {
+		// Write it into the DB
+		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionLong` = :long, `sessionUserId` = :userId WHERE `sessionId` = :id');
 
-        // Are we even logged in?
-        if($this->userID == GUEST_ID) {
-            return false;
-        }
+		$query->execute([
+			':long' => $long == true,
+			':userId' => $userId,
+			':id' => $this->id
+		]);
 
-        // Write it into the DB
-        $query = 'UPDATE '.TBL_PRE.'session SET `sessionUserID` = NULL WHERE `sessionID` = \''.\escape($this->id).'\'';
+		$this->userId = $userId;
 
-        // Some checks
-        if(\Skies::$db->query($query) === false) {
-            return false;
-        }
-        else {
-            $this->userID = GUEST_ID;
+		// Update the global user object
+		$this->rehashUser();
 
-            // Update the global user object
-            $this->rehashUser();
+		\Skies::$user->setLastActivity(NOW);
+		\Skies::$user->update();
 
-            return true;
-        }
+		return true;
 
-    }
+	}
 
-    /**
-     * @return User User of this session
-     */
-    public function getUser() {
+	public function logout() {
 
-        return new User($this->userID);
+		// Are we even logged in?
+		if($this->userId == GUEST_ID) {
+			return false;
+		}
 
-    }
+		// Write it into the DB
+		$query = \Skies::$db->prepare('UPDATE `session` SET `sessionUserId` = NULL WHERE `sessionId` = :id');
 
-    /**
-     * Closes the current session
-     */
-    protected function closeSession() {
+		$query->execute([':id' => $this->id]);
 
-        \skies\util\UserUtil::deleteCookie(COOKIE_PRE.'sessionID');
+		$this->userId = GUEST_ID;
 
-        \Skies::$db->query('DELETE FROM '.TBL_PRE.'session WHERE sessionID = \''.\escape($this->id).'\'');
+		// Update the global user object
+		$this->rehashUser();
 
-    }
+		return true;
 
-    /**
-     * Updates the global user object
-     */
-    public function rehashUser() {
+	}
 
-        \Skies::$user = $this->getUser();
+	/**
+	 * @return User User of this session
+	 */
+	public function getUser() {
 
-    }
+		return new User($this->userId);
+
+	}
+
+	/**
+	 * Closes the current session
+	 */
+	protected function closeSession() {
+
+		UserUtil::deleteCookie(COOKIE_PRE.'sessionId');
+
+		$query = \Skies::$db->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
+
+		$query->execute([':id' => $this->id]);
+
+	}
+
+	/**
+	 * Updates the global user object
+	 */
+	public function rehashUser() {
+
+		\Skies::$user = $this->getUser();
+
+	}
 
 }
 
