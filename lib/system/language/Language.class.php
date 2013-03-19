@@ -2,27 +2,24 @@
 
 namespace skies\system\language;
 
+use skies\model\template\ITemplateArray;
+use skies\system\exception\SystemException;
+use skies\util\Spyc;
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.system.language
  */
-class Language {
+class Language implements ITemplateArray {
 
 	/**
 	 * Language ID
 	 *
-	 * @var int
-	 */
-	protected $id = 0;
-
-	/**
-	 * Short language identifier
-	 *
 	 * @var string
 	 */
-	protected $name = '';
+	protected $id = '';
 
 	/**
 	 * Detailed name
@@ -32,11 +29,18 @@ class Language {
 	protected $title = '';
 
 	/**
-	 * Array holding all the model
+	 * Description
 	 *
-	 * @var array<mixed>
+	 * @var string
 	 */
-	//protected $model = [];
+	protected $description = '';
+
+	/**
+	 * Array holding all the data
+	 *
+	 * @var array
+	 */
+	protected $data = [];
 
 	/**
 	 * Default language?
@@ -46,97 +50,104 @@ class Language {
 	protected $default = false;
 
 	/**
-	 * Buffer for already fetched language vars
+	 * Language config file (YAML array)
 	 *
 	 * @var array
 	 */
-	protected $buffer = [];
+	protected $configFile = [];
+
+	/**
+	 * Did we fall back to the default langauge somewhere?
+	 *
+	 * @var bool
+	 */
+	protected static $fallbackUsed = false;
 
 	/**
 	 * Hm, what do you think this __construct does ... coffee?
-	 *
-	 * @param int  $id      Language ID
-	 * @param bool $default Is this the default language?
+	 * @param string $id      Language identifer
+	 * @param bool   $loadVars Shall we load the language vars?
+	 * @param bool   $default Is this the default language?
+	 * @throws \skies\system\exception\SystemException
 	 */
-	public function __construct($id, $default = false) {
-
-		// Fetch info
-		$query = \Skies::getDb()->prepare('SELECT * FROM `language` WHERE `langID` = :id');
-		$query->execute([':id' => $id]);
-
-		$data = $query->fetchArray();
-
-		$this->name  = $data['langName'];
-		$this->title = $data['langTitle'];
-
-		/*// Fetch model
-		$query = 'SELECT * FROM `'.TBL_PRE.'language-model` WHERE `langID` = '.\escape($id);
-
-		$this->model = \Skies::getDb()->query($query)->fetch_array(MYSQLI_ASSOC);*/
+	public function __construct($id, $loadVars = true, $default = false) {
 
 		// Blah blah
 		$this->default = $default;
 		$this->id      = $id;
 
+		// Parse config file
+		if(!file_exists($this->getDirectoryPath()))
+			throw new SystemException('Failed to load language "'.$this->id.'": The language directory does not exist.');
+
+		if(!file_exists($this->getDirectoryPath().'language.yml'))
+			throw new SystemException('Failed to load language "'.$this->id.'": The language config file does not exist.');
+
+		$this->configFile = Spyc::YAMLLoad($this->getDirectoryPath().'language.yml')['language'];
+
+		// Load the vars
+		if($loadVars) {
+			foreach($this->configFile['files'] as $curFile) {
+
+				$curFileVars = Spyc::YAMLLoad($this->getDirectoryPath().$curFile);
+
+				// Remove the ending and save the vars
+				$superVar = pathinfo($this->getDirectoryPath().$curFile, PATHINFO_FILENAME);
+				$this->data[$superVar] = $curFileVars;
+
+			}
+		}
+
+		$this->title = $this->configFile['title'];
+		$this->description = $this->configFile['description'];
+
 	}
 
-	public function get($var, $userVars = [], $nl2br = false) {
+	public function get($var, $userVars = []) {
 
-		if(isset($this->buffer[$var])) {
-
-			return ($nl2br ? nl2br($this->buffer[$var], true) : $this->buffer[$var]);
-
+		if(explode('.', $var)[0] == 'config') {
+			$varData = $this->replaceVars($this->getConfig($var), $userVars);
 		}
 		else {
+			$varData = $this->replaceVars($this->getVar($var), $userVars);
+		}
 
-			if(explode('.', $var)[0] == 'config') {
-				$varData = $this->replaceVars($this->getConfig($var), $userVars);
+		if($varData === null) {
+
+			// Fall back to the default language
+			if(!$this->default) {
+				$varData = \Skies::getDefaultLanguage()->get($var, $userVars);
+				self::$fallbackUsed = true;
+			}
+			else
+				$varData = '{{'.$var.'}}';
+		}
+
+		return $varData;
+
+	}
+
+	protected function getVar($var) {
+
+		// Explode
+		$var_arr = explode('.', $var);
+
+		// temporary array
+		$tmp = $this->data;
+
+		// Try to get the string, recurse deeper and deeper ...
+		foreach($var_arr as $cur) {
+
+			if(isset($tmp[$cur])) {
+				$tmp = $tmp[$cur];
 			}
 			else {
-				$varData = $this->replaceVars($this->getDB($var), $userVars);
+				$tmp = null;
+				break;
 			}
-
-			// Save to the buffer
-			$this->buffer[$var] = $varData;
-
-			if($varData == $var) {
-				$varData = '{{'.$varData.'}}';
-			}
-
-			return ($nl2br ? nl2br($varData, true) : $varData);
-
 		}
 
-	}
-
-	/**
-	 * Fetch the language variable form the DB
-	 *
-	 * @param string $var language variable
-	 *
-	 * @return string Content of the language variable
-	 */
-	protected function getDB($var) {
-
-		$query = \Skies::getDb()->prepare('SELECT * FROM `language-data` WHERE `langID` = :id AND `varName` = :var');
-		$query->execute([':id' => $this->id, ':var' => $var]);
-
-		if($query->rowCount() == 0 && !$this->default) {
-
-			return \Skies::getDefaultLanguage()->get($var);
-
-		}
-		elseif($query->rowCount() == 1) {
-
-			return $query->fetchArray()['varData'];
-
-		}
-		else {
-
-			return $var;
-
-		}
-
+		return $tmp;
 
 	}
 
@@ -172,8 +183,8 @@ class Language {
 
 		$matches = [];
 
-		// Language vars (lower case)
-		if(preg_match_all('/\{\{[a-z0-9\-\_\.]+\}\}/', $varData, $matches) > 0) {
+		// Language vars ({}-braces)
+		if(preg_match_all('/\{\{[a-zA-Z0-9\-\_\.]+\}\}/', $varData, $matches) > 0) {
 
 			foreach($matches[0] as $tag) {
 
@@ -187,8 +198,8 @@ class Language {
 
 		$matches = [];
 
-		// Constants (upper case)
-		if(preg_match_all('/\{\{[A-Z0-9\.\-\_]+\}\}/', $varData, $matches) > 0) {
+		// Constants (upper case, normal braces)
+		if(preg_match_all('/\(\([A-Z0-9\.\-\_]+\)\)/', $varData, $matches) > 0) {
 
 			foreach($matches[0] as $tag) {
 
@@ -223,6 +234,43 @@ class Language {
 		}
 
 		return $varData;
+
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTemplateArray() {
+
+		return [
+			'id' => $this->id,
+			'title' => $this->title,
+			'description' => $this->description,
+			'default' => $this->default,
+			'object' => $this
+		];
+
+	}
+
+	/**
+	 * Get the path to the languages directory
+	 *
+	 * @return string
+	 */
+	public function getDirectoryPath() {
+
+		return ROOT_DIR.DIR_LANGUAGE.$this->id.'/';
+
+	}
+
+	/**
+	 * Did we use the fallback language (the default one)
+	 *
+	 * @return bool
+	 */
+	public static function getFallbackUsed() {
+
+		return self::$fallbackUsed;
 
 	}
 

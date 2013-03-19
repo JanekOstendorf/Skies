@@ -13,6 +13,7 @@ namespace skies\model\page;
 use skies\model\Page;
 use skies\model\template\Notification;
 use skies\system\user\User;
+use skies\util\LanguageUtil;
 use skies\util\UserUtil;
 
 class LoginPage extends Page {
@@ -47,21 +48,21 @@ class LoginPage extends Page {
 					}
 					else {
 
-						\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.error}}');
+						\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.login.error.generic}}');
 
 					}
 
 				}
 				else {
 
-					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.error.user-pw}}');
+					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.login.error.userPassword}}');
 
 				}
 
 			}
 			else {
 
-				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.error.user-pw}}');
+				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.login.error.userPassword}}');
 
 			}
 
@@ -101,26 +102,26 @@ class LoginPage extends Page {
 						\Skies::getUser()->setMail($_POST['changeMail'], $_POST['changeMailPassword']);
 						\Skies::getUser()->update();
 
-						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.change.mail.success}}', ['newMail' => \Skies::getUser()->getMail()]);
+						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.changeMail.success}}', ['newMail' => \Skies::getUser()->getMail()]);
 
 					}
 					else {
 
-						\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.mail.error.wrong-password}}');
+						\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.changeMail.error.wrongPassword}}');
 
 					}
 
 				}
 				else {
 
-					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.mail.error.mail-pattern}}');
+					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.changeMail.error.mailPattern}}');
 
 				}
 
 			}
 			else {
 
-				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.mail.error.missing}}');
+				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.changeMail.error.missing}}');
 
 			}
 
@@ -142,25 +143,30 @@ class LoginPage extends Page {
 				}
 				else {
 
-					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.password.error.mismatch}}');
+					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.changePassword.error.mismatch}}');
 
 				}
 
 			}
 			else {
 
-				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.password.error.missing}}');
+				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.changePassword.error.missing}}');
 
 			}
 
 		}
 
+		$availableLanguages = [];
+
+		foreach(LanguageUtil::getAllLanguages() as $language)
+			$availableLanguages[] = $language->getTemplateArray();
 
 		// Mail and username pattern
 		\Skies::getTemplate()->assign([
 			'loginPage' => [
 				'mailPattern' => UserUtil::MAIL_PATTERN,
-				'usernamePattern' => UserUtil::USERNAME_PATTERN
+				'usernamePattern' => UserUtil::USERNAME_PATTERN,
+				'availableLanguages' => $availableLanguages
 			]
 		]);
 

@@ -8,7 +8,7 @@
 namespace skies\util;
 
 /**
- * Language utilites
+ * Language utilities
  */
 use skies\system\language\Language;
 
@@ -19,16 +19,43 @@ class LanguageUtil {
 	 */
 	public static function getDefaultLanguage() {
 
-		$query = \Skies::getDb()->prepare('SELECT * FROM `language` WHERE `langName` = :name');
-		$query->execute([':name' => \Skies::getConfig()['defaultLanguage']]);
-		$langId = $query->fetchArray()['langId'];
-
-		$language = new Language($langId, true);
+		$language = new Language(\Skies::getConfig()['defaultLanguage'], true, true);
 
 		if($language instanceof Language)
 			return $language;
 
 		return null;
+
+	}
+
+	/**
+	 * Get all available languages
+	 *
+	 * @return \skies\system\language\Language[]
+	 */
+	public static function getAllLanguages() {
+
+		// Scan directory
+		$dirs = scandir(ROOT_DIR.DIR_LANGUAGE);
+
+		$languages = [];
+
+		foreach($dirs as $curDir) {
+
+			if(in_array($curDir, ['.', '..']))
+				continue;
+
+			// If there's and language.yml it should be a valid language
+			if(is_dir(ROOT_DIR.DIR_LANGUAGE.$curDir) && file_exists(ROOT_DIR.DIR_LANGUAGE.$curDir.'/language.yml')) {
+				if($curDir == \Skies::getConfig()['defaultLanguage'])
+					$languages[] = new Language($curDir, false, true);
+				else
+					$languages[] = new Language($curDir, false, false);
+			}
+
+		}
+
+		return $languages;
 
 	}
 

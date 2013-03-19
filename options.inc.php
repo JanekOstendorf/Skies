@@ -28,3 +28,4 @@ define('EOL', "\n");
 define('DIR_TPL', 'template/');
 define('DIR_STYLE', 'style/');
 define('DIR_CACHE', 'cache/');
+define('DIR_LANGUAGE', 'language/');

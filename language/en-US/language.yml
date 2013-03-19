@@ -1,0 +1,7 @@
+language:
+    title: English
+    description: >
+        English as spoken in Northern America.
+
+    files:
+        - system.yml

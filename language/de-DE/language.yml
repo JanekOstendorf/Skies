@@ -1,0 +1,7 @@
+language:
+    title: Deutsch (Deutschland)
+    description: >
+        German as spoken in Germany.
+
+    files:
+        - system.yml

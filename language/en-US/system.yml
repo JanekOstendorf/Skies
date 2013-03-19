@@ -1,0 +1,82 @@
+page:
+    login:
+        title: Login
+        introduction: >
+            Welcome to the login and sign up page of {{config.meta.title}}!
+            You can login to your existing account on the left side.
+            To sign up for a new account, just use the form on the right.
+
+        username: User name
+        password: Password
+        passwordTwice: Password (twice)
+        mail: Email
+        language: Language
+
+        welcomeText: Howdy [[userName]]!
+
+        login:
+            title: Login
+            login: Login
+
+            success: You hace successfully logged in as [[userName]]!
+            error:
+                userPassword: This combination of user name and password does not work. Try again.
+                generic: Failed to login. :/
+
+        logout:
+            success: You have successfully logged out.
+            error:
+                guest: You're not even logged in!
+
+        signUp:
+            title: Sign up
+            signUp: Sign up
+
+            success: Congratulations! You have successfully registered the account [[userName]]!
+            error:
+                missing: Not all required fields are filled.
+                pattern: The data does not match the required pattern.
+                usernameTaken: This user name is already in use.
+                usernamePattern: This user name is not valid.
+                mailPattern: Your email address is not valid.
+                passwordMatch: The passwords do not match!
+                generic: Failed to create the account. :/
+
+        changeMail:
+            title: Change email
+            description: >
+                You can change your email address here.
+                Since we're using your address as a part of our password encryption process, we need the password to reencrypt it.
+            change: Adresse ändern
+
+            success: Your email has been successfully changed to '[[newMail]]'.
+            error:
+                wrongPassword: The password is wrong.
+                mailPattern: This mail address is not valid.
+                missing: Not all required fields are filled!
+
+        changePassword:
+            title: Change password
+            description: >
+                You can change your password here.
+                Just enter it twice and press '{{system.page.login.changePassword.change}}'.
+            change: Passwort ändern
+
+            success: Your password has been changed successfully.
+            error:
+                mismacth: The passwords do not match!
+                missing: Not all required fields are filled.
+
+        avatar:
+            title: Your avatar
+            description: >
+                We use the system of Gravatar (Globally Recognized Avatar) for {{config.meta.title}}.
+                You can change your avatar there.
+            avatarLink: Change the avatar at Gravatar
+
+        chooseLanguage:
+            title: Choose language
+            description: >
+                You can choose your language here.
+                Just select the language you want to switch to below.
+            change: Change language

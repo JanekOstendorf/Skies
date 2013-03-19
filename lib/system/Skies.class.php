@@ -232,7 +232,7 @@ class Skies {
 		self::$language = self::$defaultLanguage = LanguageUtil::getDefaultLanguage();
 
 		// TODO: get this from user's model
-		self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 1));
+		self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 'de-DE'));
 
 	}
 
@@ -311,6 +311,10 @@ class Skies {
 
 			// Current page
 			'page' => self::$page->getTemplateArray(),
+
+			// Language
+			'language' => self::$language->getTemplateArray(),
+			'defaultLanguage' => self::$defaultLanguage->getTemplateArray(),
 
 			// Subdirectory for URLs
 			'subdir' => SUBDIR,

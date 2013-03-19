@@ -1,0 +1,83 @@
+page:
+    login:
+        title: Anmeldung
+        introduction: >
+            Willkommen auf der Login- und Registrierungs-Seite von {{config.meta.title}}!
+            Auf der linken Seite kannst du dich mit deinem Benutzernamen und deinem Passwort anmelden.
+            Auf der rechten Seite kannst du einen neuen Account registrieren.
+            Gib einfach den gewünschten Benutzernamen und dein Passwort ein.
+
+        username: Benutzername
+        password: Passwort
+        passwordTwice: Passwort (zweimal)
+        mail: E-Mail
+        language: Sprache
+
+        welcomeText: Moin [[userName]]!
+
+        login:
+            title: Anmelden
+            login: Anmelden
+
+            success: Du wurdest erfolgreich als [[userName]] eingeloggt.
+            error:
+                userPassword: Diese Kombination aus Benutzername und Passwort funktioniert nicht. Probier's nochmal.
+                generic: Fehler beim Anmelden. :/
+
+        logout:
+            success: Du wurdest erfolgreich ausgeloggt.
+            error:
+                guest: Du bist gar nicht eingeloggt!
+
+        signUp:
+            title: Registrieren
+            signUp: Registrieren
+
+            success: Glückwunsch! Du hast den Account [[userName]] erfolgreich registriert und wurdest angemeldet!
+            error:
+                missing: Nicht alle erforderlichen Felder wurden ausgefüllt!
+                pattern: Die eingegebenen Daten haben nicht das richtige Format.
+                usernameTaken: Dieser Benutzername ist schon vergeben.
+                usernamePattern: Der eingegebene Benutzername ist nicht gültig
+                mailPattern: Die eingegebene E-Mail Adresse ist nicht gültig.
+                passwordMatch: Die eingegeben Passwörter stimmen nicht überein.
+                generic: Fehler beim Erstellen des Accounts. :/
+
+        changeMail:
+            title: E-Mail Adresse ändern
+            description: >
+                Hier kannst du deine E-Mail Adresse ändern.
+                Da wir deine Adresse zur Verschlüsselung deines Passwortes verwenden, musst du auch dein Passwort angeben, damit wir es neu verschlüsseln können.
+            change: Adresse ändern
+
+            success: Deine E-Mail Adresse wurde erfolgreich auf '[[newMail]]' geändert.
+            error:
+                wrongPassword: Das eingegebene Passwort ist falsch.
+                mailPattern: Die eingegebene E-Mail Adresse ist nicht gültig.
+                missing: Nicht alle erforderlichen Felder sind ausgefüllt!
+
+        changePassword:
+            title: Passwort ändern
+            description: >
+                Hier kannst du dein Passwort ändern.
+                Gib dein neues Passwort einfach zweimal unten ein und drücke auf '{{system.page.login.changePassword.change}}'.
+            change: Passwort ändern
+
+            success: Dein Passwort wurde erfolgreich geändert.
+            error:
+                mismacth: Die eingegebenen Passwörter stimmen nicht überein.
+                missing: Nicht alle erfoderlichen Felder wurden ausgefüllt.
+
+        avatar:
+            title: Dein Avatar
+            description: >
+                Wir benutzen das System Gravatar (Globally Recognized Avatar) für {{config.meta.title}}.
+                Deinen Avatar kannst du dort ändern.
+            avatarLink: Avatar bei Gravatar ändern
+
+        chooseLanguage:
+            title: Sprache ändern
+            description: >
+                Hier kannst du deine Sprache ändern.
+                Wähle einfach die Sprache aus, zu der du wechseln möchtest.
+            change: Sprache ändern
