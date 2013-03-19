@@ -2,7 +2,7 @@
 
 namespace skies\system\user;
 
-use skies\lan\Team;
+use skies\model\template\ITemplateArray;
 use skies\util\SecureUtil;
 use skies\util\UserUtil;
 
@@ -12,7 +12,7 @@ use skies\util\UserUtil;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.user
  */
-class User {
+class User implements ITemplateArray {
 
 	/**
 	 * User ID
@@ -132,6 +132,25 @@ class User {
 		// Fetch stuff again
 		$this->__construct($this->id);
 
+
+	}
+
+	/**
+	 * Get an array suitable for assignment
+	 *
+	 * @return array
+	 */
+	public function getTemplateArray() {
+
+		return [
+			'id' => $this->id,
+			'name' => $this->name,
+			'mail' => $this->mail,
+			'lastActivity' => $this->lastActivity,
+			'hasPassword' => $this->hasPassword,
+			'isGuest' => $this->isGuest(),
+			'object' => $this
+		];
 
 	}
 

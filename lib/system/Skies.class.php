@@ -304,33 +304,13 @@ class Skies {
 			'config' => self::$config,
 
 			// User
-			'user' => [
-				'name' => self::$user->getName(),
-				'mail' => self::$user->getMail(),
-				'isGuest' => self::$user->isGuest(),
-				'id' => self::$user->getId(),
-				'lastActivity' => self::$user->getLastActivity(),
-				'hasPassword' => self::$user->hasPassword()
-			],
-			'userObj' => self::$user,
+			'user' => self::$user->getTemplateArray(),
 
 			// Current style
-			'style' => [
-				'config' => self::$style->getConfig(),
-				'cssFiles' => self::$style->getCssFiles(),
-				'jsFiles' => self::$style->getJsFiles(),
-				'dir' => self::$style->getStyleDirUrl()
-			],
-			'styleObj' => self::$style,
+			'style' => self::$style->getTemplateArray(),
 
 			// Current page
-			'page' => [
-				'name' => self::$page->getName(),
-				'templateName' => self::$page->getTemplateName(),
-				'title' => self::$page->getTitle(),
-				'data' => self::$page->getData()
-			],
-			'pageObj' => self::$page,
+			'page' => self::$page->getTemplateArray(),
 
 			// Subdirectory for URLs
 			'subdir' => SUBDIR,

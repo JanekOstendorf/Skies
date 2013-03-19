@@ -162,7 +162,7 @@
 		<legend>{lang node="system.page.login.avatar.title"}</legend>
 
 		<p class="description">
-!
+
 			<img src="http://gravatar.com/avatar/{$user.mail|trim|strtolower|md5}.png?s=200" alt="avatar" class="float-left" id="avatar" />
 
 			{lang node="system.page.login.avatar.description"}

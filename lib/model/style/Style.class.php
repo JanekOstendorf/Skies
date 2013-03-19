@@ -8,10 +8,11 @@ namespace skies\model\style;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.system.style
  */
+use skies\model\template\ITemplateArray;
 use skies\system\exception\SystemException;
 use skies\util\Spyc;
 
-class Style {
+class Style implements ITemplateArray {
 
 	/**
 	 * Template's short name
@@ -147,6 +148,26 @@ class Style {
 
 	}
 
+	/**
+	 * Get an array suitable for assignment
+	 *
+	 * @return array
+	 */
+	public function getTemplateArray() {
+
+		return [
+			'name' => $this->name,
+			'title' => $this->title,
+			'mainFile' => $this->mainFile,
+			'cssFiles' => $this->cssFiles,
+			'jsFiles' => $this->jsFiles,
+			'meta' => $this->meta,
+			'config' => $this->config,
+			'dir' => $this->getStyleDirUrl(),
+			'object' => $this
+		];
+
+	}
 }
 
 ?>

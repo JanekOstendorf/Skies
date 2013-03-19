@@ -7,10 +7,12 @@
  
 namespace skies\model;
 
+use skies\model\template\ITemplateArray;
+
 /**
  * Super page class
  */
-abstract class Page {
+abstract class Page implements ITemplateArray {
 
 	protected $templateName = '';
 
@@ -70,6 +72,24 @@ abstract class Page {
 	public function getData() {
 
 		return $this->data;
+
+	}
+
+	/**
+	 * Get an array suitable for assignment
+	 *
+	 * @return array
+	 */
+	public function getTemplateArray() {
+
+		return [
+			'name' => $this->getName(),
+			'title' => $this->getTitle(),
+			'isActive' => $this->isActive(),
+			'data' => $this->getData(),
+			'templateName' => $this->getTemplateName(),
+			'object' => $this
+		];
 
 	}
 

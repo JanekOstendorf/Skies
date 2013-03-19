@@ -126,6 +126,35 @@ class LoginPage extends Page {
 
 		}
 
+		// Change Password
+		if(isset($_POST['changePasswordSubmit'])) {
+
+			// Check for passwords
+			if(isset($_POST['changePassword1']) && isset($_POST['changePassword2'])) {
+
+				if($_POST['changePassword1'] == $_POST['changePassword2']) {
+
+					\Skies::getUser()->setPassword($_POST['changePassword1']);
+					\Skies::updateUser();
+
+					\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.change.password.success}}');
+
+				}
+				else {
+
+					\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.password.error.mismatch}}');
+
+				}
+
+			}
+			else {
+
+				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.change.password.error.missing}}');
+
+			}
+
+		}
+
 
 		// Mail and username pattern
 		\Skies::getTemplate()->assign([
