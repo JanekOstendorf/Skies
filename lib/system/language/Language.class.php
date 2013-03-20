@@ -274,6 +274,34 @@ class Language implements ITemplateArray {
 
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getDefault() {
+		return $this->default;
+	}
+
 }
 
 ?>

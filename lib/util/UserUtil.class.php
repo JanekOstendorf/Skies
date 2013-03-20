@@ -276,13 +276,11 @@ class UserUtil {
 	 * @param int    $userId User's ID
 	 * @param string $data   Data field's name
 	 * @param string $value  Value to set
-	 *
-	 * @return bool Success?
 	 */
 	public static function setData($userId, $data, $value) {
 
 		if($userId == null) {
-			return false;
+			return;
 		}
 
 		// Does this dataField exist?
@@ -297,11 +295,11 @@ class UserUtil {
 			$query->execute([':data' => $data]);
 
 
-			$fieldID = \Skies::getDb()->getInsertId();
+			$fieldId = \Skies::getDb()->getInsertId();
 
 		}
 		else {
-			$fieldID = $query->fetchArray()['fieldId'];
+			$fieldId = $query->fetchArray()['fieldId'];
 		}
 
 		// Is there already an data entry?
@@ -311,7 +309,7 @@ class UserUtil {
 			$query = \Skies::getDb()->prepare('INSERT INTO `user-data` (`dataFieldId`, `dataUserId`, `dataValue`)
                     VALUES(:fieldId, :userId, :value)');
 			$query->execute([
-				':fieldId' => $fieldID,
+				':fieldId' => $fieldId,
 				':userId' => $userId,
 				':value' => $value
 			]);
@@ -321,12 +319,9 @@ class UserUtil {
 		else {
 
 			$query = \Skies::getDb()->prepare('UPDATE `user-data` SET `dataValue` = :value WHERE `dataUserId` = :userId AND `dataFieldId` = :fieldId');
-			$query->execute([':value' => $value, ':userId' => $userId]);
+			$query->execute([':value' => $value, ':userId' => $userId, ':fieldId' => $fieldId]);
 
 		}
-
-		// Save
-		return \Skies::getDb()->query($query) === true;
 
 	}
 
@@ -344,7 +339,7 @@ class UserUtil {
 			return null;
 		}
 
-		$query  = \Skies::getDb()->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = `fieldId` WHERE `fieldName` = :data AND `dataUserId` = :userId');
+		$query  = \Skies::getDb()->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = fieldId WHERE `fieldName` = :data AND `dataUserId` = :userId');
 		$query->execute([':data' => $data, ':userId' => $userId]);
 
 		if($query->rowCount() != 1) {

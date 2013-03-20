@@ -12,6 +12,7 @@ namespace skies\model\page;
  */
 use skies\model\Page;
 use skies\model\template\Notification;
+use skies\system\language\Language;
 use skies\system\user\User;
 use skies\util\LanguageUtil;
 use skies\util\UserUtil;
@@ -156,10 +157,38 @@ class LoginPage extends Page {
 
 		}
 
+		// Choose language
 		$availableLanguages = [];
+		$languageIds = [];
 
-		foreach(LanguageUtil::getAllLanguages() as $language)
+		foreach(LanguageUtil::getAllLanguages() as $language) {
 			$availableLanguages[] = $language->getTemplateArray();
+			$languageIds[] = $language->getId();
+		}
+
+		if(isset($_POST['chooseLanguageSubmit'])) {
+
+			// Is the language valid?
+			if(in_array($_POST['chooseLanguage'], $languageIds)) {
+
+				\Skies::getUser()->setData('language', $_POST['chooseLanguage']);
+
+				// Some language vars are fetched before this is changed. Therefore there might be some text in the old language
+				// To avoid this, we use this very ugly method called redirecting.
+				// TODO: Look for a better solution
+				header('Location: /'.SUBDIR.$this->getName().'/');
+				exit;
+
+			}
+			else {
+
+				\Skies::getNotification()->add(Notification::ERROR, '{{system.page.login.chooseLanguage.error.notExists}}');
+
+			}
+
+		}
+
+
 
 		// Mail and username pattern
 		\Skies::getTemplate()->assign([

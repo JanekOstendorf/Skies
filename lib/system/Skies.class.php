@@ -229,10 +229,12 @@ class Skies {
 	 */
 	private final function initLanguage() {
 
+		// Default language
 		self::$language = self::$defaultLanguage = LanguageUtil::getDefaultLanguage();
 
-		// TODO: get this from user's model
-		self::$language = new \skies\system\language\Language((isset($_GET['lang']) ? $_GET['lang'] : 'de-DE'));
+
+		if(self::$user->getData('language') !== null)
+			self::$language = new \skies\system\language\Language(self::$user->getData('language'), true);
 
 	}
 
