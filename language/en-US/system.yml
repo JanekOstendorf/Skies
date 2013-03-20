@@ -83,3 +83,6 @@ page:
                 You can choose your language here.
                 Just select the language you want to switch to below.
             change: Change language
+
+            error:
+                notExists: It seems like this language doesn't exist anymore. Weird.

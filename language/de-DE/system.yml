@@ -84,3 +84,6 @@ page:
                 Hier kannst du deine Sprache ändern.
                 Wähle einfach die Sprache aus, zu der du wechseln möchtest.
             change: Sprache ändern
+
+            error:
+                notExists: Diese Sprache scheint nicht mehr zu existieren. Komisch.
