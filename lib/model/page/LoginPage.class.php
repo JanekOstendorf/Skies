@@ -166,7 +166,8 @@ class LoginPage extends Page {
 			'loginPage' => [
 				'mailPattern' => UserUtil::MAIL_PATTERN,
 				'usernamePattern' => UserUtil::USERNAME_PATTERN,
-				'availableLanguages' => $availableLanguages
+				'availableLanguages' => $availableLanguages,
+				'changeMail' => (isset($_POST['changeMail']) ? $_POST['changeMail'] : null)
 			]
 		]);
 

@@ -100,7 +100,7 @@
 						<label for="changeMail">{lang node="system.page.login.mail"}:</label>
 					</td>
 					<td>
-						<input type="text" required="required" name="changeMail" id="changeMail" pattern="{$loginPage.mailPattern}" value="{$loginPage.changeForm.mail|default:$user.mail}" />
+						<input type="text" required="required" name="changeMail" id="changeMail" pattern="{$loginPage.mailPattern}" value="{$loginPage.changeMail|default:$user.mail}" />
 					</td>
 				</tr>
 				<tr>
