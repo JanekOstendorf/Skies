@@ -1,3 +1,6 @@
+notification:
+    hide: Hide
+
 page:
     login:
         title: Login

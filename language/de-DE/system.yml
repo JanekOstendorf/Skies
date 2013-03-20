@@ -1,3 +1,6 @@
+notification:
+    hide: Ausblenden
+
 page:
     login:
         title: Anmeldung
