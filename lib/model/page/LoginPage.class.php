@@ -41,7 +41,7 @@ class LoginPage extends Page {
 				// Check password
 				if($user->checkPassword($_POST['password'])) {
 
-					if(\Skies::getSession()->login($user->getId()) !== false) {
+					if(\Skies::getSession()->login($user->getId(), (isset($_POST['longSession']) && $_POST['longSession'] != null)) !== false) {
 
 						\Skies::updateUser();
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);

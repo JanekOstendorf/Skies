@@ -21,6 +21,7 @@ page:
         login:
             title: Anmelden
             login: Anmelden
+            longSession: Angemeldet bleiben
 
             success: Du wurdest erfolgreich als [[userName]] eingeloggt.
             error:

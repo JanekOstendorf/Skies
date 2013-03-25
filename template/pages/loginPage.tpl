@@ -30,6 +30,14 @@
 				</tr>
 				<tr>
 					<td>
+						<label for="longSession">{lang node="system.page.login.login.longSession"}:</label>
+					</td>
+					<td>
+						<input type="checkbox" name="longSession" id="longSession" />
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<input type="submit" name="login" id="login" value="{lang node="system.page.login.login.login"}" />
 					</td>
 				</tr>

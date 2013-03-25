@@ -20,6 +20,7 @@ page:
         login:
             title: Login
             login: Login
+            longSession: Stay logged in
 
             success: You hace successfully logged in as [[userName]]!
             error:
