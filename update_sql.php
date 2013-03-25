@@ -2,6 +2,9 @@
 /* Update MySQL DB */
 
 // Load driver
+require_once 'lib/system/exception/IPrintableException.class.php';
+require_once 'lib/system/exception/LoggedException.class.php';
+require_once 'lib/system/exception/SystemException.class.php';
 require_once 'lib/system/database/DatabaseException.class.php';
 require_once 'lib/system/database/PreparedStatement.class.php';
 require_once 'lib/system/database/Database.class.php';
@@ -12,7 +15,7 @@ $dbHost = $dbUser = $dbPassword = $dbName = '';
 $dbPort = 0;
 
 // Fetch configuration
-require_once ROOT_DIR.'/lib/config.inc.php';
+require_once 'lib/config.inc.php';
 
 $db = new \skies\system\database\MysqlDatabase($dbHost, $dbUser, $dbPassword, $dbName, $dbPort);
 
