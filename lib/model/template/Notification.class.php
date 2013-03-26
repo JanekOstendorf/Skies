@@ -31,7 +31,7 @@ class Notification {
 	protected $storage = [];
 
 	/**
-	 * Which template belongs to which type?
+	 * Which css class belongs to which type?
 	 *
 	 * @var array
 	 */
@@ -40,7 +40,7 @@ class Notification {
 	/**
 	 * Init the notifications
 	 *
-	 * @param array $templates Type => template file
+	 * @param array $templates Type => css class
 	 */
 	public function __construct($templates) {
 

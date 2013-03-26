@@ -248,10 +248,10 @@ class Skies {
 
 		// Notification
 		self::$notification = new Notification([
-			Notification::ERROR => 'error.tpl',
-			Notification::NOTICE => 'notice.tpl',
-			Notification::SUCCESS => 'success.tpl',
-			Notification::WARNING => 'warning.tpl'
+			Notification::ERROR => 'error',
+			Notification::NOTICE => 'notice',
+			Notification::SUCCESS => 'success',
+			Notification::WARNING => 'warning'
 		]);
 
 	}
