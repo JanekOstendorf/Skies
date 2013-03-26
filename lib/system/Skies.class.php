@@ -31,26 +31,15 @@ spl_autoload_register(['\Skies', 'autoload']);
 
 use skies\model\style\Style;
 use skies\model\template\Notification;
-use skies\model\template\Notification;
 use skies\model\template\TemplateEngine;
-use skies\model\style\Style;
 
-use skies\model\template\TemplateEngine;
 use skies\system\language\Language;
 use skies\system\user\Session;
-use skies\system\user\Session;
 use skies\system\user\User;
-use skies\system\language\Language;
 
-use skies\system\user\User;
-use skies\util\Benchmark;
 use skies\util\Benchmark;
 use skies\util\LanguageUtil;
-use skies\util\LanguageUtil;
 use skies\util\PageUtil;
-use skies\util\PageUtil;
-use skies\util\SessionUtil;
-use skies\util\spyc;
 use skies\util\SessionUtil;
 use skies\util\spyc;
 
