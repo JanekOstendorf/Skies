@@ -4,16 +4,17 @@
  * @copyright Copyright (c) 2013 Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
- 
+
 namespace skies\system\database;
 
 /**
- * 
+ *
  */
 class SqliteDatabase extends Database {
 
 	/**
 	 * Connect to the SQL server
+	 *
 	 * @throws DatabaseException
 	 */
 	public function connect() {

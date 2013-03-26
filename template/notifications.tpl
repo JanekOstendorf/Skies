@@ -4,7 +4,6 @@
 
 		{$cssClass = $notificationTemplates.$type}
 		{foreach from=$messages item=message}
-
 			<div class="{$cssClass}">
 				<div class="message">
 					{$message}
@@ -14,7 +13,6 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-
 		{/foreach}
 
 	{/foreach}

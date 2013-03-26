@@ -60,20 +60,20 @@ class DatabaseException extends SystemException {
 	 */
 	public function __construct($message, Database $db, PreparedStatement $statement = null) {
 
-		$this->db                = $db;
+		$this->db = $db;
 		$this->preparedStatement = $statement;
-		$this->dbType            = $this->db->getDbType();
+		$this->dbType = $this->db->getDbType();
 
 		// Prefer statements
 		if($this->preparedStatement !== null && $this->preparedStatement->getErrorNumber()) {
 
-			$this->errorNumber      = $this->preparedStatement->getErrorNumber();
+			$this->errorNumber = $this->preparedStatement->getErrorNumber();
 			$this->errorDescription = $this->preparedStatement->getErrorDesc();
 
 		}
 		else {
 
-			$this->errorNumber      = $this->db->getErrorNumber();
+			$this->errorNumber = $this->db->getErrorNumber();
 			$this->errorDescription = $this->db->getErrorDesc();
 
 		}
@@ -165,6 +165,5 @@ class DatabaseException extends SystemException {
 		parent::show();
 
 	}
-
 
 }

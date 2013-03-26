@@ -10,7 +10,6 @@
  * Alias for Skies::getDb()->escape_string($string)
  *
  * @param $string
- *
  * @return string
  * @see skies\system\database\MySQL::escape_string()
  */

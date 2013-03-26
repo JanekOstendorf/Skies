@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2013 Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
- 
+
 namespace skies\model\template;
 
 use Smarty;

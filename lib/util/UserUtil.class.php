@@ -30,7 +30,9 @@ class UserUtil {
 
 		$REMOTE_ADDR = '';
 		if(isset($_SERVER['REMOTE_ADDR']))
-			$REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+				{
+					$REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+				}
 
 		// darwin fix
 		if($REMOTE_ADDR == '::1' || $REMOTE_ADDR == 'fe80::1') {
@@ -61,8 +63,8 @@ class UserUtil {
 		}
 
 		$ipArray = array_pad(explode('.', $ip), 4, 0);
-		$part7   = base_convert(($ipArray[0] * 256) + $ipArray[1], 10, 16);
-		$part8   = base_convert(($ipArray[2] * 256) + $ipArray[3], 10, 16);
+		$part7 = base_convert(($ipArray[0] * 256) + $ipArray[1], 10, 16);
+		$part8 = base_convert(($ipArray[2] * 256) + $ipArray[3], 10, 16);
 
 		return '::ffff:'.$part7.':'.$part8;
 	}
@@ -70,8 +72,7 @@ class UserUtil {
 	/**
 	 * Converts IPv6 embedded IPv4 address into IPv4 or returns input if true IPv6.
 	 *
-	 * @param    string        $ip
-	 *
+	 * @param    string $ip
 	 * @return    string
 	 */
 	public static function convertIPv6To4($ip) {
@@ -89,15 +90,15 @@ class UserUtil {
 
 		// check if ip is a masked IPv4 address
 		if(substr($ip, 0, 7) == '::ffff:') {
-			$ip    = explode(':', substr($ip, 7));
+			$ip = explode(':', substr($ip, 7));
 			$ip[0] = base_convert($ip[0], 16, 10);
 			$ip[1] = base_convert($ip[1], 16, 10);
 
-			$ipParts   = array();
-			$tmp       = $ip[0] % 256;
+			$ipParts = array();
+			$tmp = $ip[0] % 256;
 			$ipParts[] = ($ip[0] - $tmp) / 256;
 			$ipParts[] = $tmp;
-			$tmp       = $ip[1] % 256;
+			$tmp = $ip[1] % 256;
 			$ipParts[] = ($ip[1] - $tmp) / 256;
 			$ipParts[] = $tmp;
 
@@ -112,6 +113,7 @@ class UserUtil {
 
 	/**
 	 * Check mail address for validity
+	 *
 	 * @param string $mail Mail address to check
 	 * @return bool Is this address valid?
 	 */
@@ -124,6 +126,7 @@ class UserUtil {
 
 	/**
 	 * Check user name for validity
+	 *
 	 * @static
 	 * @param        $username
 	 * @param string $username Mail address to check
@@ -137,6 +140,7 @@ class UserUtil {
 
 	/**
 	 * Deletes the cookie and clears the session variable
+	 *
 	 * @return void
 	 * @param string $cookie Name of the cookie
 	 */
@@ -154,7 +158,6 @@ class UserUtil {
 	 * Does the user exist?
 	 *
 	 * @param int $userId User ID
-	 *
 	 * @return bool
 	 */
 	public static function userExists($userId) {
@@ -174,8 +177,7 @@ class UserUtil {
 	 * Checks the password
 	 *
 	 * @param string $password Clear text password to check
-	 * @param int    $userId  User ID
-	 *
+	 * @param int    $userId   User ID
 	 * @return bool
 	 */
 	public static function checkPassword($password, $userId) {
@@ -202,11 +204,8 @@ class UserUtil {
 
 	/**
 	 * @static
-	 *
 	 * Gets the ID of the user with the specified userName
-	 *
 	 * @param string $userName Name of the user
-	 *
 	 * @return int ID of the user
 	 */
 	public static function usernameToID($userName) {
@@ -223,14 +222,12 @@ class UserUtil {
 
 	}
 
-
 	/**
 	 * Creates a new user
 	 *
 	 * @param string $userName     Username
 	 * @param string $userMail     Mail address
 	 * @param string $userPassword Plaintext password
-	 *
 	 * @return bool|\skies\system\user\User
 	 */
 	public static function createUser($userName, $userMail, $userPassword) {
@@ -247,9 +244,9 @@ class UserUtil {
 			$password = self::makePass($userPassword);
 		}
 		else {
-			$password           = new \stdClass();
+			$password = new \stdClass();
 			$password->password = '';
-			$password->salt     = '';
+			$password->salt = '';
 		}
 
 		if($password === false) {
@@ -284,16 +281,14 @@ class UserUtil {
 		}
 
 		// Does this dataField exist?
-		$query  = \Skies::getDb()->prepare('SELECT * FROM `user-fields` WHERE `fieldName` = :data');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `user-fields` WHERE `fieldName` = :data');
 		$query->execute([':data' => $data]);
-
 
 		// No, create it
 		if($query->rowCount() != 1) {
 
 			$query = \Skies::getDb()->prepare('INSERT INTO `user-fields` (`fieldName`) VALUES (:data)');
 			$query->execute([':data' => $data]);
-
 
 			$fieldId = \Skies::getDb()->getInsertId();
 
@@ -330,7 +325,6 @@ class UserUtil {
 	 *
 	 * @param int    $userId User's ID
 	 * @param string $data   Data field name
-	 *
 	 * @return mixed|null Null if there is no value. Else the value.
 	 */
 	public static function getData($userId, $data) {
@@ -339,7 +333,7 @@ class UserUtil {
 			return null;
 		}
 
-		$query  = \Skies::getDb()->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = fieldId WHERE `fieldName` = :data AND `dataUserId` = :userId');
+		$query = \Skies::getDb()->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = fieldId WHERE `fieldName` = :data AND `dataUserId` = :userId');
 		$query->execute([':data' => $data, ':userId' => $userId]);
 
 		if($query->rowCount() != 1) {
@@ -348,7 +342,6 @@ class UserUtil {
 		else {
 			return $query->fetchArray()['dataValue'];
 		}
-
 
 	}
 

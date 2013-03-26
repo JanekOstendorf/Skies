@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2013 Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
- 
+
 namespace skies\model\page;
 
 /**
@@ -21,6 +21,7 @@ class LoginPage extends Page {
 
 	/**
 	 * Prepare the output
+	 *
 	 * @return void
 	 */
 	public function prepare() {
@@ -187,8 +188,6 @@ class LoginPage extends Page {
 			}
 
 		}
-
-
 
 		// Mail and username pattern
 		\Skies::getTemplate()->assign([

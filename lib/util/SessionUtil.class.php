@@ -10,7 +10,6 @@ namespace skies\util;
  */
 class SessionUtil {
 
-
 	public static function cleanUp() {
 
 		$query = \Skies::getDb()->prepare('DELETE FROM `session` WHERE `sessionLong` = :long AND (`sessionLastActivity` + :length) < :now');
@@ -18,8 +17,8 @@ class SessionUtil {
 		// Normal sessions
 		$query->execute([
 			':long' => 1,
-		    ':length' => (30 * 60),
-		    ':now' => NOW
+			':length' => (30 * 60),
+			':now' => NOW
 		]);
 
 		// Long sessions

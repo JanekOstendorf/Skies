@@ -14,9 +14,7 @@ class StringUtil {
 	 * Converts special HTML characters
 	 *
 	 * @static
-	 *
 	 * @param $string
-	 *
 	 * @return string
 	 */
 	public static function encodeHtml($string) {
@@ -33,9 +31,7 @@ class StringUtil {
 	 * Alias to php sha1() function
 	 *
 	 * @static
-	 *
 	 * @param $string
-	 *
 	 * @return string
 	 */
 	public static function getHash($string) {
@@ -58,7 +54,6 @@ class StringUtil {
 	 * Generates a random alphanumeric string
 	 *
 	 * @param int $length Length of the string
-	 *
 	 * @return string
 	 */
 	public static function getRandomString($length) {

@@ -11,11 +11,9 @@
 			{if isset($entry.active) && $entry.active}
 				{$classes = "`$classes`active"}
 			{/if}
-
 			<li{if $classes} class="{$classes|trim}"{/if}>
 				<a href="{$entry.link}">{$entry.title}</a>
 			</li>
-
 		{/foreach}
 	</ul>
 

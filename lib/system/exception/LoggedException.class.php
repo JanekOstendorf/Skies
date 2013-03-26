@@ -74,16 +74,16 @@ class LoggedException extends \Exception {
 
 		// Build the message
 		$text = date('r', NOW).EOL.
-		        'Message: '.$e->getMessage().EOL.
-		        'Description: '.$this->description.EOL.
-		        'File: '.$e->getFile().':'.$e->getLine().EOL.
-		        'Request URI: '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '').EOL.
-		        'Referrer: '.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '').EOL.
-		        'Additional information: '.EOL.$this->information.EOL.EOL.
-		        'Stacktrace: '.EOL.implode(EOL.'  ', explode("\n", $e->getTraceAsString())).EOL;
+				'Message: '.$e->getMessage().EOL.
+				'Description: '.$this->description.EOL.
+				'File: '.$e->getFile().':'.$e->getLine().EOL.
+				'Request URI: '.(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '').EOL.
+				'Referrer: '.(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '').EOL.
+				'Additional information: '.EOL.$this->information.EOL.EOL.
+				'Stacktrace: '.EOL.implode(EOL.'  ', explode("\n", $e->getTraceAsString())).EOL;
 
 		// Get the ID for this exception
-		$id      = StringUtil::getHash($text);
+		$id = StringUtil::getHash($text);
 		$message = '++++++ '.$id.' ++++++'.EOL.$text.'++++++'.EOL.EOL;
 
 		// Finally, write it to the log file

@@ -2,15 +2,15 @@
 
 namespace skies\system\user;
 
+use skies\util\StringUtil;
+use skies\util\UserUtil;
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.user
  */
-use skies\util\StringUtil;
-use skies\util\UserUtil;
-
 class Session {
 
 	/**
@@ -65,19 +65,16 @@ class Session {
 		// Fetch session ID
 		if(isset($_COOKIE[COOKIE_PRE.'sessionId']) && !empty($_COOKIE[COOKIE_PRE.'sessionId']) && preg_match("/[0-9a-f]{40}/", $_COOKIE[COOKIE_PRE.'sessionId'])) {
 
-
 			$this->id = $_COOKIE[COOKIE_PRE.'sessionId'];
 			$this->continueSession();
 
 		}
 		else {
 
-
 			$this->newSession();
 			$this->continueSession();
 
 		}
-
 
 	}
 
@@ -100,9 +97,7 @@ class Session {
 			':userId' => null
 		]);
 
-
 		return setcookie(COOKIE_PRE.'sessionId', $this->id, NOW + (365 * 86400), '/'.SUBDIR) !== false;
-
 
 	}
 
@@ -125,44 +120,43 @@ class Session {
 			$data = $query->fetchArray();
 
 			$this->userId = $data['sessionUserId'];
-			$this->long   = ($data['sessionLong'] == 1);
-			$this->oldIp  = $data['sessionIp'];
+			$this->long = ($data['sessionLong'] == 1);
+			$this->oldIp = $data['sessionIp'];
 
 			// Check session's IP
 			//if($this->oldIP == $this->ip) {
 
-				// Check if the session timed out
-				if($this->long) {
-					$length = (365 * 86400);
+			// Check if the session timed out
+			if($this->long) {
+				$length = (365 * 86400);
+			}
+			else {
+				$length = (30 * 60);
+			}
+
+			// Session's dead
+			if($data['sessionLastActivity'] + $length < NOW) {
+
+				$this->closeSession();
+				$this->newSession();
+
+			}
+			else {
+
+				/*
+				 * Update DB
+				 */
+
+				$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
+
+				$query->execute([':lastActivity' => NOW, ':id' => $this->id]);
+
+				if(!$this->getUser()->isGuest()) {
+					$this->getUser()->setLastActivity(NOW);
+					$this->getUser()->update();
 				}
-				else {
-					$length = (30 * 60);
-				}
 
-				// Session's dead
-				if($data['sessionLastActivity'] + $length < NOW) {
-
-
-					$this->closeSession();
-					$this->newSession();
-
-				}
-				else {
-
-					/*
-					 * Update DB
-					 */
-
-					$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionLastActivity` = :lastActivity WHERE `sessionID` = :id');
-
-					$query->execute([':lastActivity' => NOW, ':id' => $this->id]);
-
-					if(!$this->getUser()->isGuest()) {
-						$this->getUser()->setLastActivity(NOW);
-						$this->getUser()->update();
-					}
-
-				}
+			}
 
 			/*}
 			else {
@@ -182,7 +176,6 @@ class Session {
 	 *
 	 * @param int  $userId User ID
 	 * @param bool $long   Long session?
-	 *
 	 * @return bool Success?
 	 */
 	public function login($userId, $long = false) {
@@ -228,8 +221,9 @@ class Session {
 	 */
 	public function getUser() {
 
-		if($this->user === null)
+		if($this->user === null) {
 			$this->user = new User($this->userId);
+		}
 
 		return $this->user;
 

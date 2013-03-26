@@ -29,19 +29,30 @@ spl_autoload_register(['\Skies', 'autoload']);
  * Includes
  */
 
+use skies\model\style\Style;
+use skies\model\template\Notification;
 use skies\model\template\Notification;
 use skies\model\template\TemplateEngine;
 use skies\model\style\Style;
 
+use skies\model\template\TemplateEngine;
+use skies\system\language\Language;
+use skies\system\user\Session;
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\system\language\Language;
 
+use skies\system\user\User;
+use skies\util\Benchmark;
 use skies\util\Benchmark;
 use skies\util\LanguageUtil;
+use skies\util\LanguageUtil;
 use skies\util\PageUtil;
+use skies\util\PageUtil;
+use skies\util\SessionUtil;
 use skies\util\spyc;
 use skies\util\SessionUtil;
+use skies\util\spyc;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -162,23 +173,24 @@ class Skies {
 
 	/**
 	 * Connect to the MySQL server
-     *
-     * @throws \skies\system\exception\SystemException
+	 *
+	 * @throws \skies\system\exception\SystemException
 	 */
 	private final function initDb() {
 
 		// NULL values
 		$dbHost = $dbUser = $dbPassword = $dbName = '';
 		$dbPort = 0;
-        $dbType = 'skies\system\database\MysqlDatabase';
+		$dbType = 'skies\system\database\MysqlDatabase';
 
 		// Fetch configuration
 		require_once ROOT_DIR.'/lib/config.inc.php';
 
 		self::$db = new $dbType($dbHost, $dbUser, $dbPassword, $dbName, $dbPort);
 
-        if(!self::$db instanceof \skies\system\database\Database || !self::$db->isSupported())
-            throw new \skies\system\exception\SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
+		if(!self::$db instanceof \skies\system\database\Database || !self::$db->isSupported()) {
+			throw new \skies\system\exception\SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
+		}
 
 	}
 
@@ -188,8 +200,9 @@ class Skies {
 	private final function initSession($clean = true) {
 
 		// Do some clean ups
-		if($clean)
+		if($clean) {
 			\skies\util\SessionUtil::cleanUp();
+		}
 
 		self::$session = new skies\system\user\Session();
 
@@ -232,9 +245,9 @@ class Skies {
 		// Default language
 		self::$language = self::$defaultLanguage = LanguageUtil::getDefaultLanguage();
 
-
-		if(self::$user->getData('language') !== null)
+		if(self::$user->getData('language') !== null) {
 			self::$language = new \skies\system\language\Language(self::$user->getData('language'), true);
+		}
 
 	}
 
@@ -261,10 +274,11 @@ class Skies {
 	 */
 	private final function initTemplate() {
 
-		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getTemplatePath() ?: '');
+		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getTemplatePath() ? : '');
 
-		if(isset($_GET['flushCache']))
+		if(isset($_GET['flushCache'])) {
 			self::$template->flushCache();
+		}
 
 	}
 
@@ -298,7 +312,6 @@ class Skies {
 	/**#@-*/
 
 	private final function assignDefaults() {
-
 
 		self::$template->assign([
 
@@ -340,10 +353,12 @@ class Skies {
 		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);
 		self::$notification->assign();
 
-		if(self::isApiMode())
+		if(self::isApiMode()) {
 			print json_encode(self::$template->getVars());
-		else
+		}
+		else {
 			self::$template->show('index.tpl');
+		}
 
 	}
 
@@ -360,7 +375,6 @@ class Skies {
 	 * Handle our Exceptions
 	 *
 	 * @static
-	 *
 	 * @param \Exception $e
 	 */
 	public static final function handleException(\Exception $e) {
@@ -379,11 +393,10 @@ class Skies {
 	/**
 	 * Catches php errors and throws instead a system exception.
 	 *
-	 * @param    integer        $errorNo
-	 * @param    string         $message
-	 * @param    string         $filename
-	 * @param    integer        $lineNo
-	 *
+	 * @param    integer $errorNo
+	 * @param    string  $message
+	 * @param    string  $filename
+	 * @param    integer $lineNo
 	 * @throws skies\system\exception\SystemException
 	 */
 	public static final function handleError($errorNo, $message, $filename, $lineNo) {
@@ -406,8 +419,7 @@ class Skies {
 	/**
 	 * Includes the required util or exception classes automatically.
 	 *
-	 * @param     string        $className
-	 *
+	 * @param     string $className
 	 * @see        spl_autoload_register()
 	 */
 	public static final function autoload($className) {
@@ -448,7 +460,6 @@ class Skies {
 		return (self::$api == true);
 
 	}
-
 
 	/**
 	 * @return array

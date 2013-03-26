@@ -65,23 +65,26 @@ class Language implements ITemplateArray {
 
 	/**
 	 * Hm, what do you think this __construct does ... coffee?
-	 * @param string $id      Language identifer
+	 *
+	 * @param string $id       Language identifer
 	 * @param bool   $loadVars Shall we load the language vars?
-	 * @param bool   $default Is this the default language?
+	 * @param bool   $default  Is this the default language?
 	 * @throws \skies\system\exception\SystemException
 	 */
 	public function __construct($id, $loadVars = true, $default = false) {
 
 		// Blah blah
 		$this->default = $default;
-		$this->id      = $id;
+		$this->id = $id;
 
 		// Parse config file
-		if(!file_exists($this->getDirectoryPath()))
+		if(!file_exists($this->getDirectoryPath())) {
 			throw new SystemException('Failed to load language "'.$this->id.'": The language directory does not exist.');
+		}
 
-		if(!file_exists($this->getDirectoryPath().'language.yml'))
+		if(!file_exists($this->getDirectoryPath().'language.yml')) {
 			throw new SystemException('Failed to load language "'.$this->id.'": The language config file does not exist.');
+		}
 
 		$this->configFile = Spyc::YAMLLoad($this->getDirectoryPath().'language.yml')['language'];
 
@@ -119,8 +122,9 @@ class Language implements ITemplateArray {
 				$varData = \Skies::getDefaultLanguage()->get($var, $userVars);
 				self::$fallbackUsed = true;
 			}
-			else
+			else {
 				$varData = '{{'.$var.'}}';
+			}
 		}
 
 		return $varData;
@@ -177,7 +181,6 @@ class Language implements ITemplateArray {
 		return $tmp;
 
 	}
-
 
 	public function replaceVars($varData, $userVars = []) {
 

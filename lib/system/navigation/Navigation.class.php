@@ -13,133 +13,131 @@ use skies\util\PageUtil;
  */
 class Navigation {
 
-    /**
-     * Entries of this navigation
-     *
-     * @var array
-     */
-    protected $entries = [];
+	/**
+	 * Entries of this navigation
+	 *
+	 * @var array
+	 */
+	protected $entries = [];
 
-    /**
-     * ID of this nav
-     *
-     * @var int
-     */
-    protected $id = 0;
+	/**
+	 * ID of this nav
+	 *
+	 * @var int
+	 */
+	protected $id = 0;
 
-    /**
-     * Title of this navigation
-     *
-     * @var string
-     */
-    protected $title = '';
+	/**
+	 * Title of this navigation
+	 *
+	 * @var string
+	 */
+	protected $title = '';
 
-    /**
-     * Does this nav include the LoginForm?
-     *
-     * @var bool
-     */
-    protected $loginForm = false;
+	/**
+	 * Does this nav include the LoginForm?
+	 *
+	 * @var bool
+	 */
+	protected $loginForm = false;
 
+	/**
+	 * Init the nav and fetch all model
+	 *
+	 * @param int $id ID of the navigation
+	 */
+	public function __construct($id) {
 
-    /**
-     * Init the nav and fetch all model
-     *
-     * @param int $id ID of the navigation
-     */
-    public function __construct($id) {
+		$this->id = $id;
 
-        $this->id = $id;
-
-        // Data about this nav
-        $query = \Skies::getDb()->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
+		// Data about this nav
+		$query = \Skies::getDb()->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
 		$query->execute([':id' => $this->id]);
 
-        if($query->rowCount() != 1) {
+		if($query->rowCount() != 1) {
 
-            return false;
+			return false;
 
-        }
+		}
 
-        $this->title = $query->fetchArray()['navTitle'];
+		$this->title = $query->fetchArray()['navTitle'];
 
+		// Entries
+		$entryQuery = \Skies::getDb()->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
 
-        // Entries
-        $entryQuery = \Skies::getDb()->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
+		$entryQuery->execute([':id' => $this->id]);
 
-        $entryQuery->execute([':id' => $this->id]);
+		while($line = $entryQuery->fetchArray()) {
 
-        while($line = $entryQuery->fetchArray()) {
+			$this->entries[] = [
 
-            $this->entries[] = [
+				'id' => $line['entryId'],
+				'order' => $line['entryOrder'],
+				'link' => $line['entryLink'],
+				'title' => $line['entryTitle'],
+				'type' => $line['entryType'],
+				'pageName' => $line['entryPageName']
 
-                'id'       => $line['entryId'],
-                'order'    => $line['entryOrder'],
-                'link'     => $line['entryLink'],
-                'title'    => $line['entryTitle'],
-                'type'     => $line['entryType'],
-                'pageName' => $line['entryPageName']
+			];
 
-            ];
+		}
 
-        }
+	}
 
-    }
+	public function prepareNav() {
 
-    public function prepareNav() {
+		$i = 0;
 
-        $i = 0;
+		$entryCount = count($this->entries);
 
-        $entryCount = count($this->entries);
+		$entries = [];
 
-	    $entries = [];
+		foreach($this->entries as $entry) {
 
-        foreach($this->entries as $entry) {
+			// Tpl variables
+			$vars = [];
 
-            // Tpl variables
-            $vars = [];
+			// Determine css classes of this entry
+			if($i == 0) {
+				$vars['first'] = true;
+			}
 
-            // Determine css classes of this entry
-            if($i == 0) {
-                $vars['first'] = true;
-            }
+			if($i == $entryCount - 1) {
+				$vars['last'] = false;
+			}
 
-            if($i == $entryCount - 1) {
-	            $vars['last'] = false;
-            }
+			// Type (internal/external link) dependant stuff
+			switch($entry['type']) {
 
-            // Type (internal/external link) dependant stuff
-            switch($entry['type']) {
+				case EntryTypes::PAGE:
 
-                case EntryTypes::PAGE:
+					// Is this the current page?
+					if(PageUtil::getPage($entry['pageName'])->isActive()) {
+						$vars['active'] = true;
+					}
 
-                    // Is this the current page?
-                    if(PageUtil::getPage($entry['pageName'])->isActive()) {
-	                    $vars['active'] = true;
-                    }
+					// Make the link
+					$vars['link'] = '/'.SUBDIR.$entry['pageName'];
 
-                    // Make the link
-	                $vars['link'] = '/'.SUBDIR.$entry['pageName'];
+					break;
 
-                    break;
+				case EntryTypes::EXTERNAL_LINK:
 
-                case EntryTypes::EXTERNAL_LINK:
+					// Make the link
+					$vars['link'] = $entry['link'];
 
-                    // Make the link
-	                $vars['link'] = $entry['link'];
+					break;
 
-                    break;
+			}
+			$vars['title'] = $entry['title'];
 
-            }
-	        $vars['title'] = $entry['title'];
+			$entries[$i++] = $vars;
 
-            $entries[$i++] = $vars;
+		}
 
-        }
+		\Skies::getTemplate()->assign(['nav' => ['entries' => $entries]]);
 
-	    \Skies::getTemplate()->assign(['nav' => ['entries' => $entries]]);
-
-    }
+	}
 
 }
 

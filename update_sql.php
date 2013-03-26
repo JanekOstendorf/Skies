@@ -19,8 +19,9 @@ require_once 'lib/config.inc.php';
 
 $db = new \skies\system\database\MysqlDatabase($dbHost, $dbUser, $dbPassword, $dbName, $dbPort);
 
-if(!$db instanceof \skies\system\database\Database || !$db->isSupported())
+if(!$db instanceof \skies\system\database\Database || !$db->isSupported()) {
 	die('Error connecting to the SQL server');
+}
 
 // Execute query
 $db->query(file_get_contents('docs/default.sql'));

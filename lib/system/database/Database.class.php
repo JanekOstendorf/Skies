@@ -49,7 +49,6 @@ abstract class Database {
 	 */
 	protected $database = '';
 
-
 	/**
 	 * Number of executed queries
 	 *
@@ -57,14 +56,12 @@ abstract class Database {
 	 */
 	protected $queryCount = 0;
 
-
 	/**
 	 * PDO object
 	 *
 	 * @var \PDO
 	 */
 	protected $pdo = null;
-
 
 	/**
 	 * Create a database object
@@ -78,11 +75,11 @@ abstract class Database {
 	public function __construct($host, $user, $password, $database, $port) {
 
 		// Save specifiers
-		$this->host     = $host;
-		$this->user     = $user;
+		$this->host = $host;
+		$this->user = $user;
 		$this->password = $password;
 		$this->database = $database;
-		$this->port     = $port;
+		$this->port = $port;
 
 		// Connect!
 		$this->connect();
@@ -96,12 +93,12 @@ abstract class Database {
 	 */
 	abstract public function connect();
 
-    /**
-     * Is this type of database supported
-     *
-     * @return bool
-     */
-    abstract public function isSupported();
+	/**
+	 * Is this type of database supported
+	 *
+	 * @return bool
+	 */
+	abstract public function isSupported();
 
 	/**
 	 * Get the ID of the last inserted row
@@ -213,8 +210,9 @@ abstract class Database {
 	 */
 	public function getErrorNumber() {
 
-		if($this->pdo !== null)
+		if($this->pdo !== null) {
 			return $this->pdo->errorCode();
+		}
 
 		return 0;
 
@@ -291,6 +289,5 @@ abstract class Database {
 		return addslashes($string);
 
 	}
-
 
 }

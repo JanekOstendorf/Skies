@@ -74,7 +74,6 @@ class Style implements ITemplateArray {
 	 * Init a style
 	 *
 	 * @param string $name Short name of the style
-	 *
 	 * @throws \skies\system\exception\SystemException
 	 */
 	public function __construct($name) {
@@ -91,11 +90,11 @@ class Style implements ITemplateArray {
 		}
 
 		$this->cssFiles = explode(', ', $this->config['cssFiles']);
-		$this->jsFiles  = explode(', ', $this->config['jsFiles']);
+		$this->jsFiles = explode(', ', $this->config['jsFiles']);
 		$this->templateDir = empty($this->config['templateDir']) ? null : $this->config['templateDir'];
-		$this->meta     = $this->config['meta'];
+		$this->meta = $this->config['meta'];
 
-		$this->name  = $this->config['name'];
+		$this->name = $this->config['name'];
 		$this->title = $this->config['title'];
 
 	}
@@ -162,8 +161,9 @@ class Style implements ITemplateArray {
 	 */
 	public function getTemplatePath() {
 
-		if($this->templateDir != null)
+		if($this->templateDir != null) {
 			return $this->getStylePath().$this->templateDir;
+		}
 
 		return null;
 

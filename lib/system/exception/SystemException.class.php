@@ -71,54 +71,56 @@ class SystemException extends LoggedException implements IPrintableException {
 		$e = ($this->getPrevious() ? : $this);
 		?>
 
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<title>Fatal error: <?php echo StringUtil::encodeHtml($this->_getMessage()); ?></title>
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>Fatal error: <?php echo StringUtil::encodeHtml($this->_getMessage()); ?></title>
 
-		</head>
-		<body>
-			<div class="systemException">
-				<h1>Fatal error: <?php echo StringUtil::encodeHtml($this->_getMessage()); ?></h1>
-				<!-- TODO: Maybe a nice style? -->
-				<?php if(\Skies::isDebugMode()) { ?>
-				<div>
-					<p><?php echo $this->getDescription(); ?></p>
+			</head>
+			<body>
+				<div class="systemException">
+					<h1>Fatal error: <?php echo StringUtil::encodeHtml($this->_getMessage()); ?></h1>
+					<!-- TODO: Maybe a nice style? -->
+					<?php if(\Skies::isDebugMode()) { ?>
+						<div>
+							<p><?php echo $this->getDescription(); ?></p>
 
-					<h2>Information:</h2>
+							<h2>Information:</h2>
 
-					<p>
-						<b>ID:</b> <code><?php echo $id; ?></code><br>
-						<b>Error message:</b> <?php echo StringUtil::encodeHtml($this->_getMessage()); ?><br>
-						<b>Error code:</b> <?php echo intval($e->getCode()); ?><br>
-						<?php echo $this->information; ?>
-						<b>File:</b> <?php echo StringUtil::encodeHTML($e->getFile()); ?> (<?php echo $e->getLine(); ?>)<br>
-						<b>Date:</b> <?php echo gmdate('r'); ?><br>
-						<b>Request:</b> <?php if(isset($_SERVER['REQUEST_URI']))
-						echo StringUtil::encodeHtml($_SERVER['REQUEST_URI']); ?><br>
-						<b>Referer:</b> <?php if(isset($_SERVER['HTTP_REFERER']))
-						echo StringUtil::encodeHtml($_SERVER['HTTP_REFERER']); ?><br>
-					</p>
+							<p>
+								<b>ID:</b> <code><?php echo $id; ?></code><br>
+								<b>Error message:</b> <?php echo StringUtil::encodeHtml($this->_getMessage()); ?><br>
+								<b>Error code:</b> <?php echo intval($e->getCode()); ?><br>
+								<?php echo $this->information; ?>
+								<b>File:</b> <?php echo StringUtil::encodeHTML($e->getFile()); ?> (<?php echo $e->getLine(); ?>)<br>
+								<b>Date:</b> <?php echo gmdate('r'); ?><br>
+								<b>Request:</b> <?php if(isset($_SERVER['REQUEST_URI']))
+										{
+											echo StringUtil::encodeHtml($_SERVER['REQUEST_URI']);
+										} ?><br>
+								<b>Referer:</b> <?php if(isset($_SERVER['HTTP_REFERER']))
+									echo StringUtil::encodeHtml($_SERVER['HTTP_REFERER']); ?><br>
+							</p>
 
-					<h2>Stacktrace:</h2>
-					<pre><?php echo StringUtil::encodeHtml($this->__getTraceAsString()); ?></pre>
+							<h2>Stacktrace:</h2>
+							<pre><?php echo StringUtil::encodeHtml($this->__getTraceAsString()); ?></pre>
+						</div>
+					<?php
+					}
+					else {
+						?>
+						<div>
+							<h2>Information:</h2>
+
+							<p>
+								<b>ID:</b> <code><?php echo $id; ?></code><br>
+								Send this ID to the administrator of this website to report this issue.
+							</p>
+						</div>
+					<?php } ?>
 				</div>
-				<?php
-			}
-			else {
-				?>
-				<div>
-					<h2>Information:</h2>
-
-					<p>
-						<b>ID:</b> <code><?php echo $id; ?></code><br>
-						Send this ID to the administrator of this website to report this issue.
-					</p>
-				</div>
-				<?php } ?>
-			</div>
-		</body>
-	</html>
+			</body>
+		</html>
 
 	<?php
 

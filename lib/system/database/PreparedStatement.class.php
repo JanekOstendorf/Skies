@@ -49,9 +49,9 @@ class PreparedStatement {
 	 */
 	public function __construct(Database $database, \PDOStatement $pdoStatement, $query = '') {
 
-		$this->database     = $database;
+		$this->database = $database;
 		$this->pdoStatement = $pdoStatement;
-		$this->query        = $query;
+		$this->query = $query;
 
 	}
 
@@ -81,6 +81,7 @@ class PreparedStatement {
 
 	/**
 	 * Executes the prepared statement
+	 *
 	 * @param array $parameters Parameters for the execution
 	 * @throws DatabaseException
 	 * @return void
@@ -92,10 +93,12 @@ class PreparedStatement {
 
 		try {
 
-			if(empty($parameters))
+			if(empty($parameters)) {
 				$this->pdoStatement->execute();
-			else
+			}
+			else {
 				$this->pdoStatement->execute($parameters);
+			}
 
 		}
 		catch(\PDOException $e) {
@@ -112,8 +115,9 @@ class PreparedStatement {
 	 */
 	public function fetchArray($type = null) {
 
-		if($type === null)
+		if($type === null) {
 			$type = \PDO::FETCH_ASSOC;
+		}
 
 		return $this->fetch($type);
 
@@ -121,15 +125,15 @@ class PreparedStatement {
 
 	/**
 	 * Fetch an iteratable object from the next row.
-     *
-     * @return \stdClass
+	 *
+	 * @return \stdClass
 	 */
 	public function fetchObject() {
 
 		$row = $this->fetchArray();
 
 		if($row !== false) {
-			return (object) $row;
+			return (object)$row;
 		}
 
 		return null;
@@ -197,14 +201,14 @@ class PreparedStatement {
 
 		if($this->pdoStatement !== null) {
 
-			if(isset($this->pdoStatement->errorInfo()[2]))
+			if(isset($this->pdoStatement->errorInfo()[2])) {
 				return $this->pdoStatement->errorInfo()[2];
+			}
 
 		}
 
 		return '';
 
 	}
-
 
 }

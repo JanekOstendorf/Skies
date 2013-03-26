@@ -153,7 +153,7 @@ h3, h4 {
 }
 
 #content > h1, #content > h2, #content > h3, #content > h4,
-	#content > form > h1, #content > form > h2, #content > form > h3, #content > form > h4 {
+#content > form > h1, #content > form > h2, #content > form > h3, #content > form > h4 {
 	margin: 30px -20px 10px -20px;
 	padding: 4px 20px;
 }

@@ -1,11 +1,9 @@
 <h1>{lang node='system.page.login.title'}</h1>
 
 {if $user.isGuest}
-
 	<p>
 		{lang node='system.page.login.introduction'}
 	</p>
-
 	<fieldset class="float-left" style="width: 45%;">
 
 		<legend>{lang node='system.page.login.login.title'}</legend>
@@ -85,12 +83,10 @@
 
 	</fieldset>
 	<br class="clear" />
-
 {else}
 	<p>
 		{lang node="system.page.login.welcomeText" userVars=["userName" => $user.name]}
 	</p>
-
 	<fieldset class="float-left" style="width: 45%;">
 		<legend>{lang node="system.page.login.changeMail.title"}</legend>
 
@@ -129,7 +125,6 @@
 		</form>
 
 	</fieldset>
-
 	<fieldset class="float-right" style="width: 45%;">
 
 		<legend>{lang node="system.page.login.changePassword.title"}</legend>
@@ -162,9 +157,7 @@
 		</form>
 
 	</fieldset>
-
 	<br class="clear" />
-
 	<fieldset class="float-left" style="width: 45%;">
 
 		<legend>{lang node="system.page.login.avatar.title"}</legend>
@@ -175,17 +168,16 @@
 
 			{lang node="system.page.login.avatar.description"}
 
-			<p>
-				<a href="http://gravatar.com/emails/">{lang node="system.page.login.avatar.avatarLink"}</a>
-			</p>
+		<p>
+			<a href="http://gravatar.com/emails/">{lang node="system.page.login.avatar.avatarLink"}</a>
+		</p>
 
-			<div class="clear"></div>
+		<div class="clear"></div>
 
 		</p>
 
 
 	</fieldset>
-
 	<fieldset class="float-right" style="width: 45%;">
 
 		<legend>{lang node="system.page.login.chooseLanguage.title"}</legend>
@@ -219,11 +211,8 @@
 			</table>
 
 
-
 		</form>
 
 	</fieldset>
-
 	<br class="clear" />
-
 {/if}

@@ -36,15 +36,15 @@ class MysqlDatabase extends Database {
 
 	}
 
-    /**
-     * Is this type of database supported
-     *
-     * @return bool
-     */
-    public function isSupported() {
+	/**
+	 * Is this type of database supported
+	 *
+	 * @return bool
+	 */
+	public function isSupported() {
 
-        return (extension_loaded('PDO') && extension_loaded('pdo_mysql'));
+		return (extension_loaded('PDO') && extension_loaded('pdo_mysql'));
 
-    }
+	}
 
 }

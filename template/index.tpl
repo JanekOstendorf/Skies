@@ -34,7 +34,8 @@
 			<div id="footer-wrapper">
 				<div id="footer" style="line-height: 16px;">
 					This is GNU GPL, do with it what you want. Hosted by SkyIrc.
-					- <a href="https://github.com/ozzyfant/Skies"><img style="width: 16px; vertical-align: middle;" src="/{$subdir}images/github.png" alt="GitHub" /></a>
+					-
+					<a href="https://github.com/ozzyfant/Skies"><img style="width: 16px; vertical-align: middle;" src="/{$subdir}images/github.png" alt="GitHub" /></a>
 					- {($benchmarkTime * 1000)|round}ms
 				</div>
 			</div>

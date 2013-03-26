@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2013 Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
- 
+
 namespace skies\model\page;
 
 /**
@@ -14,9 +14,9 @@ use skies\model\Page;
 
 class HomePage extends Page {
 
-
 	/**
 	 * Prepare the output
+	 *
 	 * @return void
 	 */
 	public function prepare() {
