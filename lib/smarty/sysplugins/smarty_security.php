@@ -35,7 +35,7 @@ class Smarty_Security {
      */
     public $php_handling = Smarty::PHP_PASSTHRU;
     /**
-     * This is the list of style directories that are considered secure.
+     * This is the list of template directories that are considered secure.
      * $template_dir is in this list implicitly.
      *
      * @var array
@@ -124,12 +124,12 @@ class Smarty_Security {
      */
     public $streams = array('file');
     /**
-     * + flag if constants can be accessed from style
+     * + flag if constants can be accessed from template
      * @var boolean
      */
     public $allow_constants = true;
     /**
-     * + flag if super globals can be accessed from style
+     * + flag if super globals can be accessed from template
      * @var boolean
      */
     public $allow_super_globals = true;
@@ -330,7 +330,7 @@ class Smarty_Security {
             $_secure = !empty($this->secure_dir);
         }
 
-        // rebuild style dir index
+        // rebuild template dir index
         if ($_template) {
             $this->_template_dir = $_template_dir;
             foreach ($_template_dir as $directory) {

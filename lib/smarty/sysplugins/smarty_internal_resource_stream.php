@@ -2,7 +2,7 @@
 /**
 * Smarty Internal Plugin Resource Stream
 *
-* Implements the streams as resource for Smarty style
+* Implements the streams as resource for Smarty template
 *
 * @package Smarty
 * @subpackage TemplateResources
@@ -13,7 +13,7 @@
 /**
 * Smarty Internal Plugin Resource Stream
 *
-* Implements the streams as resource for Smarty style
+* Implements the streams as resource for Smarty template
 *
 * @link http://php.net/streams
 * @package Smarty
@@ -22,10 +22,10 @@
 class Smarty_Internal_Resource_Stream extends Smarty_Resource_Recompiled {
 
     /**
-    * populate Source Object with meta model from Resource
+    * populate Source Object with meta data from Resource
     *
     * @param Smarty_Template_Source   $source    source object
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @return void
     */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
@@ -42,10 +42,10 @@ class Smarty_Internal_Resource_Stream extends Smarty_Resource_Recompiled {
     }
 
     /**
-    * Load style's source from stream into current style object
+    * Load template's source from stream into current template object
     *
     * @param Smarty_Template_Source $source source object
-    * @return string style source
+    * @return string template source
     * @throws SmartyException if source cannot be loaded
     */
     public function getContent(Smarty_Template_Source $source)

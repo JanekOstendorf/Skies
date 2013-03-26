@@ -12,13 +12,13 @@
  *
  * Type:     function<br>
  * Name:     math<br>
- * Purpose:  handle math computations in style
+ * Purpose:  handle math computations in template
  *
  * @link http://www.smarty.net/manual/en/language.function.math.php {math}
  *          (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
  * @param array                    $params   parameters
- * @param Smarty_Internal_Template $template style object
+ * @param Smarty_Internal_Template $template template object
  * @return string|null
  */
 function smarty_function_math($params, $template)

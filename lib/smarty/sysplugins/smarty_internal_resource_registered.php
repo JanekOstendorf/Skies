@@ -11,7 +11,7 @@
 /**
  * Smarty Internal Plugin Resource Registered
  *
- * Implements the registered resource for Smarty style
+ * Implements the registered resource for Smarty template
  *
  * @package Smarty
  * @subpackage TemplateResources
@@ -20,10 +20,10 @@
 class Smarty_Internal_Resource_Registered extends Smarty_Resource {
 
     /**
-     * populate Source Object with meta model from Resource
+     * populate Source Object with meta data from Resource
      *
      * @param Smarty_Template_Source   $source    source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return void
      */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
@@ -49,10 +49,10 @@ class Smarty_Internal_Resource_Registered extends Smarty_Resource {
     }
 
     /**
-     * Get timestamp (epoch) the style source was modified
+     * Get timestamp (epoch) the template source was modified
      *
      * @param Smarty_Template_Source $source source object
-     * @return integer|boolean timestamp (epoch) the style was modified, false if resources has no timestamp
+     * @return integer|boolean timestamp (epoch) the template was modified, false if resources has no timestamp
      */
     public function getTemplateTimestamp(Smarty_Template_Source $source)
     {
@@ -63,18 +63,18 @@ class Smarty_Internal_Resource_Registered extends Smarty_Resource {
     }
 
     /**
-     * Load style's source by invoking the registered callback into current style object
+     * Load template's source by invoking the registered callback into current template object
      *
      * @param Smarty_Template_Source $source source object
-     * @return string style source
+     * @return string template source
      * @throws SmartyException if source cannot be loaded
      */
     public function getContent(Smarty_Template_Source $source)
     {
-        // return style string
+        // return template string
         $t = call_user_func_array($source->smarty->registered_resources[$source->type][0][0], array($source->name, &$source->content, $source->smarty));
         if (is_bool($t) && !$t) {
-            throw new SmartyException("Unable to read style {$source->type} '{$source->name}'");
+            throw new SmartyException("Unable to read template {$source->type} '{$source->name}'");
         }
         return $source->content;
     }

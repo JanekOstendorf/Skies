@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Templateparser Parsetrees
  *
- * These are classes to build parsetrees in the style parser
+ * These are classes to build parsetrees in the template parser
  *
  * @package Smarty
  * @subpackage Compiler
@@ -78,7 +78,7 @@ class _smarty_tag extends _smarty_parsetree {
     /**
      * Return complied code that loads the evaluated outout of buffer content into a temporary variable
      *
-     * @return string style code
+     * @return string template code
      */
     public function assign_to_var()
     {
@@ -174,7 +174,7 @@ class _smarty_doublequoted extends _smarty_parsetree {
     /**
      * Merge subtree buffer content together
      *
-     * @return string  compiled style code
+     * @return string  compiled template code
      */
     public function to_smarty_php()
     {
@@ -244,14 +244,14 @@ class _smarty_dq_content extends _smarty_parsetree {
 class _smarty_template_buffer extends _smarty_parsetree {
 
     /**
-     * Array of style elements
+     * Array of template elements
      *
      * @var array
      */
     public $subtrees = Array();
 
     /**
-     * Create root of parse tree for style elements
+     * Create root of parse tree for template elements
      *
      * @param object $parser    parse object
      */
@@ -273,7 +273,7 @@ class _smarty_template_buffer extends _smarty_parsetree {
     /**
      * Sanitize and merge subtree buffers together
      *
-     * @return string style code content
+     * @return string template code content
      */
     public function to_smarty_php()
     {
@@ -326,7 +326,7 @@ class _smarty_template_buffer extends _smarty_parsetree {
 }
 
 /**
- * style text
+ * template text
  *
  * @package Smarty
  * @subpackage Compiler
@@ -336,7 +336,7 @@ class _smarty_text extends _smarty_parsetree {
 
 
     /**
-     * Create style text buffer
+     * Create template text buffer
      *
      * @param object $parser    parser object
      * @param string $data      text
@@ -360,7 +360,7 @@ class _smarty_text extends _smarty_parsetree {
 }
 
 /**
- * style linebreaks
+ * template linebreaks
  *
  * @package Smarty
  * @subpackage Compiler

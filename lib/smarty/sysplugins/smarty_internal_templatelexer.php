@@ -2,7 +2,7 @@
 /**
 * Smarty Internal Plugin Templatelexer
 *
-* This is the lexer to break the style source into tokens
+* This is the lexer to break the template source into tokens
 * @package Smarty
 * @subpackage Compiler
 * @author Uwe Tews
@@ -76,7 +76,7 @@ class Smarty_Internal_Templatelexer
 
     function __construct($data,$compiler)
     {
-//        $this->model = preg_replace("/(\r\n|\r|\n)/", "\n", $model);
+//        $this->data = preg_replace("/(\r\n|\r|\n)/", "\n", $data);
         $this->data = $data;
         $this->counter = 0;
         $this->line = 1;

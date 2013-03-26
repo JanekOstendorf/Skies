@@ -19,10 +19,10 @@
 class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
 
     /**
-     * populate Cached Object with meta model from Resource
+     * populate Cached Object with meta data from Resource
      *
      * @param Smarty_Template_Cached   $cached    cached object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return void
      */
     public function populate(Smarty_Template_Cached $cached, Smarty_Internal_Template $_template)
@@ -78,9 +78,9 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Read the cached style and process its header
+     * Read the cached template and process its header
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @param Smarty_Template_Cached $cached cached object
      * @return booelan true or false if the cached content does not exist
      */
@@ -91,9 +91,9 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Write the rendered style output to cache
+     * Write the rendered template output to cache
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @param string                   $content   content to cache
      * @return boolean success
      */
@@ -112,7 +112,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     /**
      * Empty cache
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @param integer                  $exp_time  expiration time (number of seconds, not timestamp)
      * @return integer number of cache files deleted
      */
@@ -122,10 +122,10 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Empty cache for a specific style
+     * Empty cache for a specific template
      *
-     * @param Smarty  $_template     style object
-     * @param string  $resource_name style name
+     * @param Smarty  $_template     template object
+     * @param string  $resource_name template name
      * @param string  $cache_id      cache id
      * @param string  $compile_id    compile id
      * @param integer $exp_time      expiration time (number of seconds, not timestamp)
@@ -154,8 +154,8 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
             $tpl = new $smarty->template_class($resource_name, $smarty);
             $smarty->caching = $_save_stat;
 
-            // remove from style cache
-            $tpl->source; // have the style registered before unset()
+            // remove from template cache
+            $tpl->source; // have the template registered before unset()
             if ($smarty->allow_ambiguous_resources) {
                 $_templateId = $tpl->source->unique_resource . $tpl->cache_id . $tpl->compile_id;
             } else {
@@ -221,7 +221,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Check is cache is locked for this style
+     * Check is cache is locked for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object
@@ -239,7 +239,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Lock cache for this style
+     * Lock cache for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object
@@ -251,7 +251,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
     }
 
     /**
-     * Unlock cache for this style
+     * Unlock cache for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object

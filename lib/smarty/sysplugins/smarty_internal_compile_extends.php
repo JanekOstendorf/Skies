@@ -70,7 +70,7 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
             $compiler->trigger_template_error('illegal value for file attribute', $compiler->lex->taglineno);
         }
         eval('$include_file = ' . $_attr['file'] . ';');
-        // create style object
+        // create template object
         $_template = new $compiler->smarty->template_class($include_file, $compiler->smarty, $compiler->template);
         // save file dependency
         if (isset($_is_stringy[$_template->source->type])) {

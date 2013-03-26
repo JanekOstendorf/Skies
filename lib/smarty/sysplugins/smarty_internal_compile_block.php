@@ -72,8 +72,8 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
      *
      * @param string $block_content     block source content
      * @param string $block_tag         opening block tag
-     * @param object $template          style object
-     * @param string $filepath          filepath of style source
+     * @param object $template          template object
+     * @param string $filepath          filepath of template source
      */
     public static function saveBlockData($block_content, $block_tag, $template, $filepath) {
         $_rdl = preg_quote($template->smarty->right_delimiter);
@@ -179,7 +179,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             return '';
         }
         $_tpl = new Smarty_Internal_template('string:' . $compiler->template->block_data[$_name]['source'], $compiler->smarty, $compiler->template, $compiler->template->cache_id,
-                        $compiler->template->compile_id = null, $compiler->template->caching, $compiler->template->cache_lifetime);
+                        $compiler->template->compile_id, $compiler->template->caching, $compiler->template->cache_lifetime);
         $_tpl->variable_filters = $compiler->template->variable_filters;
         $_tpl->properties['nocache_hash'] = $compiler->template->properties['nocache_hash'];
         $_tpl->source->filepath = $compiler->template->block_data[$_name]['file'];
@@ -255,8 +255,8 @@ class Smarty_Internal_Compile_Blockclose extends Smarty_Internal_CompileBase {
             //
             //$compiler->merged_templates = $saved_data[4];
             //$compiler->smarty->merged_templates_func = $saved_data[5];
-            //$compiler->style->properties = $saved_data[6];
-            //$compiler->style->has_nocache_code = $saved_data[7];
+            //$compiler->template->properties = $saved_data[6];
+            //$compiler->template->has_nocache_code = $saved_data[7];
             $_output = Smarty_Internal_Compile_Block::compileChildBlock($compiler, $_name);
         } else {
             if (isset($saved_data[0]['hide']) && !isset($compiler->template->block_data[$_name]['source'])) {

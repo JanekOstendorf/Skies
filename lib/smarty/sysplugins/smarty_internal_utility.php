@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:     Smarty: the PHP compiling style engine
+ * Project:     Smarty: the PHP compiling template engine
  * File:        smarty_internal_utility.php
  * SVN:         $Id: $
  *
@@ -49,14 +49,14 @@ class Smarty_Internal_Utility {
     }
 
     /**
-     * Compile all style files
+     * Compile all template files
      *
-     * @param string $extension     style file name extension
+     * @param string $extension     template file name extension
      * @param bool   $force_compile force all to recompile
      * @param int    $time_limit    set maximum execution time
      * @param int    $max_errors    set maximum allowed errors
      * @param Smarty $smarty        Smarty instance
-     * @return integer number of style files compiled
+     * @return integer number of template files compiled
      */
     public static function compileAllTemplates($extention, $force_compile, $time_limit, $max_errors, Smarty $smarty)
     {
@@ -67,7 +67,7 @@ class Smarty_Internal_Utility {
         $smarty->force_compile = $force_compile;
         $_count = 0;
         $_error_count = 0;
-        // loop over array of style directories
+        // loop over array of template directories
         foreach($smarty->getTemplateDir() as $_dir) {
             $_compileDirs = new RecursiveDirectoryIterator($_dir);
             $_compile = new RecursiveIteratorIterator($_compileDirs);
@@ -131,7 +131,7 @@ class Smarty_Internal_Utility {
         $smarty->force_compile = $force_compile;
         $_count = 0;
         $_error_count = 0;
-        // loop over array of style directories
+        // loop over array of template directories
         foreach($smarty->getConfigDir() as $_dir) {
             $_compileDirs = new RecursiveDirectoryIterator($_dir);
             $_compile = new RecursiveIteratorIterator($_compileDirs);
@@ -173,13 +173,13 @@ class Smarty_Internal_Utility {
     }
 
     /**
-     * Delete compiled style file
+     * Delete compiled template file
      *
-     * @param string  $resource_name style name
+     * @param string  $resource_name template name
      * @param string  $compile_id    compile id
      * @param integer $exp_time      expiration time
      * @param Smarty  $smarty        Smarty instance
-     * @return integer number of style files deleted
+     * @return integer number of template files deleted
      */
     public static function clearCompiledTemplate($resource_name, $compile_id, $exp_time, Smarty $smarty)
     {
@@ -192,8 +192,8 @@ class Smarty_Internal_Utility {
             $tpl = new $smarty->template_class($resource_name, $smarty);
             $smarty->caching = $_save_stat;
 
-            // remove from style cache
-            $tpl->source; // have the style registered before unset()
+            // remove from template cache
+            $tpl->source; // have the template registered before unset()
             if ($smarty->allow_ambiguous_resources) {
                 $_templateId = $tpl->source->unique_resource . $tpl->cache_id . $tpl->compile_id;
             } else {
@@ -270,9 +270,9 @@ class Smarty_Internal_Utility {
     }
 
     /**
-     * Return array of tag/attributes of all tags used by an style
+     * Return array of tag/attributes of all tags used by an template
      *
-     * @param Smarty_Internal_Template $templae style object
+     * @param Smarty_Internal_Template $templae template object
      * @return array of tag/attributes
      */
     public static function getTags(Smarty_Internal_Template $template)
@@ -299,7 +299,7 @@ class Smarty_Internal_Utility {
         if ($errors === null) {
             echo "<PRE>\n";
             echo "Smarty Installation test...\n";
-            echo "Testing style directory...\n";
+            echo "Testing template directory...\n";
         }
 
         $_stream_resolve_include_path = function_exists('stream_resolve_include_path');

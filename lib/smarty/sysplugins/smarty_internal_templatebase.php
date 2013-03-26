@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Smarty Template  Base
  *
- * This file contains the basic shared methodes for style handling
+ * This file contains the basic shared methodes for template handling
  *
  * @package Smarty
  * @subpackage Template
@@ -10,7 +10,7 @@
  */
 
 /**
- * Class with shared style methodes
+ * Class with shared template methodes
  *
  * @package Smarty
  * @subpackage Template
@@ -18,16 +18,16 @@
 abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
 
     /**
-     * fetches a rendered Smarty style
+     * fetches a rendered Smarty template
      *
-     * @param string $template          the resource handle of the style file or style object
-     * @param mixed  $cache_id          cache id to be used with this style
-     * @param mixed  $compile_id        compile id to be used with this style
+     * @param string $template          the resource handle of the template file or template object
+     * @param mixed  $cache_id          cache id to be used with this template
+     * @param mixed  $compile_id        compile id to be used with this template
      * @param object $parent            next higher level of Smarty variables
      * @param bool   $display           true: display, false: fetch
-     * @param bool   $merge_tpl_vars    if true parent style variables merged in to local scope
+     * @param bool   $merge_tpl_vars    if true parent template variables merged in to local scope
      * @param bool   $no_output_filter  if true do not run output filter
-     * @return string rendered style output
+     * @return string rendered template output
      */
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
@@ -41,7 +41,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if ($parent === null && ($this instanceof Smarty || is_string($template))) {
             $parent = $this;
         }
-        // create style object if necessary
+        // create template object if necessary
         $_template = ($template instanceof $this->template_class)
         ? $template
         : $this->smarty->createTemplate($template, $cache_id, $compile_id, $parent, false);
@@ -49,7 +49,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if ($this instanceof Smarty) {
             $_template->caching = $this->caching;
         }
-        // merge all variable scopes into style
+        // merge all variable scopes into template
         if ($merge_tpl_vars) {
             // save local variables
             $save_tpl_vars = $_template->tpl_vars;
@@ -110,25 +110,25 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 }
             }
         }
-        // must reset merge style date
+        // must reset merge template date
         $_template->smarty->merged_templates_func = array();
-        // get rendered style
+        // get rendered template
         // disable caching for evaluated code
         if ($_template->source->recompiled) {
             $_template->caching = false;
         }
-        // checks if style exists
+        // checks if template exists
         if (!$_template->source->exists) {
             if ($_template->parent instanceof Smarty_Internal_Template) {
                 $parent_resource = " in '{$_template->parent->template_resource}'";
             } else {
                 $parent_resource = '';
             }
-            throw new SmartyException("Unable to load style {$_template->source->type} '{$_template->source->name}'{$parent_resource}");
+            throw new SmartyException("Unable to load template {$_template->source->type} '{$_template->source->name}'{$parent_resource}");
         }
         // read from cache or render
         if (!($_template->caching == Smarty::CACHING_LIFETIME_CURRENT || $_template->caching == Smarty::CACHING_LIFETIME_SAVED) || !$_template->cached->valid) {
-            // render style (not loaded and not in cache)
+            // render template (not loaded and not in cache)
             if (!$_template->source->uncompiled) {
                 $_smarty_tpl = $_template;
                 if ($_template->source->recompiled) {
@@ -171,11 +171,11 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                     try {
                         ob_start();
                         if (empty($_template->properties['unifunc']) || !is_callable($_template->properties['unifunc'])) {
-                            throw new SmartyException("Invalid compiled style for '{$_template->template_resource}'");
+                            throw new SmartyException("Invalid compiled template for '{$_template->template_resource}'");
                         }
                         array_unshift($_template->_capture_stack,array());
                         //
-                        // render compiled style
+                        // render compiled template
                         //
                         $_template->properties['unifunc']($_template);
                         // any unclosed {capture} tags ?
@@ -234,7 +234,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 $output = '';
                 // loop over items, stitch back together
                 foreach ($cache_split as $curr_idx => $curr_split) {
-                    // escape PHP tags in style content
+                    // escape PHP tags in template content
                     $output .= preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php echo \'$1\'; ?>', $curr_split);
                     if (isset($cache_parts[0][$curr_idx])) {
                         $_template->properties['has_nocache_code'] = true;
@@ -276,7 +276,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 ob_start();
                 array_unshift($_template->_capture_stack,array());
                 //
-                // render cached style
+                // render cached template
                 //
                 $_template->properties['unifunc']($_template);
                 // any unclosed {capture} tags ?
@@ -361,25 +361,25 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     }
 
     /**
-     * displays a Smarty style
+     * displays a Smarty template
      *
-     * @param string $template   the resource handle of the style file or style object
-     * @param mixed  $cache_id   cache id to be used with this style
-     * @param mixed  $compile_id compile id to be used with this style
+     * @param string $template   the resource handle of the template file or template object
+     * @param mixed  $cache_id   cache id to be used with this template
+     * @param mixed  $compile_id compile id to be used with this template
      * @param object $parent     next higher level of Smarty variables
      */
     public function display($template = null, $cache_id = null, $compile_id = null, $parent = null)
     {
-        // display style
+        // display template
         $this->fetch($template, $cache_id, $compile_id, $parent, true);
     }
 
     /**
      * test if cache is valid
      *
-     * @param string|object $template   the resource handle of the style file or style object
-     * @param mixed         $cache_id   cache id to be used with this style
-     * @param mixed         $compile_id compile id to be used with this style
+     * @param string|object $template   the resource handle of the template file or template object
+     * @param mixed         $cache_id   cache id to be used with this template
+     * @param mixed         $compile_id compile id to be used with this template
      * @param object        $parent     next higher level of Smarty variables
      * @return boolean cache status
      */
@@ -394,15 +394,15 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
             }
             $template = $this->smarty->createTemplate($template, $cache_id, $compile_id, $parent, false);
         }
-        // return cache status of style
+        // return cache status of template
         return $template->cached->valid;
     }
 
     /**
-     * creates a model object
+     * creates a data object
      *
      * @param object $parent next higher level of Smarty variables
-     * @returns Smarty_Data model object
+     * @returns Smarty_Data data object
      */
     public function createData($parent = null)
     {
@@ -413,7 +413,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
      * Registers plugin to be used in templates
      *
      * @param string   $type       plugin type
-     * @param string   $tag        name of style tag
+     * @param string   $tag        name of template tag
      * @param callback $callback   PHP callback to register
      * @param boolean  $cacheable  if true (default) this fuction is cachable
      * @param array    $cache_attr caching attributes if any
@@ -450,7 +450,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     }
 
     /**
-     * Registers a resource to fetch a style
+     * Registers a resource to fetch a template
      *
      * @param string $type name of resource type
      * @param Smarty_Resource|array $callback or instance of Smarty_Resource, or array of callbacks to handle resource (deprecated)
@@ -478,7 +478,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     }
 
     /**
-     * Registers a cache resource to cache a style's output
+     * Registers a cache resource to cache a template's output
      *
      * @param string               $type     name of cache resource type
      * @param Smarty_CacheResource $callback instance of Smarty_CacheResource to handle output caching
@@ -508,7 +508,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     /**
      * Registers object to be used in templates
      *
-     * @param string  $object        name of style object
+     * @param string  $object        name of template object
      * @param object  $object_impl   the referenced PHP object to register
      * @param array   $allowed       list of allowed methods (empty = all)
      * @param boolean $smarty_args   smarty argument format, else traditional
@@ -577,7 +577,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     /**
      * Registers static classes to be used in templates
      *
-     * @param string $class name of style class
+     * @param string $class name of template class
      * @param string $class_impl the referenced PHP class to register
      * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
      * @throws SmartyException if $class_impl does not refer to an existing class
@@ -586,7 +586,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     {
         // test if exists
         if (!class_exists($class_impl)) {
-            throw new SmartyException("Undefined class '$class_impl' in register style class");
+            throw new SmartyException("Undefined class '$class_impl' in register template class");
         }
         // register the class
         $this->smarty->registered_classes[$class_name] = $class_impl;
@@ -612,7 +612,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     }
 
     /**
-     * Registers a default style handler
+     * Registers a default template handler
      *
      * @param callable $callback class/method name
      * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining
@@ -623,14 +623,14 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (is_callable($callback)) {
             $this->smarty->default_template_handler_func = $callback;
         } else {
-            throw new SmartyException("Default style handler '$callback' not callable");
+            throw new SmartyException("Default template handler '$callback' not callable");
         }
 
         return $this;
     }
 
     /**
-     * Registers a default style handler
+     * Registers a default template handler
      *
      * @param callable $callback class/method name
      * @return Smarty_Internal_Templatebase current Smarty_Internal_Templatebase (or Smarty or Smarty_Internal_Template) instance for chaining

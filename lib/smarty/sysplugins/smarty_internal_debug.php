@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Debug
  *
- * Class to collect model for the Smarty Debugging Consol
+ * Class to collect data for the Smarty Debugging Consol
  *
  * @package Smarty
  * @subpackage Debug
@@ -18,7 +18,7 @@
 class Smarty_Internal_Debug extends Smarty_Internal_Data {
 
     /**
-     * style model
+     * template data
      *
      * @var array
      */
@@ -71,7 +71,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     /**
      * Start logging of cache time
      *
-     * @param object $template cached style
+     * @param object $template cached template
      */
     public static function start_cache($template)
     {
@@ -82,7 +82,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     /**
      * End logging of cache time
      *
-     * @param object $template cached style
+     * @param object $template cached template
      */
     public static function end_cache($template)
     {
@@ -91,7 +91,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     }
 
     /**
-     * Opens a window for the Smarty Debugging Consol and display the model
+     * Opens a window for the Smarty Debugging Consol and display the data
      *
      * @param Smarty_Internal_Template|Smarty $obj object to debug
      */
@@ -136,7 +136,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     }
 
     /**
-     * Recursively gets variables from all style/model scopes
+     * Recursively gets variables from all template/data scopes
      *
      * @param Smarty_Internal_Template|Smarty_Data $obj object to debug
      * @return StdClass
@@ -173,9 +173,9 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     }
 
     /**
-     * Return key into $template_data for style
+     * Return key into $template_data for template
      *
-     * @param object $template  style object
+     * @param object $template  template object
      * @return string   key into $template_data
      */
     private static function get_key($template)

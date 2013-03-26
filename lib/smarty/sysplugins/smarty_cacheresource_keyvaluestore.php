@@ -45,10 +45,10 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     protected $timestamps = array();
 
     /**
-     * populate Cached Object with meta model from Resource
+     * populate Cached Object with meta data from Resource
      *
      * @param Smarty_Template_Cached   $cached    cached object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return void
      */
     public function populate(Smarty_Template_Cached $cached, Smarty_Internal_Template $_template)
@@ -78,9 +78,9 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Read the cached style and process the header
+     * Read the cached template and process the header
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @param Smarty_Template_Cached $cached cached object
      * @return booelan true or false if the cached content does not exist
      */
@@ -105,9 +105,9 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Write the rendered style output to cache
+     * Write the rendered template output to cache
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @param string $content content to cache
      * @return boolean success
      */
@@ -137,12 +137,12 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Empty cache for a specific style
+     * Empty cache for a specific template
      *
      * {@internal the $exp_time argument is ignored altogether}}
      *
      * @param Smarty  $smarty        Smarty object
-     * @param string  $resource_name style name
+     * @param string  $resource_name template name
      * @param string  $cache_id      cache id
      * @param string  $compile_id    compile id
      * @param integer $exp_time      expiration time [being ignored]
@@ -160,10 +160,10 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
         return -1;
     }
     /**
-     * Get style's unique ID
+     * Get template's unique ID
      *
      * @param Smarty $smarty        Smarty object
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @param string $cache_id      cache id
      * @param string $compile_id    compile id
      * @return string filepath of cache file
@@ -177,7 +177,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
                 $uid = $tpl->source->uid;
             }
             
-            // remove from style cache
+            // remove from template cache
             if ($smarty->allow_ambiguous_resources) {
                 $_templateId = $tpl->source->unique_resource . $tpl->cache_id . $tpl->compile_id;
             } else {
@@ -211,7 +211,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
      * Fetch and prepare a cache object.
      *
      * @param string  $cid           CacheID to fetch
-     * @param string  $resource_name style name
+     * @param string  $resource_name template name
      * @param string  $cache_id      cache id
      * @param string  $compile_id    compile id
      * @param string  $content       cached content
@@ -268,7 +268,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
      * Invalidate CacheID
      *
      * @param string $cid           CacheID
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @param string $cache_id      cache id
      * @param string $compile_id    compile id
      * @param string $resource_uid  source's uid
@@ -282,7 +282,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
         if (!$resource_name && !$cache_id && !$compile_id) {
             $key = 'IVK#ALL';
         }
-        // invalidate all caches by style
+        // invalidate all caches by template
         else if ($resource_name && !$cache_id && !$compile_id) {
             $key = 'IVK#TEMPLATE#' . $resource_uid . '#' . $this->sanitize($resource_name);
         }
@@ -305,7 +305,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
      * Determine the latest timestamp known to the invalidation chain
      *
      * @param string $cid           CacheID to determine latest invalidation timestamp of
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @param string $cache_id      cache id
      * @param string $compile_id    compile id
      * @param string $resource_uid  source's filepath
@@ -337,7 +337,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
      * Splits "some|chain|into|an|array" into array( '#clearAll#', 'some', 'some|chain', 'some|chain|into', ... )
      *
      * @param string $cid           CacheID to translate
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @param string $cache_id      cache id
      * @param string $compile_id    compile id
      * @param string $resource_uid  source's filepath
@@ -384,7 +384,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Check is cache is locked for this style
+     * Check is cache is locked for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object
@@ -398,7 +398,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Lock cache for this style
+     * Lock cache for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object
@@ -411,7 +411,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource {
     }
 
     /**
-     * Unlock cache for this style
+     * Unlock cache for this template
      *
      * @param Smarty $smarty Smarty object
      * @param Smarty_Template_Cached $cached cached object

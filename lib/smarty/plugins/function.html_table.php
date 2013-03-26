@@ -12,7 +12,7 @@
  * Type:     function<br>
  * Name:     html_table<br>
  * Date:     Feb 17, 2003<br>
- * Purpose:  make an html table from an array of model<br>
+ * Purpose:  make an html table from an array of data<br>
  * Params:
  * <pre>
  * - loop       - array to loop through
@@ -32,9 +32,9 @@
  * </pre>
  * Examples:
  * <pre>
- * {table loop=$model}
- * {table loop=$model cols=4 tr_attr='"bgcolor=red"'}
- * {table loop=$model cols="first,second,third" tr_attr=$colors}
+ * {table loop=$data}
+ * {table loop=$data cols=4 tr_attr='"bgcolor=red"'}
+ * {table loop=$data cols="first,second,third" tr_attr=$colors}
  * </pre>
  *
  * @author Monte Ohrt <monte at ohrt dot com>
@@ -44,7 +44,7 @@
  * @link http://www.smarty.net/manual/en/language.function.html.table.php {html_table}
  *          (Smarty online manual)
  * @param array                    $params   parameters
- * @param Smarty_Internal_Template $template style object
+ * @param Smarty_Internal_Template $template template object
  * @return string
  */
 function smarty_function_html_table($params, $template)

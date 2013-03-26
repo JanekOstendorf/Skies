@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:     Smarty: the PHP compiling style engine
+ * Project:     Smarty: the PHP compiling template engine
  * File:        Smarty.class.php
  * SVN:         $Id: Smarty.class.php 4694 2013-01-13 21:13:14Z uwe.tews@googlemail.com $
  *
@@ -28,7 +28,7 @@
  * @author Uwe Tews
  * @author Rodney Rehm
  * @package Smarty
- * @version 3.1.13
+ * @version 3.1-DEV
  */
 
 /**
@@ -113,7 +113,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     /**
      * smarty version
      */
-    const SMARTY_VERSION = 'Smarty-3.1.13';
+    const SMARTY_VERSION = 'Smarty-3.1-DEV';
 
     /**
      * define variable scopes
@@ -215,12 +215,12 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $use_include_path = false;
     /**
-     * style directory
+     * template directory
      * @var array
      */
     private $template_dir = array();
     /**
-     * joined style directory string used in cache keys
+     * joined template directory string used in cache keys
      * @var string
      */
     public $joined_template_dir = null;
@@ -230,7 +230,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $joined_config_dir = null;
     /**
-     * default style handler
+     * default template handler
      * @var callable
      */
     public $default_template_handler_func = null;
@@ -265,12 +265,12 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     private $config_dir = array();
     /**
-     * force style compiling?
+     * force template compiling?
      * @var boolean
      */
     public $force_compile = false;
     /**
-     * check style for modifications?
+     * check template for modifications?
      * @var boolean
      */
     public $compile_check = true;
@@ -319,12 +319,12 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $compile_id = null;
     /**
-     * style left-delimiter
+     * template left-delimiter
      * @var string
      */
     public $left_delimiter = "{";
     /**
-     * style right-delimiter
+     * template right-delimiter
      * @var string
      */
     public $right_delimiter = "}";
@@ -353,7 +353,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $php_handling = self::PHP_PASSTHRU;
     /**
-     * controls if the php style file resource is allowed
+     * controls if the php template file resource is allowed
      *
      * @var bool
      */
@@ -396,7 +396,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $smarty_debug_id = 'SMARTY_DEBUG';
     /**
-     * Path of debug style.
+     * Path of debug template.
      * @var string
      */
     public $debug_tpl = null;
@@ -456,7 +456,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     /**#@-*/
 
     /**
-     * global style functions
+     * global template functions
      * @var array
      */
     public $template_functions = array();
@@ -486,7 +486,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      */
     public $default_config_type = 'file';
     /**
-     * cached style objects
+     * cached template objects
      * @var array
      */
     public $template_objects = array();
@@ -699,14 +699,14 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Check if a style resource exists
+     * Check if a template resource exists
      *
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @return boolean status
      */
     public function templateExists($resource_name)
     {
-        // create style object
+        // create template object
         $save = $this->template_objects;
         $tpl = new $this->template_class($resource_name, $this);
         // check if it does exists
@@ -755,9 +755,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Empty cache for a specific style
+     * Empty cache for a specific template
      *
-     * @param string  $template_name style name
+     * @param string  $template_name template name
      * @param string  $cache_id      cache id
      * @param string  $compile_id    compile id
      * @param integer $exp_time      expiration time
@@ -813,9 +813,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Set style directory
+     * Set template directory
      *
-     * @param string|array $template_dir directory(s) of style sources
+     * @param string|array $template_dir directory(s) of template sources
      * @return Smarty current Smarty instance for chaining
      */
     public function setTemplateDir($template_dir)
@@ -830,12 +830,12 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Add style directory(s)
+     * Add template directory(s)
      *
-     * @param string|array $template_dir directory(s) of style sources
-     * @param string       $key          of the array element to assign the style dir to
+     * @param string|array $template_dir directory(s) of template sources
+     * @param string       $key          of the array element to assign the template dir to
      * @return Smarty current Smarty instance for chaining
-     * @throws SmartyException when the given style directory is not valid
+     * @throws SmartyException when the given template directory is not valid
      */
     public function addTemplateDir($template_dir, $key=null)
     {
@@ -864,10 +864,10 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Get style directories
+     * Get template directories
      *
      * @param mixed index of directory to get, null to get all
-     * @return array|string list of style directories, or directory of $index
+     * @return array|string list of template directories, or directory of $index
      */
     public function getTemplateDir($index=null)
     {
@@ -1153,7 +1153,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * return name of debugging style
+     * return name of debugging template
      *
      * @return string
      */
@@ -1163,7 +1163,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * set the debug style
+     * set the debug template
      *
      * @param string $tpl_name
      * @return Smarty current Smarty instance for chaining
@@ -1180,14 +1180,14 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * creates a style object
+     * creates a template object
      *
-     * @param string $template the resource handle of the style file
-     * @param mixed $cache_id cache id to be used with this style
-     * @param mixed $compile_id compile id to be used with this style
+     * @param string $template the resource handle of the template file
+     * @param mixed $cache_id cache id to be used with this template
+     * @param mixed $compile_id compile id to be used with this template
      * @param object $parent next higher level of Smarty variables
      * @param boolean $do_clone flag is Smarty object shall be cloned
-     * @return object style object
+     * @return object template object
      */
     public function createTemplate($template, $cache_id = null, $compile_id = null, $parent = null, $do_clone = true)
     {
@@ -1204,7 +1204,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
         // default to cache_id and compile_id of Smarty object
         $cache_id = $cache_id === null ? $this->cache_id : $cache_id;
         $compile_id = $compile_id === null ? $this->compile_id : $compile_id;
-        // already in style cache?
+        // already in template cache?
         if ($this->allow_ambiguous_resources) {
             $_templateId = Smarty_Resource::getUniqueTemplateName($this, $template) . $cache_id . $compile_id;
         } else {
@@ -1215,7 +1215,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
         }
         if ($do_clone) {
             if (isset($this->template_objects[$_templateId])) {
-                // return cached style object
+                // return cached template object
                 $tpl = clone $this->template_objects[$_templateId];
                 $tpl->smarty = clone $tpl->smarty;
                 $tpl->parent = $parent;
@@ -1226,7 +1226,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             }
         } else {
             if (isset($this->template_objects[$_templateId])) {
-                // return cached style object
+                // return cached template object
                 $tpl = $this->template_objects[$_templateId];
                 $tpl->parent = $parent;
                 $tpl->tpl_vars = array();
@@ -1235,7 +1235,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
                 $tpl = new $this->template_class($template, $this, $parent, $cache_id, $compile_id);
             }
         }
-        // fill model if present
+        // fill data if present
         if (!empty($data) && is_array($data)) {
             // set up variable values
             foreach ($data as $_key => $_val) {
@@ -1315,13 +1315,13 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Compile all style files
+     * Compile all template files
      *
      * @param string $extension file extension
      * @param bool $force_compile force all to recompile
      * @param int $time_limit
      * @param int $max_errors
-     * @return integer number of style files recompiled
+     * @return integer number of template files recompiled
      */
     public function compileAllTemplates($extention = '.tpl', $force_compile = false, $time_limit = 0, $max_errors = null)
     {
@@ -1335,7 +1335,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      * @param bool $force_compile force all to recompile
      * @param int $time_limit
      * @param int $max_errors
-     * @return integer number of style files recompiled
+     * @return integer number of template files recompiled
      */
     public function compileAllConfig($extention = '.conf', $force_compile = false, $time_limit = 0, $max_errors = null)
     {
@@ -1343,12 +1343,12 @@ class Smarty extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Delete compiled style file
+     * Delete compiled template file
      *
-     * @param string $resource_name style name
+     * @param string $resource_name template name
      * @param string $compile_id compile id
      * @param integer $exp_time expiration time
-     * @return integer number of style files deleted
+     * @return integer number of template files deleted
      */
     public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
     {
@@ -1357,9 +1357,9 @@ class Smarty extends Smarty_Internal_TemplateBase {
 
 
     /**
-     * Return array of tag/attributes of all tags used by an style
+     * Return array of tag/attributes of all tags used by an template
      *
-     * @param object $templae style object
+     * @param object $templae template object
      * @return array of tag/attributes
      */
     public function getTags(Smarty_Internal_Template $template)

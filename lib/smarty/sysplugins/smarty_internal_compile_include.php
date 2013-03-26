@@ -186,7 +186,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
         }
         if ($has_compiled_template) {
             $_hash = $compiler->smarty->merged_templates_func[$tpl_name]['nocache_hash'];
-            $_output = "<?php /*  Call merged included style \"" . $tpl_name . "\" */\n";
+            $_output = "<?php /*  Call merged included template \"" . $tpl_name . "\" */\n";
             $_output .= "\$_tpl_stack[] = \$_smarty_tpl;\n";
             $_output .= " \$_smarty_tpl = \$_smarty_tpl->setupInlineSubTemplate($include_file, $_cache_id, $_compile_id, $_caching, $_cache_lifetime, $_vars, $_parent_scope, '$_hash');\n";
             if (isset($_assign)) {
@@ -197,7 +197,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
             if (isset($_assign)) {
                 $_output .= " \$_smarty_tpl->tpl_vars[$_assign] = new Smarty_variable(ob_get_clean());";
             }
-            $_output .= "/*  End of included style \"" . $tpl_name . "\" */?>";
+            $_output .= "/*  End of included template \"" . $tpl_name . "\" */?>";
             return $_output;
         }
 

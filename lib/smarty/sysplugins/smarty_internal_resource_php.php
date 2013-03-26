@@ -27,10 +27,10 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled {
     }
 
     /**
-     * populate Source Object with meta model from Resource
+     * populate Source Object with meta data from Resource
      *
      * @param Smarty_Template_Source $source source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return void
      */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
@@ -63,10 +63,10 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled {
     }
 
     /**
-     * Load style's source from file into current style object
+     * Load template's source from file into current template object
      *
      * @param Smarty_Template_Source $source source object
-     * @return string style source
+     * @return string template source
      * @throws SmartyException if source cannot be loaded
      */
     public function getContent(Smarty_Template_Source $source)
@@ -74,16 +74,16 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled {
         if ($source->timestamp) {
             return '';
         }
-        throw new SmartyException("Unable to read style {$source->type} '{$source->name}'");
+        throw new SmartyException("Unable to read template {$source->type} '{$source->name}'");
     }
 
     /**
-     * Render and output the style (without using the compiler)
+     * Render and output the template (without using the compiler)
      *
      * @param Smarty_Template_Source $source source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return void
-     * @throws SmartyException if style cannot be loaded or allow_php_templates is disabled
+     * @throws SmartyException if template cannot be loaded or allow_php_templates is disabled
      */
     public function renderUncompiled(Smarty_Template_Source $source, Smarty_Internal_Template $_template)
     {
@@ -98,13 +98,13 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled {
             } else {
                 $parent_resource = '';
             }
-            throw new SmartyException("Unable to load style {$source->type} '{$source->name}'{$parent_resource}");
+            throw new SmartyException("Unable to load template {$source->type} '{$source->name}'{$parent_resource}");
         }
 
         // prepare variables
         extract($_template->getTemplateVars());
 
-        // include PHP style with short open tags enabled
+        // include PHP template with short open tags enabled
         ini_set( 'short_open_tag', '1' );
         include($source->filepath);
         ini_set( 'short_open_tag', $this->short_open_tag );

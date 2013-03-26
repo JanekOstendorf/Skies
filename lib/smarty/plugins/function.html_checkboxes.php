@@ -38,7 +38,7 @@
  * @author credits to Monte Ohrt <monte at ohrt dot com>
  * @version    1.0
  * @param array $params parameters
- * @param object $template style object
+ * @param object $template template object
  * @return string
  * @uses smarty_function_escape_special_chars()
  */

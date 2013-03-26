@@ -63,21 +63,21 @@ abstract class Smarty_Resource {
     public $template_parser_class = 'Smarty_Internal_Templateparser';
 
     /**
-     * Load style's source into current style object
+     * Load template's source into current template object
      *
      * {@internal The loaded source is assigned to $_template->source->content directly.}}
      *
      * @param Smarty_Template_Source $source source object
-     * @return string style source
+     * @return string template source
      * @throws SmartyException if source cannot be loaded
      */
     public abstract function getContent(Smarty_Template_Source $source);
 
     /**
-     * populate Source Object with meta model from Resource
+     * populate Source Object with meta data from Resource
      *
      * @param Smarty_Template_Source   $source source object
-     * @param Smarty_Internal_Template $_template     style object
+     * @param Smarty_Internal_Template $_template     template object
      */
     public abstract function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null);
 
@@ -108,7 +108,7 @@ abstract class Smarty_Resource {
      * populate Compiled Object with compiled filepath
      *
      * @param Smarty_Template_Compiled $compiled  compiled object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      */
     public function populateCompiledFilepath(Smarty_Template_Compiled $compiled, Smarty_Internal_Template $_template)
     {
@@ -191,12 +191,12 @@ abstract class Smarty_Resource {
     }
     
     /**
-     * build style filepath by traversing the template_dir array
+     * build template filepath by traversing the template_dir array
      *
      * @param Smarty_Template_Source   $source    source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      * @return string fully qualified filepath
-     * @throws SmartyException if default style handler is registered but not callable
+     * @throws SmartyException if default template handler is registered but not callable
      */
     protected function buildFilepath(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
     {
@@ -209,16 +209,16 @@ abstract class Smarty_Resource {
             $_default_handler = $source->smarty->default_template_handler_func;
         }
 
-        // go relative to a given style?
+        // go relative to a given template?
         $_file_is_dotted = $file[0] == '.' && ($file[1] == '.' || $file[1] == '/' || $file[1] == "\\");
         if ($_template && $_template->parent instanceof Smarty_Internal_Template && $_file_is_dotted) {
             if ($_template->parent->source->type != 'file' && $_template->parent->source->type != 'extends' && !$_template->parent->allow_relative_path) {
-                throw new SmartyException("Template '{$file}' cannot be relative to style of resource type '{$_template->parent->source->type}'");
+                throw new SmartyException("Template '{$file}' cannot be relative to template of resource type '{$_template->parent->source->type}'");
             }
             $file = dirname($_template->parent->source->filepath) . DS . $file;
             $_file_exact_match = true;
             if (!preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $file)) {
-                // the path gained from the parent style is relative to the current working directory
+                // the path gained from the parent template is relative to the current working directory
                 // as expansions (like include_path) have already been done
                 $file = getcwd() . DS . $file;
             }
@@ -247,7 +247,7 @@ abstract class Smarty_Resource {
         // this is only required for directories
         $file = rtrim($_path, '/\\');
 
-        // files relative to a style only get one shot
+        // files relative to a template only get one shot
         if (isset($_file_exact_match)) {
             return $this->fileExists($source, $file) ? $file : false;
         }
@@ -316,7 +316,7 @@ abstract class Smarty_Resource {
                 if ($source instanceof Smarty_Config_Source) {
                     throw new SmartyException("Default config handler not callable");
                 } else {
-                    throw new SmartyException("Default style handler not callable");
+                    throw new SmartyException("Default template handler not callable");
                 }
             }
             $_return = call_user_func_array($_default_handler,
@@ -439,7 +439,7 @@ abstract class Smarty_Resource {
             return $smarty->_resource_handlers[$type] = self::$resources['stream'];
         }
 
-        // TODO: try default_(style|config)_handler
+        // TODO: try default_(template|config)_handler
 
         // give up
         throw new SmartyException("Unkown resource type '{$type}'");
@@ -498,7 +498,7 @@ abstract class Smarty_Resource {
      *
      * Either [$_template] or [$smarty, $template_resource] must be specified
      *
-     * @param Smarty_Internal_Template $_template         style object
+     * @param Smarty_Internal_Template $_template         template object
      * @param Smarty                   $smarty            smarty object
      * @param string                   $template_resource resource identifier
      * @return Smarty_Template_Source Source Object
@@ -516,7 +516,7 @@ abstract class Smarty_Resource {
         $unique_resource_name = $resource->buildUniqueResourceName($smarty, $name);
 
         // check runtime cache
-        $_cache_key = 'style|' . $unique_resource_name;
+        $_cache_key = 'template|' . $unique_resource_name;
         if ($smarty->compile_id) {
             $_cache_key .= '|'.$smarty->compile_id;
         }
@@ -585,7 +585,7 @@ abstract class Smarty_Resource {
  *
  * @property integer $timestamp Source Timestamp
  * @property boolean $exists    Source Existance
- * @property boolean $style  Extended Template reference
+ * @property boolean $template  Extended Template reference
  * @property string  $content   Source Content
  */
 class Smarty_Template_Source {
@@ -657,7 +657,7 @@ class Smarty_Template_Source {
     public $recompiled = null;
 
     /**
-     * The Components an extended style is made of
+     * The Components an extended template is made of
      * @var array
      */
     public $components = null;
@@ -704,7 +704,7 @@ class Smarty_Template_Source {
     /**
      * get a Compiled Object of this source
      *
-     * @param Smarty_Internal_Template $_template style objet
+     * @param Smarty_Internal_Template $_template template objet
      * @return Smarty_Template_Compiled compiled object
      */
     public function getCompiled(Smarty_Internal_Template $_template)
@@ -729,7 +729,7 @@ class Smarty_Template_Source {
     /**
      * render the uncompiled source
      *
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      */
     public function renderUncompiled(Smarty_Internal_Template $_template)
     {
@@ -739,7 +739,7 @@ class Smarty_Template_Source {
     /**
      * <<magic>> Generic Setter.
      *
-     * @param string $property_name valid: timestamp, exists, content, style
+     * @param string $property_name valid: timestamp, exists, content, template
      * @param mixed  $value        new value (is not checked)
      * @throws SmartyException if $property_name is not valid
      */
@@ -751,7 +751,7 @@ class Smarty_Template_Source {
             case 'exists':
             case 'content':
             // required for extends: only
-            case 'style':
+            case 'template':
                 $this->$property_name = $value;
                 break;
 

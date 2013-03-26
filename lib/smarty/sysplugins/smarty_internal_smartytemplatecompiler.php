@@ -81,9 +81,9 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
     }
 
     /**
-     * Methode to compile a Smarty style
+     * Methode to compile a Smarty template
      *
-     * @param  mixed $_content style source
+     * @param  mixed $_content template source
      * @return bool true if compiling succeeded, false if it failed
      */
     protected function doCompile($_content)
@@ -91,7 +91,7 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
         /* here is where the compiling takes place. Smarty
           tags in the templates are replaces with PHP code,
           then written to compiled files. */
-        // init the lexer/parser to compile the style
+        // init the lexer/parser to compile the template
         $this->lex = new $this->lexer_class($_content, $this);
         $this->parser = new $this->parser_class($this->lex, $this);
         if ($this->smarty->_parserdebug)

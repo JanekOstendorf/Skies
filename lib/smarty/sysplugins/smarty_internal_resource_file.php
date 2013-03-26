@@ -19,10 +19,10 @@
 class Smarty_Internal_Resource_File extends Smarty_Resource {
 
     /**
-     * populate Source Object with meta model from Resource
+     * populate Source Object with meta data from Resource
      *
      * @param Smarty_Template_Source   $source    source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
     {
@@ -53,10 +53,10 @@ class Smarty_Internal_Resource_File extends Smarty_Resource {
     }
 
     /**
-     * Load style's source from file into current style object
+     * Load template's source from file into current template object
      *
      * @param Smarty_Template_Source $source source object
-     * @return string style source
+     * @return string template source
      * @throws SmartyException if source cannot be loaded
      */
     public function getContent(Smarty_Template_Source $source)
@@ -67,7 +67,7 @@ class Smarty_Internal_Resource_File extends Smarty_Resource {
         if ($source instanceof Smarty_Config_Source) {
             throw new SmartyException("Unable to read config {$source->type} '{$source->name}'");
         }
-        throw new SmartyException("Unable to read style {$source->type} '{$source->name}'");
+        throw new SmartyException("Unable to read template {$source->type} '{$source->name}'");
     }
 
     /**

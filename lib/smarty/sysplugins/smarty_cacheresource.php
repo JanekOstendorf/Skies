@@ -29,10 +29,10 @@ abstract class Smarty_CacheResource {
     );
 
     /**
-    * populate Cached Object with meta model from Resource
+    * populate Cached Object with meta data from Resource
     *
     * @param Smarty_Template_Cached $cached cached object
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @return void
     */
     public abstract function populate(Smarty_Template_Cached $cached, Smarty_Internal_Template $_template);
@@ -46,18 +46,18 @@ abstract class Smarty_CacheResource {
     public abstract function populateTimestamp(Smarty_Template_Cached $cached);
 
     /**
-    * Read the cached style and process header
+    * Read the cached template and process header
     *
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @param Smarty_Template_Cached $cached cached object
     * @return booelan true or false if the cached content does not exist
     */
     public abstract function process(Smarty_Internal_Template $_template, Smarty_Template_Cached $cached=null);
 
     /**
-    * Write the rendered style output to cache
+    * Write the rendered template output to cache
     *
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @param string $content content to cache
     * @return boolean success
     */
@@ -66,7 +66,7 @@ abstract class Smarty_CacheResource {
     /**
     * Return cached content
     *
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @param string $content content of cache
     */
     public function getCachedContent(Smarty_Internal_Template $_template)
@@ -89,10 +89,10 @@ abstract class Smarty_CacheResource {
     public abstract function clearAll(Smarty $smarty, $exp_time=null);
 
     /**
-    * Empty cache for a specific style
+    * Empty cache for a specific template
     *
     * @param Smarty $smarty Smarty object
-    * @param string $resource_name style name
+    * @param string $resource_name template name
     * @param string $cache_id cache id
     * @param string $compile_id compile id
     * @param integer $exp_time expiration time (number of seconds, not timestamp)
@@ -280,7 +280,7 @@ class Smarty_Template_Cached {
     /**
     * create Cached Object container
     *
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     */
     public function __construct(Smarty_Internal_Template $_template)
     {
@@ -357,7 +357,7 @@ class Smarty_Template_Cached {
     /**
     * Write this cache object to handler
     *
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     * @param string $content content to cache
     * @return boolean success
     */

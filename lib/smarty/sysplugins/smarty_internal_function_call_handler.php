@@ -16,11 +16,11 @@
 class Smarty_Internal_Function_Call_Handler {
 
     /**
-     * This function handles calls to style functions defined by {function}
+     * This function handles calls to template functions defined by {function}
      * It does create a PHP function at the first call
      *
-     * @param string                   $_name       style function name
-     * @param Smarty_Internal_Template $_template   style object
+     * @param string                   $_name       template function name
+     * @param Smarty_Internal_Template $_template   template object
      * @param array                    $_params     Smarty variables passed as call parameter
      * @param string                   $_hash       nocache hash value
      * @param bool                     $_nocache    nocache flag

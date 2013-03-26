@@ -2,7 +2,7 @@
 /**
 * Smarty Internal Plugin Templateparser
 *
-* This is the style parser.
+* This is the template parser.
 * It is generated from the internal.templateparser.y file
 * @package Smarty
 * @subpackage Compiler
@@ -90,7 +90,7 @@ class Smarty_Internal_Templateparser#line 79 "smarty_internal_templateparser.php
 
     const Err1 = "Security error: Call to private object member not allowed";
     const Err2 = "Security error: Call to dynamic object member not allowed";
-    const Err3 = "PHP in style not allowed. Use SmartyBC to enable it";
+    const Err3 = "PHP in template not allowed. Use SmartyBC to enable it";
     // states whether the parse was successful or not
     public $successful = true;
     public $retvalue = 0;
@@ -1248,7 +1248,7 @@ static public $yy_action = array(
   'GREATERTHAN',   'LESSTHAN',      'GREATEREQUAL',  'LESSEQUAL',
   'IDENTITY',      'NONEIDENTITY',  'MOD',           'LAND',
   'LOR',           'LXOR',          'QUOTE',         'BACKTICK',
-  'DOLLARID',      'error',         'start',         'style',
+  'DOLLARID',      'error',         'start',         'template',
   'template_element',  'smartytag',     'literal',       'literal_elements',
   'literal_element',  'value',         'modifierlist',  'attributes',
   'expr',          'varindexed',    'statement',     'statements',
@@ -1262,10 +1262,10 @@ static public $yy_action = array(
     );
 
     static public $yyRuleName = array(
- /*   0 */ "start ::= style",
- /*   1 */ "style ::= template_element",
- /*   2 */ "style ::= style template_element",
- /*   3 */ "style ::=",
+ /*   0 */ "start ::= template",
+ /*   1 */ "template ::= template_element",
+ /*   2 */ "template ::= template template_element",
+ /*   3 */ "template ::=",
  /*   4 */ "template_element ::= smartytag",
  /*   5 */ "template_element ::= COMMENT",
  /*   6 */ "template_element ::= literal",
@@ -1724,7 +1724,7 @@ static public $yy_action = array(
 #line 84 "smarty_internal_templateparser.y"
 
     $this->internalError = true;
-    $this->compiler->trigger_template_error("Stack overflow in style parser");
+    $this->compiler->trigger_template_error("Stack overflow in template parser");
 #line 1724 "smarty_internal_templateparser.php"
             return;
         }

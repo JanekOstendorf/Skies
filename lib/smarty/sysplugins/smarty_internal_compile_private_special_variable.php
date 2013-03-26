@@ -59,7 +59,7 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
                 $compiled_ref = '$_'.strtoupper($variable);
                 break;
 
-            case 'style':
+            case 'template':
                 return 'basename($_smarty_tpl->source->filepath)';
 
             case 'template_object':

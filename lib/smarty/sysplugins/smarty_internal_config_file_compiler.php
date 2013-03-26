@@ -47,7 +47,7 @@ class Smarty_Internal_Config_File_Compiler {
     public $config;
 
     /**
-     * Compiled config model sections and variables
+     * Compiled config data sections and variables
      *
      * @var array
      */
@@ -66,7 +66,7 @@ class Smarty_Internal_Config_File_Compiler {
     }
 
     /**
-     * Method to compile a Smarty style.
+     * Method to compile a Smarty template.
      *
      * @param  Smarty_Internal_Config $config config object
      * @return bool true if compiling succeeded, false if it failed
@@ -79,7 +79,7 @@ class Smarty_Internal_Config_File_Compiler {
         $this->config = $config;
         // get config file source
         $_content = $config->source->content . "\n";
-        // on empty style just return
+        // on empty template just return
         if ($_content == '') {
             return true;
         }
@@ -111,7 +111,7 @@ class Smarty_Internal_Config_File_Compiler {
     {
         $this->lex = Smarty_Internal_Configfilelexer::instance();
         $this->parser = Smarty_Internal_Configfileparser::instance();
-        // get style source line which has error
+        // get template source line which has error
         $line = $this->lex->line;
         if (isset($args)) {
             // $line--;

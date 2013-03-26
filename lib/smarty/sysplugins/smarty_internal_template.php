@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Template
  *
- * This file contains the Smarty style engine
+ * This file contains the Smarty template engine
  *
  * @package Smarty
  * @subpackage Template
@@ -10,7 +10,7 @@
  */
 
 /**
- * Main class with style model structures and methods
+ * Main class with template data structures and methods
  *
  * @package Smarty
  * @subpackage Template
@@ -47,17 +47,17 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      */
     public $template_resource = null;
     /**
-     * flag if compiled style is invalid and must be (re)compiled
+     * flag if compiled template is invalid and must be (re)compiled
      * @var bool
      */
     public $mustCompile = null;
     /**
-     * flag if style does contain nocache code sections
+     * flag if template does contain nocache code sections
      * @var bool
      */
     public $has_nocache_code = false;
     /**
-     * special compiled and cached style properties
+     * special compiled and cached template properties
      * @var array
      */
     public $properties = array('file_dependency' => array(),
@@ -74,7 +74,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      */
     public $smarty = null;
     /**
-     * blocks for style inheritance
+     * blocks for template inheritance
      * @var array
      */
     public $block_data = array();
@@ -89,7 +89,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      */
     public $used_tags = array();
     /**
-     * internal flag to allow relative path in child style blocks
+     * internal flag to allow relative path in child template blocks
      * @var bool
      */
     public $allow_relative_path = false;
@@ -100,12 +100,12 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     public $_capture_stack = array(0 => array());
 
     /**
-     * Create style model object
+     * Create template data object
      *
-     * Some of the global Smarty settings copied to style scope
-     * It load the required style resources and cacher plugins
+     * Some of the global Smarty settings copied to template scope
+     * It load the required template resources and cacher plugins
      *
-     * @param string                   $template_resource style resource string
+     * @param string                   $template_resource template resource string
      * @param Smarty                   $smarty            Smarty instance
      * @param Smarty_Internal_Template $_parent           back pointer to parent object with variables or null
      * @param mixed                    $_cache_id cache   id or null
@@ -126,18 +126,18 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         $this->parent = $_parent;
         // Template resource
         $this->template_resource = $template_resource;
-        // copy block model of style inheritance
+        // copy block data of template inheritance
         if ($this->parent instanceof Smarty_Internal_Template) {
             $this->block_data = $this->parent->block_data;
         }
     }
 
     /**
-     * Returns if the current style must be compiled by the Smarty compiler
+     * Returns if the current template must be compiled by the Smarty compiler
      *
-     * It does compare the timestamps of style source and the compiled templates and checks the force compile configuration
+     * It does compare the timestamps of template source and the compiled templates and checks the force compile configuration
      *
-     * @return boolean true if the style must be compiled
+     * @return boolean true if the template must be compiled
      */
     public function mustCompile()
     {
@@ -147,7 +147,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             } else {
                 $parent_resource = '';
             }
-            throw new SmartyException("Unable to load style {$this->source->type} '{$this->source->name}'{$parent_resource}");
+            throw new SmartyException("Unable to load template {$this->source->type} '{$this->source->name}'{$parent_resource}");
         }
         if ($this->mustCompile === null) {
             $this->mustCompile = (!$this->source->uncompiled && ($this->smarty->force_compile || $this->source->recompiled || $this->compiled->timestamp === false ||
@@ -157,9 +157,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Compiles the style
+     * Compiles the template
      *
-     * If the style is not evaluated the compiled style is saved on disk
+     * If the template is not evaluated the compiled template is saved on disk
      */
     public function compileTemplateSource()
     {
@@ -194,10 +194,10 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         }
         // compiling succeded
         if (!$this->source->recompiled && $this->compiler->write_compiled_code) {
-            // write compiled style
+            // write compiled template
             $_filepath = $this->compiled->filepath;
             if ($_filepath === false)
-                throw new SmartyException('getCompiledFilepath() did not return a destination to save the compiled style to');
+                throw new SmartyException('getCompiledFilepath() did not return a destination to save the compiled template to');
             Smarty_Internal_Write_File::writeFile($_filepath, $code, $this->smarty);
             $this->compiled->exists = true;
             $this->compiled->isCompiled = true;
@@ -210,7 +210,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Writes the cached style output
+     * Writes the cached template output
      *
      * @return bool
      */
@@ -233,18 +233,18 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     /**
      * Template code runtime function to get subtemplate content
      *
-     * @param string  $template       the resource handle of the style file
-     * @param mixed   $cache_id       cache id to be used with this style
-     * @param mixed   $compile_id     compile id to be used with this style
+     * @param string  $template       the resource handle of the template file
+     * @param mixed   $cache_id       cache id to be used with this template
+     * @param mixed   $compile_id     compile id to be used with this template
      * @param integer $caching        cache mode
-     * @param integer $cache_lifetime life time of cache model
+     * @param integer $cache_lifetime life time of cache data
      * @param array   $vars optional  variables to assign
      * @param int     $parent_scope   scope in which {include} should execute
-     * @returns string style content
+     * @returns string template content
      */
     public function getSubTemplate($template, $cache_id, $compile_id, $caching, $cache_lifetime, $data, $parent_scope)
     {
-        // already in style cache?
+        // already in template cache?
         if ($this->smarty->allow_ambiguous_resources) {
             $_templateId = Smarty_Resource::getUniqueTemplateName($this->smarty, $template) . $cache_id . $compile_id;
         } else {
@@ -255,7 +255,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             $_templateId = sha1($_templateId);
         }
         if (isset($this->smarty->template_objects[$_templateId])) {
-            // clone cached style object because of possible recursive call
+            // clone cached template object because of possible recursive call
             $tpl = clone $this->smarty->template_objects[$_templateId];
             $tpl->parent = $this;
             $tpl->caching = $caching;
@@ -289,15 +289,15 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     /**
      * Template code runtime function to set up an inline subtemplate
      *
-     * @param string  $template       the resource handle of the style file
-     * @param mixed   $cache_id       cache id to be used with this style
-     * @param mixed   $compile_id     compile id to be used with this style
+     * @param string  $template       the resource handle of the template file
+     * @param mixed   $cache_id       cache id to be used with this template
+     * @param mixed   $compile_id     compile id to be used with this template
      * @param integer $caching        cache mode
-     * @param integer $cache_lifetime life time of cache model
+     * @param integer $cache_lifetime life time of cache data
      * @param array   $vars optional  variables to assign
      * @param int     $parent_scope   scope in which {include} should execute
      * @param string  $hash           nocache hash code
-     * @returns string style content
+     * @returns string template content
      */
     public function setupInlineSubTemplate($template, $cache_id, $compile_id, $caching, $cache_lifetime, $data, $parent_scope, $hash)
     {
@@ -330,7 +330,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     /**
      * Create code frame for compiled and cached templates
      *
-     * @param string $content   optional style content
+     * @param string $content   optional template content
      * @param bool   $cache     flag for cache file
      * @return string
      */
@@ -415,12 +415,12 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * This function is executed automatically when a compiled or cached style file is included
+     * This function is executed automatically when a compiled or cached template file is included
      *
-     * - Decode saved properties from compiled style and cache files
+     * - Decode saved properties from compiled template and cache files
      * - Check if compiled or cache file is valid
      *
-     * @param array $properties     special style properties
+     * @param array $properties     special template properties
      * @param bool  $cache          flag if called from cache file
      * @return bool                 flag if compiled or cache file is valid
      */
@@ -448,7 +448,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             foreach ($this->properties['file_dependency'] as $_file_to_check) {
                 if ($_file_to_check[2] == 'file' || $_file_to_check[2] == 'php') {
                     if ($this->source->filepath == $_file_to_check[0] && isset($this->source->timestamp)) {
-                        // do not recheck current style
+                        // do not recheck current template
                         $mtime = $this->source->timestamp;
                     } else {
                         // file and php types can be checked without loading the respective resource handlers
@@ -467,11 +467,16 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
             }
         }
         if ($cache) {
+            // CACHING_LIFETIME_SAVED cache expiry has to be validated here since otherwise we'd define the unifunc
+            if ($this->caching === Smarty::CACHING_LIFETIME_SAVED &&
+                $this->properties['cache_lifetime'] >= 0 &&
+                (time() > ($this->cached->timestamp + $this->properties['cache_lifetime']))) {
+                $is_valid = false;
+            }
             $this->cached->valid = $is_valid;
         } else {
-            $this->mustCompile = !$is_valid;
-        }
-        // store model in reusable Smarty_Template_Compiled
+            $this->mustCompile = !$is_valid;        }
+        // store data in reusable Smarty_Template_Compiled
         if (!$cache) {
             $this->compiled->_properties = $properties;
         }
@@ -501,10 +506,10 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Template code runtime function to get pointer to style variable array of requested scope
+     * Template code runtime function to get pointer to template variable array of requested scope
      *
      * @param int $scope    requested variable scope
-     * @return array        array of style variables
+     * @return array        array of template variables
      */
     public function &getScope($scope)
     {
@@ -524,7 +529,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-     * Get parent or root of style parent chain
+     * Get parent or root of template parent chain
      *
      * @param int $scope    pqrent or root scope
      * @return mixed object
@@ -583,7 +588,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
     /**
-    * Empty cache for this style
+    * Empty cache for this template
     *
     * @param integer $exp_time      expiration time
     * @return integer number of cache files deleted
@@ -595,7 +600,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
     }
 
      /**
-     * set Smarty property in style context
+     * set Smarty property in template context
      *
      * @param string $property_name property name
      * @param mixed  $value         value
@@ -610,7 +615,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 $this->$property_name = $value;
                 return;
 
-            // FIXME: routing of style -> smarty attributes
+            // FIXME: routing of template -> smarty attributes
             default:
                 if (property_exists($this->smarty, $property_name)) {
                     $this->smarty->$property_name = $value;
@@ -618,11 +623,11 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 }
         }
 
-        throw new SmartyException("invalid style property '$property_name'.");
+        throw new SmartyException("invalid template property '$property_name'.");
     }
 
     /**
-     * get Smarty property in style context
+     * get Smarty property in template context
      *
      * @param string $property_name property name
      */
@@ -631,10 +636,10 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         switch ($property_name) {
             case 'source':
                 if (strlen($this->template_resource) == 0) {
-                    throw new SmartyException('Missing style name');
+                    throw new SmartyException('Missing template name');
                 }
                 $this->source = Smarty_Resource::source($this);
-                // cache style object under a unique ID
+                // cache template object under a unique ID
                 // do not cache eval resources
                 if ($this->source->type != 'eval') {
                     if ($this->smarty->allow_ambiguous_resources) {
@@ -666,18 +671,18 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 $this->compiler = new $this->source->compiler_class($this->source->template_lexer_class, $this->source->template_parser_class, $this->smarty);
                 return $this->compiler;
 
-            // FIXME: routing of style -> smarty attributes
+            // FIXME: routing of template -> smarty attributes
             default:
                 if (property_exists($this->smarty, $property_name)) {
                     return $this->smarty->$property_name;
                 }
         }
 
-        throw new SmartyException("style property '$property_name' does not exist.");
+        throw new SmartyException("template property '$property_name' does not exist.");
     }
 
     /**
-     * Template model object destrutor
+     * Template data object destrutor
      *
      */
     public function __destruct()

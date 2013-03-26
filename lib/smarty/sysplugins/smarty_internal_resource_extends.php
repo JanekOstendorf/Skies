@@ -11,7 +11,7 @@
 /**
 * Smarty Internal Plugin Resource Extends
 *
-* Implements the file system as resource for Smarty which {extend}s a chain of style files templates
+* Implements the file system as resource for Smarty which {extend}s a chain of template files templates
 *
 * @package Smarty
 * @subpackage TemplateResources
@@ -26,10 +26,10 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
     public $mbstring_overload = 0;
 
     /**
-    * populate Source Object with meta model from Resource
+    * populate Source Object with meta data from Resource
     *
     * @param Smarty_Template_Source   $source    source object
-    * @param Smarty_Internal_Template $_template style object
+    * @param Smarty_Internal_Template $_template template object
     */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
     {
@@ -55,7 +55,7 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
             $source->timestamp = $s->timestamp;
             $source->exists = $exists;
         }
-        // need the style at getContent()
+        // need the template at getContent()
         $source->template = $_template;
     }
 
@@ -74,16 +74,16 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
     }
 
     /**
-    * Load style's source from files into current style object
+    * Load template's source from files into current template object
     *
     * @param Smarty_Template_Source $source source object
-    * @return string style source
+    * @return string template source
     * @throws SmartyException if source cannot be loaded
     */
     public function getContent(Smarty_Template_Source $source)
     {
         if (!$source->exists) {
-            throw new SmartyException("Unable to read style {$source->type} '{$source->name}'");
+            throw new SmartyException("Unable to read template {$source->type} '{$source->name}'");
         }
 
         $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
@@ -112,7 +112,7 @@ class Smarty_Internal_Resource_Extends extends Smarty_Resource {
             if ($_component != $_last) {
                 if (preg_match_all("!({$_ldl}{$al}block\s(.+?)\s*{$_rdl})!", $_content, $_open) !=
                 preg_match_all("!({$_ldl}{$al}/block\s*{$_rdl})!", $_content, $_close)) {
-                    throw new SmartyException("unmatched {block} {/block} pairs in style {$_component->type} '{$_component->name}'");
+                    throw new SmartyException("unmatched {block} {/block} pairs in template {$_component->type} '{$_component->name}'");
                 }
                 preg_match_all("!{$_ldl}{$al}block\s(.+?)\s*{$_rdl}|{$_ldl}{$al}/block\s*{$_rdl}|{$_ldl}\*([\S\s]*?)\*{$_rdl}!", $_content, $_result, PREG_OFFSET_CAPTURE);
                 $_result_count = count($_result[0]);

@@ -2,7 +2,7 @@
 /**
  * Smarty Internal Plugin Data
  *
- * This file contains the basic classes and methodes for style and variable creation
+ * This file contains the basic classes and methodes for template and variable creation
  *
  * @package Smarty
  * @subpackage Template
@@ -10,7 +10,7 @@
  */
 
 /**
- * Base class with style and variable methodes
+ * Base class with template and variable methodes
  *
  * @package Smarty
  * @subpackage Template
@@ -24,13 +24,13 @@ class Smarty_Internal_Data {
      */
     public $template_class = 'Smarty_Internal_Template';
     /**
-     * style variables
+     * template variables
      *
      * @var array
      */
     public $tpl_vars = array();
     /**
-     * parent style (if any)
+     * parent template (if any)
      *
      * @var Smarty_Internal_Template
      */
@@ -45,7 +45,7 @@ class Smarty_Internal_Data {
     /**
      * assigns a Smarty variable
      *
-     * @param array|string $tpl_var the style variable name(s)
+     * @param array|string $tpl_var the template variable name(s)
      * @param mixed        $value   the value to assign
      * @param boolean      $nocache if true any output of this variable will be not cached
      * @param boolean $scope the scope the variable will have  (local,parent or root)
@@ -90,9 +90,9 @@ class Smarty_Internal_Data {
         return $this;
     }
     /**
-     * assigns values to style variables by reference
+     * assigns values to template variables by reference
      *
-     * @param string $tpl_var the style variable name
+     * @param string $tpl_var the template variable name
      * @param mixed $ &$value the referenced value to assign
      * @param boolean $nocache if true any output of this variable will be not cached
      * @return Smarty_Internal_Data current Smarty_Internal_Data (or Smarty or Smarty_Internal_Template) instance for chaining
@@ -108,9 +108,9 @@ class Smarty_Internal_Data {
     }
 
     /**
-     * appends values to style variables
+     * appends values to template variables
      *
-     * @param array|string $tpl_var the style variable name(s)
+     * @param array|string $tpl_var the template variable name(s)
      * @param mixed        $value   the value to append
      * @param boolean      $merge   flag if array elements shall be merged
      * @param boolean $nocache if true any output of this variable will be not cached
@@ -169,9 +169,9 @@ class Smarty_Internal_Data {
     }
 
     /**
-     * appends values to style variables by reference
+     * appends values to template variables by reference
      *
-     * @param string $tpl_var the style variable name
+     * @param string $tpl_var the template variable name
      * @param mixed  &$value  the referenced value to append
      * @param boolean $merge  flag if array elements shall be merged
      * @return Smarty_Internal_Data current Smarty_Internal_Data (or Smarty or Smarty_Internal_Template) instance for chaining
@@ -198,10 +198,10 @@ class Smarty_Internal_Data {
     }
 
     /**
-     * Returns a single or all style variables
+     * Returns a single or all template variables
      *
      * @param string  $varname        variable name or null
-     * @param string  $_ptr           optional pointer to model object
+     * @param string  $_ptr           optional pointer to data object
      * @param boolean $search_parents include parent templates?
      * @return string variable value or or array of variables
      */
@@ -243,9 +243,9 @@ class Smarty_Internal_Data {
     }
 
     /**
-     * clear the given assigned style variable.
+     * clear the given assigned template variable.
      *
-     * @param string|array $tpl_var the style variable(s) to clear
+     * @param string|array $tpl_var the template variable(s) to clear
      * @return Smarty_Internal_Data current Smarty_Internal_Data (or Smarty or Smarty_Internal_Template) instance for chaining
      */
     public function clearAssign($tpl_var)
@@ -262,7 +262,7 @@ class Smarty_Internal_Data {
     }
 
     /**
-     * clear all the assigned style variables.
+     * clear all the assigned template variables.
      * @return Smarty_Internal_Data current Smarty_Internal_Data (or Smarty or Smarty_Internal_Template) instance for chaining
      */
     public function clearAllAssign()
@@ -290,8 +290,8 @@ class Smarty_Internal_Data {
      * gets the object of a Smarty variable
      *
      * @param string  $variable the name of the Smarty variable
-     * @param object  $_ptr     optional pointer to model object
-     * @param boolean $search_parents search also in parent model
+     * @param object  $_ptr     optional pointer to data object
+     * @param boolean $search_parents search also in parent data
      * @return object the object of the variable
      */
     public function getVariable($variable, $_ptr = null, $search_parents = true, $error_enable = true)
@@ -421,9 +421,9 @@ class Smarty_Internal_Data {
 }
 
 /**
- * class for the Smarty model object
+ * class for the Smarty data object
  *
- * The Smarty model object will hold Smarty variables in the current scope
+ * The Smarty data object will hold Smarty variables in the current scope
  *
  * @package Smarty
  * @subpackage Template
@@ -438,9 +438,9 @@ class Smarty_Data extends Smarty_Internal_Data {
     public $smarty = null;
 
     /**
-     * create Smarty model object
+     * create Smarty data object
      *
-     * @param Smarty|array $_parent  parent style
+     * @param Smarty|array $_parent  parent template
      * @param Smarty       $smarty   global smarty instance
      */
     public function __construct ($_parent = null, $smarty = null)
@@ -455,7 +455,7 @@ class Smarty_Data extends Smarty_Internal_Data {
                 $this->tpl_vars[$_key] = new Smarty_variable($_val);
             }
         } elseif ($_parent != null) {
-            throw new SmartyException("Wrong type for style variables");
+            throw new SmartyException("Wrong type for template variables");
         }
     }
 
@@ -472,7 +472,7 @@ class Smarty_Data extends Smarty_Internal_Data {
 class Smarty_Variable {
 
     /**
-     * style variable
+     * template variable
      *
      * @var mixed
      */

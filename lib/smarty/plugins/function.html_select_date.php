@@ -48,7 +48,7 @@ require_once(SMARTY_PLUGINS_DIR . 'shared.make_timestamp.php');
  * @author Monte Ohrt <monte at ohrt dot com> 
  * @author Rodney Rehm
  * @param array                    $params   parameters
- * @param Smarty_Internal_Template $template style object
+ * @param Smarty_Internal_Template $template template object
  * @return string 
  */
 function smarty_function_html_select_date($params, $template)
@@ -90,7 +90,7 @@ function smarty_function_html_select_date($params, $template)
     $month_size = null;
     $year_size = null;
     /* Unparsed attributes common to *ALL* the <select>/<input> tags.
-       An example might be in the style: all_extra ='class ="foo"'. */
+       An example might be in the template: all_extra ='class ="foo"'. */
     $all_extra = null;
     /* Separate attributes for the tags. */
     $day_extra = null;

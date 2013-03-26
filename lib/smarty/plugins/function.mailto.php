@@ -45,7 +45,7 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author credits to Jason Sweat (added cc, bcc and subject functionality)
  * @param array                    $params   parameters
- * @param Smarty_Internal_Template $template style object
+ * @param Smarty_Internal_Template $template template object
  * @return string
  */
 function smarty_function_mailto($params, $template)

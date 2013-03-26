@@ -156,7 +156,7 @@ class Smarty_Internal_Config {
     public function getCompiledConfig()
     {
         if ($this->compiled_config === null) {
-            // see if style needs compiling.
+            // see if template needs compiling.
             if ($this->mustCompile()) {
                 $this->compileConfigSource();
             } else {
@@ -173,7 +173,7 @@ class Smarty_Internal_Config {
      */
     public function compileConfigSource()
     {
-        // compile style
+        // compile template
         if (!is_object($this->compiler_object)) {
             // load compiler
             $this->compiler_object = new Smarty_Internal_Config_File_Compiler($this->smarty);
@@ -195,7 +195,7 @@ class Smarty_Internal_Config {
             throw $e;
         }
         // compiling succeded
-        // write compiled style
+        // write compiled template
         Smarty_Internal_Write_File::writeFile($this->getCompiledFilepath(), $this->getCompiledConfig(), $this->smarty);
     }
 
@@ -255,7 +255,7 @@ class Smarty_Internal_Config {
     }
 
     /**
-     * set Smarty property in style context
+     * set Smarty property in template context
      *
      * @param string $property_name property name
      * @param mixed  $value         value
@@ -274,7 +274,7 @@ class Smarty_Internal_Config {
     }
 
     /**
-     * get Smarty property in style context
+     * get Smarty property in template context
      *
      * @param string $property_name property name
      * @throws SmartyException if $property_name is not valid

@@ -18,22 +18,22 @@
 abstract class Smarty_Resource_Custom extends Smarty_Resource {
 
     /**
-     * fetch style and its modification time from model source
+     * fetch template and its modification time from data source
      *
-     * @param string  $name    style name
-     * @param string  &$source style source
-     * @param integer &$mtime  style modification timestamp (epoch)
+     * @param string  $name    template name
+     * @param string  &$source template source
+     * @param integer &$mtime  template modification timestamp (epoch)
      */
     protected abstract function fetch($name, &$source, &$mtime);
 
     /**
-     * Fetch style's modification timestamp from model source
+     * Fetch template's modification timestamp from data source
      *
      * {@internal implementing this method is optional.
-     *  Only implement it if modification times can be accessed faster than loading the complete style source.}}
+     *  Only implement it if modification times can be accessed faster than loading the complete template source.}}
      *
-     * @param string $name style name
-     * @return integer|boolean timestamp (epoch) the style was modified, or false if not found
+     * @param string $name template name
+     * @return integer|boolean timestamp (epoch) the template was modified, or false if not found
      */
     protected function fetchTimestamp($name)
     {
@@ -41,10 +41,10 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource {
     }
 
     /**
-     * populate Source Object with meta model from Resource
+     * populate Source Object with meta data from Resource
      *
      * @param Smarty_Template_Source   $source    source object
-     * @param Smarty_Internal_Template $_template style object
+     * @param Smarty_Internal_Template $_template template object
      */
     public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
     {
@@ -64,10 +64,10 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource {
     }
 
     /**
-     * Load style's source into current style object
+     * Load template's source into current template object
      *
      * @param Smarty_Template_Source $source source object
-     * @return string style source
+     * @return string template source
      * @throws SmartyException if source cannot be loaded
      */
     public function getContent(Smarty_Template_Source $source)
@@ -77,7 +77,7 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource {
             return $content;
         }
 
-        throw new SmartyException("Unable to read style {$source->type} '{$source->name}'");
+        throw new SmartyException("Unable to read template {$source->type} '{$source->name}'");
     }
 
     /**
