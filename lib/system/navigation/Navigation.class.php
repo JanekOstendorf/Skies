@@ -2,8 +2,8 @@
 
 namespace skies\system\navigation;
 
+use skies\model\template\ITemplateArray;
 use skies\system\navigation\EntryTypes;
-use skies\util\PageUtil;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -11,7 +11,7 @@ use skies\util\PageUtil;
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.system.navigation
  */
-class Navigation {
+class Navigation implements ITemplateArray {
 
 	/**
 	 * Entries of this navigation
@@ -62,81 +62,86 @@ class Navigation {
 
 		$this->title = $query->fetchArray()['navTitle'];
 
-		// Entries
-		$entryQuery = \Skies::getDb()->prepare('SELECT * FROM `nav-entry` WHERE `navId` = :id ORDER BY `entryOrder` ASC');
-
-		$entryQuery->execute([':id' => $this->id]);
-
-		while($line = $entryQuery->fetchArray()) {
-
-			$this->entries[] = [
-
-				'id' => $line['entryId'],
-				'order' => $line['entryOrder'],
-				'link' => $line['entryLink'],
-				'title' => $line['entryTitle'],
-				'type' => $line['entryType'],
-				'pageName' => $line['entryPageName']
-
-			];
-
-		}
-
 	}
 
-	public function prepareNav() {
+	protected function getEntries($parentId = 0, $depth = 0) {
 
-		$i = 0;
-
-		$entryCount = count($this->entries);
+		$query = \Skies::getDb()->prepare('SELECT * FROM `nav-entry` WHERE `entryNavId` = :navId AND `entryParentEntryId` = :parentId ORDER BY `entryOrder`');
+		$query->execute([':navId' => $this->id, ':parentId' => $parentId]);
+		$data = $query->fetchAllObject();
 
 		$entries = [];
 
-		foreach($this->entries as $entry) {
+		$i = 0;
 
-			// Tpl variables
-			$vars = [];
+		$entryCount = count($data);
+
+		foreach($data as $entry) {
+
+			$curEntry = null;
+			$first = false;
+			$last = false;
 
 			// Determine css classes of this entry
 			if($i == 0) {
-				$vars['first'] = true;
+				$first = true;
 			}
 
 			if($i == $entryCount - 1) {
-				$vars['last'] = false;
+				$last = false;
 			}
 
-			// Type (internal/external link) dependant stuff
-			switch($entry['type']) {
-
-				case EntryTypes::PAGE:
-
-					// Is this the current page?
-					if(PageUtil::getPage($entry['pageName'])->isActive()) {
-						$vars['active'] = true;
-					}
-
-					// Make the link
-					$vars['link'] = '/'.SUBDIR.$entry['pageName'];
-
-					break;
+			switch($entry->entryType) {
 
 				case EntryTypes::EXTERNAL_LINK:
+					$curEntry = new LinkNavigationEntry($this, (array)$entry, $first, $last);
+					break;
 
-					// Make the link
-					$vars['link'] = $entry['link'];
-
+				case EntryTypes::PAGE:
+					$curEntry = new PageNavigationEntry($this, (array)$entry, $first, $last);
 					break;
 
 			}
-			$vars['title'] = $entry['title'];
 
-			$entries[$i++] = $vars;
+			if(!($curEntry instanceof NavigationEntry)) {
+				continue;
+			}
 
+			$entries[] = [
+				'entry' => $curEntry->getTemplateArray(),
+				'subEntries' => $depth < 3 ? $this->getEntries($entry->entryId, $depth++) : null
+			];
 		}
 
-		\Skies::getTemplate()->assign(['nav' => ['entries' => $entries]]);
+		return $entries;
 
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * Get an array suitable for assignment
+	 *
+	 * @return array
+	 */
+	public function getTemplateArray() {
+		return [
+			'id' => $this->id,
+			'title' => $this->title,
+			'entries' => $this->getEntries()
+		];
 	}
 
 }

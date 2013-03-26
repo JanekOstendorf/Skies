@@ -1,6 +1,19 @@
 <?php
 
 // Options
+
+use skies\model\style\Style;
+use skies\model\template\Notification;
+use skies\model\template\TemplateEngine;
+use skies\system\language\Language;
+use skies\system\user\Session;
+use skies\system\user\User;
+use skies\util\Benchmark;
+use skies\util\LanguageUtil;
+use skies\util\PageUtil;
+use skies\util\SessionUtil;
+use skies\util\spyc;
+
 require_once ROOT_DIR.'/options.inc.php';
 
 // Core functions
@@ -28,20 +41,6 @@ spl_autoload_register(['\Skies', 'autoload']);
 /*
  * Includes
  */
-
-use skies\model\style\Style;
-use skies\model\template\Notification;
-use skies\model\template\TemplateEngine;
-
-use skies\system\language\Language;
-use skies\system\user\Session;
-use skies\system\user\User;
-
-use skies\util\Benchmark;
-use skies\util\LanguageUtil;
-use skies\util\PageUtil;
-use skies\util\SessionUtil;
-use skies\util\spyc;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -316,6 +315,9 @@ class Skies {
 			// Current page
 			'page' => self::$page->getTemplateArray(),
 
+			// Navigation
+			'nav' => (new \skies\system\navigation\Navigation(1))->getTemplateArray(),
+
 			// Language
 			'language' => self::$language->getTemplateArray(),
 			'defaultLanguage' => self::$defaultLanguage->getTemplateArray(),
@@ -333,10 +335,6 @@ class Skies {
 	 * Print everything!
 	 */
 	private final function show() {
-
-		// Get nav
-		$nav = new \skies\system\navigation\Navigation(1);
-		$nav->prepareNav();
 
 		// Assign benchmark result
 		self::$template->assign(['benchmarkTime' => Benchmark::getGenerationTime()]);

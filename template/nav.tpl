@@ -1,22 +1,34 @@
-<nav id="hornav">
+{function nav level=0}
 	<ul>
-		{foreach $nav.entries as $entry}
+		{foreach $entries as $entry}
 			{$classes = null}
-			{if isset($entry.first) && $entry.first}
+			{if $entry.entry.isFirst}
 				{$classes = "`$classes`first "}
 			{/if}
-			{if isset($entry.last) && $entry.last}
+			{if $entry.entry.isLast}
 				{$classes = "`$classes`last "}
 			{/if}
-			{if isset($entry.active) && $entry.active}
+			{if $entry.subEntries}
+				{$classes = "`$classes`dropdown "}
+			{/if}
+			{if $entry.entry.isActive}
 				{$classes = "`$classes`active"}
 			{/if}
 			<li{if $classes} class="{$classes|trim}"{/if}>
-				<a href="{$entry.link}">{$entry.title}</a>
+				<a href="{$entry.entry.link}">{$entry.entry.title}</a>
+				{if $entry.subEntries}
+					{nav level=level+1 entries=$entry.subEntries}
+				{/if}
 			</li>
 		{/foreach}
 	</ul>
+{/function}
 
+<nav id="hornav">
+
+	{nav entries=$nav.entries}
 	<br class="clear" />
 
 </nav>
+
+
