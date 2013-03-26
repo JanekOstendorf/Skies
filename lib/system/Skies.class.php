@@ -261,7 +261,7 @@ class Skies {
 	 */
 	private final function initTemplate() {
 
-		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getStylePath().'tpl/');
+		self::$template = new TemplateEngine(ROOT_DIR.DIR_TPL, self::$style->getTemplatePath() ?: '');
 
 		if(isset($_GET['flushCache']))
 			self::$template->flushCache();

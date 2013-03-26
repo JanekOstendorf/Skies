@@ -50,6 +50,13 @@ class Style implements ITemplateArray {
 	protected $jsFiles = [];
 
 	/**
+	 * Custom template directory
+	 *
+	 * @var string
+	 */
+	protected $templateDir = '';
+
+	/**
 	 * Meta information
 	 *
 	 * @var array<string|array>
@@ -83,9 +90,9 @@ class Style implements ITemplateArray {
 			throw new SystemException('Failed to load style '.$name.'!', 0, 'Failed to read the configuration file of the style "'.$name.'".');
 		}
 
-		$this->cssFiles = explode(', ', $this->config['css_files']);
-		$this->jsFiles  = explode(', ', $this->config['js_files']);
-		$this->mainFile = $this->config['main_file'];
+		$this->cssFiles = explode(', ', $this->config['cssFiles']);
+		$this->jsFiles  = explode(', ', $this->config['jsFiles']);
+		$this->templateDir = empty($this->config['templateDir']) ? null : $this->config['templateDir'];
 		$this->meta     = $this->config['meta'];
 
 		$this->name  = $this->config['name'];
@@ -145,6 +152,20 @@ class Style implements ITemplateArray {
 	public function getConfig() {
 
 		return $this->config;
+
+	}
+
+	/**
+	 * Get the path to the custom templates directory
+	 *
+	 * @return null|string
+	 */
+	public function getTemplatePath() {
+
+		if($this->templateDir != null)
+			return $this->getStylePath().$this->templateDir;
+
+		return null;
 
 	}
 

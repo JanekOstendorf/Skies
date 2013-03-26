@@ -28,11 +28,11 @@ meta:
 
 ### Files ###
 
-# Main style file
-main_file: style.php
-
 # Stylesheet files relative to the style directory (comma separated list, with spaces)
-css_files: css/fonts.css, css/style.css, css/nav.css, css/forms.css
+cssFiles: css/fonts.css, css/style.css, css/nav.css, css/forms.css
 
 # JavaScript files relative to the style directory [optional] (comma seperated list, with spaces)
-js_files: js/woobie.js
+jsFiles: js/woobie.js
+
+# Custom templates for this style overwriting the default templates [optional]
+templateDir: template/
