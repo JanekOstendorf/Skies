@@ -13,4 +13,6 @@
 		<script type="text/javascript" src="/{$style.dir}{$file}"></script>
 	{/foreach}
 
+	<link rel="shortcut icon" type="{$config.faviconMime}" href="/{$subdir}{$config.favicon}">
+
 </head>

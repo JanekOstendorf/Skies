@@ -36,9 +36,3 @@ css_files: css/fonts.css, css/style.css, css/nav.css, css/forms.css
 
 # JavaScript files relative to the style directory [optional] (comma seperated list, with spaces)
 js_files: js/woobie.js
-
-# Favicon (relative to Skies main dir)
-favicon: images/favicon.png
-
-# Favicon MIME type
-fav_mime: image/png

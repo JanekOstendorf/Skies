@@ -12,7 +12,7 @@ meta:
 
 # Subdirectory on the webserver
 # Example: 'http://test.skies.net/Skies/' is the Skies URL. In this case, 'Skies/' is the subdir
-subdir: 'Skies/'
+subdir: ''
 
 # Default language
 defaultLanguage: de-DE
@@ -31,3 +31,9 @@ allowNormalLogin: true
 
 # Salt for password generation
 salt: Mm2zTloKiuGqYIw/DgVtB
+
+# Favicon (relative to Skies main dir)
+favicon: images/favicon.png
+
+# Favicon MIME type
+faviconMime: image/png

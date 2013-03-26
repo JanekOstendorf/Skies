@@ -1,4 +1,5 @@
-.idea/
-lib/config.inc.php
-log/*
-config/config.yml
+/.idea/
+/lib/config.inc.php
+/log/*
+/gitpull.php
+/config/config.yml
