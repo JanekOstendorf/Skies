@@ -25,26 +25,28 @@ CREATE TABLE IF NOT EXISTS `nav-entry` (
     `entryNavId` int(255) DEFAULT NULL,
     PRIMARY KEY (`entryId`),
     KEY `navID` (`entryNavId`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 6;
 
 INSERT INTO `nav-entry` (`entryId`, `entryOrder`, `entryTitle`, `entryType`, `entryParentEntryId`, `entryPageName`, `entryLink`, `entryNavId`) VALUES
 (1, 1, 'Home', 1, 0, 'home', NULL, 1),
 (2, 2, 'Login', 1, 0, 'login', NULL, 1),
-(3, 3, 'Logout', 2, 2, NULL, '#', 1);
+(4, 3, 'SubHome', 1, 1, 'subhome', NULL, 1);
 
 DROP TABLE IF EXISTS `page`;
 CREATE TABLE IF NOT EXISTS `page` (
     `pageID` int(255) NOT NULL AUTO_INCREMENT,
     `pageName` varchar(500) NOT NULL,
     `pageTitle` text NOT NULL,
+    `pageParentId` int(255) NOT NULL,
     `pageClass` varchar(500) NOT NULL,
     PRIMARY KEY (`pageID`),
     KEY `pageID` (`pageID`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 3;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 4;
 
-INSERT INTO `page` (`pageID`, `pageName`, `pageTitle`, `pageClass`) VALUES
-(1, 'home', 'Home', 'HomePage'),
-(2, 'Login', 'Login', 'LoginPage');
+INSERT INTO `page` (`pageID`, `pageName`, `pageTitle`, `pageParentId`, `pageClass`) VALUES
+(1, 'home', 'Home', 0, 'HomePage'),
+(2, 'login', 'Login', 0, 'LoginPage'),
+(3, 'subhome', 'SubHome', 1, 'SubHomePage');
 
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE IF NOT EXISTS `session` (

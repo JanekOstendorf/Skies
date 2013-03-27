@@ -37,7 +37,7 @@ class PageNavigationEntry extends NavigationEntry {
 	 */
 	public function getLink() {
 
-		return '/'.SUBDIR.$this->data['entryPageName'];
+		return '/'.SUBDIR.implode('/', $this->getPage()->getName());
 
 	}
 

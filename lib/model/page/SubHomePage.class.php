@@ -7,12 +7,12 @@
 
 namespace skies\model\page;
 
-use skies\model\Page;
+use skies\model\SubPage;
 
 /**
- * Main page
+ * Testing subpages
  */
-class HomePage extends Page {
+class SubHomePage extends SubPage {
 
 	/**
 	 * Prepare the output
@@ -29,20 +29,19 @@ class HomePage extends Page {
 	 * @return string
 	 */
 	public function getTemplateName() {
-
-		return 'homePage.tpl';
-
+		return 'subHomePage.tpl';
 	}
 
 	/**
 	 * Get the name of this page (short form for the URL)
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getName() {
+		$name = $this->getParent()->getName();
+		$name[] = $this->data['pageName'];
 
-		return [$this->data['pageName']];
-
+		return $name;
 	}
 
 	/**
@@ -51,8 +50,7 @@ class HomePage extends Page {
 	 * @return string
 	 */
 	public function getTitle() {
-
 		return $this->data['pageTitle'];
-
 	}
+
 }

@@ -7,9 +7,6 @@
 
 namespace skies\model\page;
 
-/**
- * Login page
- */
 use skies\model\Page;
 use skies\model\template\Notification;
 use skies\system\language\Language;
@@ -17,6 +14,9 @@ use skies\system\user\User;
 use skies\util\LanguageUtil;
 use skies\util\UserUtil;
 
+/**
+ * Login page
+ */
 class LoginPage extends Page {
 
 	/**
@@ -213,10 +213,10 @@ class LoginPage extends Page {
 	/**
 	 * Get the name of this page (short form for the URL)
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function getName() {
-		return 'login';
+		return ['login'];
 	}
 
 	/**

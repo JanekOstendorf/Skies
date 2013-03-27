@@ -44,7 +44,7 @@ abstract class Page implements ITemplateArray {
 	/**
 	 * Get the name of this page (short form for the URL)
 	 *
-	 * @return string
+	 * @return array
 	 */
 	abstract function getName();
 

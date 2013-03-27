@@ -293,7 +293,7 @@ class Skies {
 		$pageName = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
 
 		// Fetch from the DB
-		self::$page = PageUtil::getPage($pageName);
+		self::$page = PageUtil::getPageFromUrl($args);
 
 	}
 
