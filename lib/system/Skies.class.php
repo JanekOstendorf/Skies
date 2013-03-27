@@ -354,6 +354,10 @@ class Skies {
 	 */
 	public static final function updateUser() {
 
+		if(self::$user !== null) {
+			self::$user->update();
+		}
+
 		self::$user = self::$session->getUser();
 
 	}

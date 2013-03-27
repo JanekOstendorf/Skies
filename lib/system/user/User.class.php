@@ -87,6 +87,7 @@ class User implements ITemplateArray {
 			$this->hasPassword = ($data['userPassword'] != '');
 			$this->lastActivity = $data['userLastActivity'];
 			$this->password = $data['userPassword'];
+			$this->data = unserialize($data['userData']);
 
 		}
 
@@ -115,13 +116,15 @@ class User implements ITemplateArray {
 		$query = \Skies::getDb()->prepare('UPDATE `user` SET
 			`userMail` = :mail,
             `userName` = :name,
-            `userLastActivity` = :lastActivity
+            `userLastActivity` = :lastActivity,
+            `userData` = :data
             WHERE `userId` = :id');
 
 		$query->execute([
 			':mail' => $this->mail,
 			':name' => $this->name,
 			':lastActivity' => $this->lastActivity,
+			':data' => serialize($this->data),
 			':id' => $this->id
 		]);
 
@@ -263,13 +266,7 @@ class User implements ITemplateArray {
 	 */
 	public function setData($data, $value) {
 
-		if(!UserUtil::setData($this->getId(), $data, $value)) {
-			return false;
-		}
-
 		$this->data[$data] = $value;
-
-		return true;
 
 	}
 
@@ -281,10 +278,11 @@ class User implements ITemplateArray {
 	 */
 	public function getData($data) {
 
-		if(isset($this->data[$data]))
+		if(isset($this->data[$data])) {
 			return $this->data[$data];
+		}
 
-		return UserUtil::getData($this->id, $data);
+		return null;
 
 	}
 

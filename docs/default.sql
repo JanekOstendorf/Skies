@@ -58,6 +58,10 @@ CREATE TABLE IF NOT EXISTS `session` (
     PRIMARY KEY (`sessionId`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+INSERT INTO `session` (`sessionId`, `sessionUserId`, `sessionIp`, `sessionLastActivity`, `sessionLong`) VALUES
+('47c0fac80a6c33f118a06132bccf02b3b14c3892', NULL, '::ffff:7f00:1', 1364388718, 0),
+('a2e2b6f3bdb0de438c5477703dc411db36531a40', 1, '::ffff:7f00:1', 1364390052, 0);
+
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
     `userId` int(255) NOT NULL AUTO_INCREMENT,
@@ -65,32 +69,9 @@ CREATE TABLE IF NOT EXISTS `user` (
     `userMail` text NOT NULL,
     `userPassword` text NOT NULL,
     `userLastActivity` bigint(255) NOT NULL,
+    `userData` varchar(1000) NOT NULL,
     PRIMARY KEY (`userId`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 2;
 
-INSERT INTO `user` (`userId`, `userName`, `userMail`, `userPassword`, `userLastActivity`) VALUES
-(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', 1364303038);
-
-DROP TABLE IF EXISTS `user-data`;
-CREATE TABLE IF NOT EXISTS `user-data` (
-    `dataID` int(255) NOT NULL AUTO_INCREMENT,
-    `dataFieldID` int(255) NOT NULL,
-    `dataUserID` int(255) NOT NULL,
-    `dataValue` longtext NOT NULL,
-    PRIMARY KEY (`dataID`),
-    KEY `dataUserID` (`dataUserID`),
-    KEY `dataFieldID` (`dataFieldID`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 2;
-
-INSERT INTO `user-data` (`dataID`, `dataFieldID`, `dataUserID`, `dataValue`) VALUES
-(1, 1, 1, 'de-DE');
-
-DROP TABLE IF EXISTS `user-fields`;
-CREATE TABLE IF NOT EXISTS `user-fields` (
-    `fieldId` int(11) NOT NULL DEFAULT '0',
-    `fieldName` varchar(500) NOT NULL,
-    PRIMARY KEY (`fieldId`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-INSERT INTO `user-fields` (`fieldId`, `fieldName`) VALUES
-(1, 'language');
+INSERT INTO `user` (`userId`, `userName`, `userMail`, `userPassword`, `userLastActivity`, `userData`) VALUES
+(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', 1364390052, 'a:1:{s:8:"language";s:5:"de-DE";}');

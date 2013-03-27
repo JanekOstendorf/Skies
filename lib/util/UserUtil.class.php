@@ -29,10 +29,9 @@ class UserUtil {
 	public static function getIpAddress() {
 
 		$REMOTE_ADDR = '';
-		if(isset($_SERVER['REMOTE_ADDR']))
-				{
-					$REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
-				}
+		if(isset($_SERVER['REMOTE_ADDR'])) {
+			$REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+		}
 
 		// darwin fix
 		if($REMOTE_ADDR == '::1' || $REMOTE_ADDR == 'fe80::1') {
@@ -189,8 +188,9 @@ class UserUtil {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `user` WHERE `userID` = :id');
 		$query->execute([':id' => $userId]);
 
-		if(!$data = $query->fetchObject())
+		if(!$data = $query->fetchObject()) {
 			return false;
+		}
 
 		$pwObj = self::makePass($password, $data->userSalt);
 
@@ -267,84 +267,4 @@ class UserUtil {
 
 	}
 
-	/**
-	 * Sets the model value for the given dataField and userID. Creates the dataField if not exist.
-	 *
-	 * @param int    $userId User's ID
-	 * @param string $data   Data field's name
-	 * @param string $value  Value to set
-	 */
-	public static function setData($userId, $data, $value) {
-
-		if($userId == null) {
-			return;
-		}
-
-		// Does this dataField exist?
-		$query = \Skies::getDb()->prepare('SELECT * FROM `user-fields` WHERE `fieldName` = :data');
-		$query->execute([':data' => $data]);
-
-		// No, create it
-		if($query->rowCount() != 1) {
-
-			$query = \Skies::getDb()->prepare('INSERT INTO `user-fields` (`fieldName`) VALUES (:data)');
-			$query->execute([':data' => $data]);
-
-			$fieldId = \Skies::getDb()->getInsertId();
-
-		}
-		else {
-			$fieldId = $query->fetchArray()['fieldId'];
-		}
-
-		// Is there already an data entry?
-		// No
-		if(is_null(self::getData($userId, $data))) {
-
-			$query = \Skies::getDb()->prepare('INSERT INTO `user-data` (`dataFieldId`, `dataUserId`, `dataValue`)
-                    VALUES(:fieldId, :userId, :value)');
-			$query->execute([
-				':fieldId' => $fieldId,
-				':userId' => $userId,
-				':value' => $value
-			]);
-
-		}
-		// Yes
-		else {
-
-			$query = \Skies::getDb()->prepare('UPDATE `user-data` SET `dataValue` = :value WHERE `dataUserId` = :userId AND `dataFieldId` = :fieldId');
-			$query->execute([':value' => $value, ':userId' => $userId, ':fieldId' => $fieldId]);
-
-		}
-
-	}
-
-	/**
-	 * Get the model field for one user
-	 *
-	 * @param int    $userId User's ID
-	 * @param string $data   Data field name
-	 * @return mixed|null Null if there is no value. Else the value.
-	 */
-	public static function getData($userId, $data) {
-
-		if($userId == null) {
-			return null;
-		}
-
-		$query = \Skies::getDb()->prepare('SELECT * FROM `user-data` INNER JOIN `user-fields` ON `dataFieldId` = fieldId WHERE `fieldName` = :data AND `dataUserId` = :userId');
-		$query->execute([':data' => $data, ':userId' => $userId]);
-
-		if($query->rowCount() != 1) {
-			return null;
-		}
-		else {
-			return $query->fetchArray()['dataValue'];
-		}
-
-	}
-
 }
-
-?>
