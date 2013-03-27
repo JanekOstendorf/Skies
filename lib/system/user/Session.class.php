@@ -189,10 +189,13 @@ class Session {
 			':id' => $this->id
 		]);
 
+		$this->user = null;
 		$this->userId = $userId;
 
 		$this->getUser()->setLastActivity(NOW);
 		$this->getUser()->update();
+
+		\Skies::updateUser();
 
 		return true;
 
@@ -233,6 +236,8 @@ class Session {
 	 * Closes the current session
 	 */
 	protected function closeSession() {
+
+		echo 'close session';
 
 		UserUtil::deleteCookie(COOKIE_PRE.'sessionId');
 

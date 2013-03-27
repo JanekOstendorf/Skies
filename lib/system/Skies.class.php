@@ -147,7 +147,6 @@ class Skies {
 		$this->initPage();
 
 		self::$page->prepare();
-		$this->initSession(false);
 
 		$this->assignDefaults();
 
