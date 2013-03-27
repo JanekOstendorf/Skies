@@ -51,7 +51,7 @@ page:
             description: >
                 You can change your email address here.
                 Since we're using your address as a part of our password encryption process, we need the password to reencrypt it.
-            change: Adresse ändern
+            change: Change address
 
             success: Your email has been successfully changed to '[[newMail]]'.
             error:
@@ -64,7 +64,7 @@ page:
             description: >
                 You can change your password here.
                 Just enter it twice and press '{{system.page.login.changePassword.change}}'.
-            change: Passwort ändern
+            change: Change password
 
             success: Your password has been changed successfully.
             error:
