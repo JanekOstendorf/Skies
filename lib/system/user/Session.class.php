@@ -237,8 +237,6 @@ class Session {
 	 */
 	protected function closeSession() {
 
-		echo 'close session';
-
 		UserUtil::deleteCookie(COOKIE_PRE.'sessionId');
 
 		$query = \Skies::getDb()->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
