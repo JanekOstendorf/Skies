@@ -14,8 +14,6 @@ use skies\model\template\ITemplateArray;
  */
 abstract class Page implements ITemplateArray {
 
-	protected $templateName = '';
-
 	protected $data = [];
 
 	/**
@@ -88,6 +86,7 @@ abstract class Page implements ITemplateArray {
 			'isActive' => $this->isActive(),
 			'data' => $this->getData(),
 			'templateName' => $this->getTemplateName(),
+			'parent' => null,
 			'object' => $this
 		];
 

@@ -173,11 +173,12 @@ class LoginPage extends Page {
 			if(in_array($_POST['chooseLanguage'], $languageIds)) {
 
 				\Skies::getUser()->setData('language', $_POST['chooseLanguage']);
+				\Skies::getUser()->update();
 
 				// Some language vars are fetched before this is changed. Therefore there might be some text in the old language
 				// To avoid this, we use this very ugly method called redirecting.
 				// TODO: Look for a better solution
-				header('Location: /'.SUBDIR.$this->getName().'/');
+				header('Location: /'.SUBDIR.implode('/', $this->getName()));
 				exit;
 
 			}
