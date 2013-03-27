@@ -277,6 +277,8 @@ class Skies {
 		// Parse GET arguments
 		if(isset($_GET['__0'])) {
 
+			// Remove prefixed slash
+			$_GET['__0'] = ltrim($_GET['__0'], '/');
 			$args = explode('/', $_GET['__0']);
 
 			$i = 0;
