@@ -24,6 +24,9 @@ define('COOKIE_PRE', 'skies_');
 // End of line
 define('EOL', "\n");
 
+// Page namespace. Changes the directory as well, due to the autoloader function
+define('PAGE_NAMESPACE', 'skies\model\page\\');
+
 // Path constants
 define('DIR_TPL', 'template/');
 define('DIR_STYLE', 'style/');

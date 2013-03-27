@@ -55,7 +55,7 @@ class PageUtil {
 			$data = $query->fetchArray();
 
 			// Build the class name
-			$pageClass = 'skies\model\page\\'.$data['pageClass'];
+			$pageClass = PAGE_NAMESPACE.$data['pageClass'];
 
 			$page = new $pageClass($data);
 
@@ -80,7 +80,7 @@ class PageUtil {
 			$data = $query->fetchArray();
 
 			// Build the class name
-			$pageClass = 'skies\model\page\\'.$data['pageClass'];
+			$pageClass = PAGE_NAMESPACE.$data['pageClass'];
 
 			$page = new $pageClass($data);
 
