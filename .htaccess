@@ -17,6 +17,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 # Everything => $_GET['_0']
 RewriteRule ^(.*)$ index.php?__0=$1&%{QUERY_STRING}
 
+## NGINX EQUIVALENT ##
 
-## Redirect
-#Redirect 302 / https://der-lan.de/
+#location / {
+#	if (!-e $request_filename){
+#		rewrite ^(.*)$ /index.php?__0=$1&$query_string;
+#	}
+#}

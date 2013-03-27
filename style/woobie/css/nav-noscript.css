@@ -1,0 +1,7 @@
+#hornav li.dropdown > div.submenu {
+	display: none;
+}
+
+#hornav li.dropdown:hover > div.submenu {
+	display: block;
+}

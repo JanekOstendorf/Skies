@@ -88,7 +88,7 @@ class Navigation implements ITemplateArray {
 			}
 
 			if($i == $entryCount - 1) {
-				$last = false;
+				$last = true;
 			}
 
 			switch($entry->entryType) {
@@ -111,6 +111,9 @@ class Navigation implements ITemplateArray {
 				'entry' => $curEntry->getTemplateArray(),
 				'subEntries' => $depth < 3 ? $this->getEntries($entry->entryId, $depth++) : null
 			];
+
+			$i++;
+
 		}
 
 		return $entries;

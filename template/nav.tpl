@@ -1,5 +1,9 @@
 {function nav level=0}
+{if $level == 0}
+<ul class="toplevel">
+	{else}
 	<ul>
+		{/if}
 		{foreach $entries as $entry}
 			{$classes = null}
 			{if $entry.entry.isFirst}
@@ -17,18 +21,20 @@
 			<li{if $classes} class="{$classes|trim}"{/if}>
 				<a href="{$entry.entry.link}">{$entry.entry.title}</a>
 				{if $entry.subEntries}
-					{nav level=level+1 entries=$entry.subEntries}
+					<div class="submenu">
+						{nav level=level+1 entries=$entry.subEntries}
+					</div>
 				{/if}
 			</li>
 		{/foreach}
 	</ul>
-{/function}
+	{/function}
 
-<nav id="hornav">
+	<nav id="hornav">
 
-	{nav entries=$nav.entries}
-	<br class="clear" />
+		{nav entries=$nav.entries}
+		<br class="clear" />
 
-</nav>
+	</nav>
 
 
