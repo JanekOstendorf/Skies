@@ -274,6 +274,8 @@ class Skies {
 	 */
 	private final function initPage() {
 
+		$args = [];
+
 		// Parse GET arguments
 		if(isset($_GET['__0'])) {
 
