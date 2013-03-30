@@ -5,9 +5,9 @@
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
 
-namespace skies\system\navigation;
+namespace skies\model\navigation;
 
-use skies\model\template\ITemplateArray;
+use skies\system\template\ITemplateArray;
 
 /**
  * A navigation entry
@@ -111,7 +111,7 @@ abstract class NavigationEntry implements ITemplateArray {
 	}
 
 	/**
-	 * @return \skies\system\navigation\Navigation
+	 * @return \skies\model\navigation\Navigation
 	 */
 	public function getNavigation() {
 		return $this->navigation;
@@ -125,7 +125,7 @@ abstract class NavigationEntry implements ITemplateArray {
 	}
 
 	/**
-	 * @return null|\skies\system\navigation\NavigationEntry
+	 * @return null|\skies\model\navigation\NavigationEntry
 	 */
 	public function getParent() {
 		return $this->parent;

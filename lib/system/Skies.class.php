@@ -4,9 +4,9 @@
 
 use skies\model\style\Style;
 use skies\model\template\Notification;
-use skies\model\template\TemplateEngine;
 use skies\system\exception\SystemException;
 use skies\system\language\Language;
+use skies\system\template\TemplateEngine;
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\util\Benchmark;
@@ -103,7 +103,7 @@ class Skies {
 	/**
 	 * Template Engine
 	 *
-	 * @var \skies\model\template\TemplateEngine
+	 * @var \skies\system\template\TemplateEngine
 	 */
 	private static $template = null;
 
@@ -319,7 +319,7 @@ class Skies {
 			'page' => self::$page->getTemplateArray(),
 
 			// Navigation
-			'nav' => (new \skies\system\navigation\Navigation(1))->getTemplateArray(),
+			'nav' => (new \skies\model\navigation\Navigation(1))->getTemplateArray(),
 
 			// Language
 			'language' => self::$language->getTemplateArray(),
@@ -535,7 +535,7 @@ class Skies {
 	}
 
 	/**
-	 * @return \skies\model\template\TemplateEngine
+	 * @return \skies\system\template\TemplateEngine
 	 */
 	public final static function getTemplate() {
 

@@ -7,7 +7,7 @@
 
 namespace skies\model;
 
-use skies\model\template\ITemplateArray;
+use skies\system\template\ITemplateArray;
 use skies\util\PageUtil;
 
 /**

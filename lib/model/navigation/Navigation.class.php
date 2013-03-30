@@ -1,9 +1,9 @@
 <?php
 
-namespace skies\system\navigation;
+namespace skies\model\navigation;
 
-use skies\model\template\ITemplateArray;
-use skies\system\navigation\EntryTypes;
+use skies\model\navigation\EntryTypes;
+use skies\system\template\ITemplateArray;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -54,7 +54,7 @@ class Navigation implements ITemplateArray {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `nav` WHERE `navId` = :id');
 		$query->execute([':id' => $this->id]);
 
-		if($query->rowCount() != 1) {
+		if($query->getRowCount() != 1) {
 
 			return false;
 

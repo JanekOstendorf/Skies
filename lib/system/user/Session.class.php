@@ -109,7 +109,7 @@ class Session {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `session` WHERE `sessionId` = :id');
 		$query->execute([':id' => $this->id]);
 
-		if($query->rowCount() != 1) {
+		if($query->getRowCount() != 1) {
 
 			$this->closeSession();
 			$this->newSession();

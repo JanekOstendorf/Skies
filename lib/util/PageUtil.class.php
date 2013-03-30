@@ -50,7 +50,7 @@ class PageUtil {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
 		$query->execute([':name' => $pageName]);
 
-		if($query->rowCount() == 1) {
+		if($query->getRowCount() == 1) {
 
 			$data = $query->fetchArray();
 
@@ -75,7 +75,7 @@ class PageUtil {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `page` WHERE `pageId` = :id');
 		$query->execute([':id' => $pageId]);
 
-		if($query->rowCount() == 1) {
+		if($query->getRowCount() == 1) {
 
 			$data = $query->fetchArray();
 

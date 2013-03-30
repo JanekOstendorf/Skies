@@ -119,7 +119,27 @@ class PreparedStatement {
 			$type = \PDO::FETCH_ASSOC;
 		}
 
-		return $this->fetch($type);
+		return $this->pdoStatement->fetch($type);
+
+	}
+
+	/**
+	 * Get all data from the current query
+	 *
+	 * @param int $type
+	 * @return array
+	 */
+	public function fetchAllArray($type = null) {
+
+		$return = [];
+
+		while($cur = $this->fetchArray($type)) {
+
+			$return[] = $cur;
+
+		}
+
+		return $return;
 
 	}
 
@@ -156,6 +176,12 @@ class PreparedStatement {
 		}
 
 		return $objects;
+
+	}
+
+	public function getRowCount() {
+
+		return $this->pdoStatement->rowCount();
 
 	}
 

@@ -126,7 +126,6 @@ class UserUtil {
 	/**
 	 * Check user name for validity
 	 *
-	 * @static
 	 * @param        $username
 	 * @param string $username Mail address to check
 	 * @return bool Is this name valid?
@@ -164,42 +163,12 @@ class UserUtil {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `user` WHERE `userID` = :id');
 		$query->execute([':id' => $userId]);
 
-		if($query->rowCount() != 1) {
+		if($query->getRowCount() != 1) {
 			return false;
 		}
 
 		return true;
 
-	}
-
-	/**
-	 * Checks the password
-	 *
-	 * @param string $password Clear text password to check
-	 * @param int    $userId   User ID
-	 * @return bool
-	 */
-	public static function checkPassword($password, $userId) {
-
-		if(!self::userExists($userId)) {
-			return false;
-		}
-
-		$query = \Skies::getDb()->prepare('SELECT * FROM `user` WHERE `userID` = :id');
-		$query->execute([':id' => $userId]);
-
-		if(!$data = $query->fetchObject()) {
-			return false;
-		}
-
-		$pwObj = self::makePass($password, $data->userSalt);
-
-		if($pwObj->password != $data->userPassword) {
-			return false;
-		}
-		else {
-			return true;
-		}
 	}
 
 	/**
@@ -213,7 +182,7 @@ class UserUtil {
 		$query = \Skies::getDb()->prepare('SELECT * FROM `user` WHERE `userName` = :userName');
 		$query->execute([':userName' => $userName]);
 
-		if($query->rowCount() != 1) {
+		if($query->getRowCount() != 1) {
 			return false;
 		}
 		else {

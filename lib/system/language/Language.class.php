@@ -2,8 +2,8 @@
 
 namespace skies\system\language;
 
-use skies\model\template\ITemplateArray;
 use skies\system\exception\SystemException;
+use skies\system\template\ITemplateArray;
 use skies\util\Spyc;
 
 /**

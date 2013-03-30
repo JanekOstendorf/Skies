@@ -2,7 +2,7 @@
 
 namespace skies\system\user;
 
-use skies\model\template\ITemplateArray;
+use skies\system\template\ITemplateArray;
 use skies\util\SecureUtil;
 use skies\util\UserUtil;
 

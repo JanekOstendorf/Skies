@@ -2,8 +2,8 @@
 
 namespace skies\model\style;
 
-use skies\model\template\ITemplateArray;
 use skies\system\exception\SystemException;
+use skies\system\template\ITemplateArray;
 use skies\util\Spyc;
 
 /**
@@ -119,10 +119,9 @@ class Style implements ITemplateArray {
 	 */
 	public function prepare() {
 
-		if($this->styleScript instanceof StyleScript)
-				{
-					$this->styleScript->prepare();
-				}
+		if($this->styleScript instanceof StyleScript) {
+			$this->styleScript->prepare();
+		}
 
 	}
 

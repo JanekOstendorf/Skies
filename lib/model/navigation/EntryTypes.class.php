@@ -1,6 +1,6 @@
 <?php
 
-namespace skies\system\navigation;
+namespace skies\model\navigation;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
