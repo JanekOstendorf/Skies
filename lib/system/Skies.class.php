@@ -5,6 +5,7 @@
 use skies\model\style\Style;
 use skies\model\template\Notification;
 use skies\model\template\TemplateEngine;
+use skies\system\exception\SystemException;
 use skies\system\language\Language;
 use skies\system\user\Session;
 use skies\system\user\User;
@@ -146,6 +147,7 @@ class Skies {
 		$this->initTemplate();
 		$this->initPage();
 
+		self::$style->prepare();
 		self::$page->prepare();
 
 		$this->assignDefaults();
@@ -161,7 +163,7 @@ class Skies {
 	/**
 	 * Connect to the MySQL server
 	 *
-	 * @throws \skies\system\exception\SystemException
+	 * @throws SystemException
 	 */
 	private final function initDb() {
 
@@ -176,7 +178,7 @@ class Skies {
 		self::$db = new $dbType($dbHost, $dbUser, $dbPassword, $dbName, $dbPort);
 
 		if(!self::$db instanceof \skies\system\database\Database || !self::$db->isSupported()) {
-			throw new \skies\system\exception\SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
+			throw new SystemException('Failed to create database object.', 0, 'Failed to create Database object or database type is not supported.');
 		}
 
 	}
@@ -207,7 +209,7 @@ class Skies {
 		self::$config = \skies\util\Spyc::YAMLLoad(ROOT_DIR.'config/config.yml');
 
 		if(isset(self::$config[0]) && self::$config[0] == ROOT_DIR.'config/config.yml') {
-			throw new \skies\system\exception\SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
+			throw new SystemException('Failed to open config file!', 0, 'Failed to open required config file.');
 		}
 
 		date_default_timezone_set(self::$config['defaultTimezone']);
@@ -293,8 +295,6 @@ class Skies {
 
 		}
 
-		$pageName = addslashes((isset($_GET['_0']) && !empty($_GET['_0']) ? $_GET['_0'] : self::$config['defaultPage']));
-
 		// Fetch from the DB
 		self::$page = PageUtil::getPageFromUrl($args);
 
@@ -325,11 +325,11 @@ class Skies {
 			'language' => self::$language->getTemplateArray(),
 			'defaultLanguage' => self::$defaultLanguage->getTemplateArray(),
 
-			// Subdirectory for URLs
+			// Generic constants
 			'subdir' => SUBDIR,
-
-			// Time
 			'now' => NOW,
+			'version' => VERSION,
+			'debug' => DEBUG
 		]);
 
 	}
@@ -413,7 +413,8 @@ class Skies {
 	/**
 	 * Includes the required util or exception classes automatically.
 	 *
-	 * @param     string $className
+	 * @param      string $className
+	 * @throws     skies\system\exception\SystemException
 	 * @see        spl_autoload_register()
 	 */
 	public static final function autoload($className) {
@@ -423,7 +424,13 @@ class Skies {
 		// Is it a valid import?
 		if(array_shift($namespaces) == 'skies') {
 
-			$classPath = ROOT_DIR.'lib/'.implode('/', $namespaces).'.class.php';
+			// Style scripts
+			if($namespaces[0] == rtrim(DIR_STYLE, '/')) {
+				$classPath = ROOT_DIR.implode('/', $namespaces).'.class.php';
+			}
+			else {
+				$classPath = ROOT_DIR.'lib/'.implode('/', $namespaces).'.class.php';
+			}
 
 			if(file_exists($classPath)) {
 				require_once($classPath);

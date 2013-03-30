@@ -2,16 +2,16 @@
 
 namespace skies\model\style;
 
+use skies\model\template\ITemplateArray;
+use skies\system\exception\SystemException;
+use skies\util\Spyc;
+
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
  * @copyright Copyright (c) Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  * @package   skies.system.style
  */
-use skies\model\template\ITemplateArray;
-use skies\system\exception\SystemException;
-use skies\util\Spyc;
-
 class Style implements ITemplateArray {
 
 	/**
@@ -57,6 +57,13 @@ class Style implements ITemplateArray {
 	protected $templateDir = '';
 
 	/**
+	 * StyleScript
+	 *
+	 * @var StyleScript|null
+	 */
+	protected $styleScript = null;
+
+	/**
 	 * Meta information
 	 *
 	 * @var array<string|array>
@@ -96,6 +103,26 @@ class Style implements ITemplateArray {
 
 		$this->name = $this->config['name'];
 		$this->title = $this->config['title'];
+
+		// Check for a style script
+		if(isset($this->config['styleScript']) && !empty($this->config['styleScript'])) {
+
+			$styleScriptClass = 'skies\style\\'.$this->name.'\\'.$this->config['styleScript'];
+			$this->styleScript = new $styleScriptClass($this);
+
+		}
+
+	}
+
+	/**
+	 * Executes custom style code
+	 */
+	public function prepare() {
+
+		if($this->styleScript instanceof StyleScript)
+				{
+					$this->styleScript->prepare();
+				}
 
 	}
 
@@ -155,7 +182,7 @@ class Style implements ITemplateArray {
 	}
 
 	/**
-	 * Get the path to the custom templates directory
+	 * Get the path to the custom template directory
 	 *
 	 * @return null|string
 	 */
