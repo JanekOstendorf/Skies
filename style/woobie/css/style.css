@@ -201,12 +201,25 @@ a img {
 
 }
 
+a::selection {
+
+	color: #ff6200;
+
+}
+
 tt, .tt {
 	display: inline;
 	padding: 0 2px;
 	background: rgb(250, 250, 250);
 	border: 1px solid rgb(230, 230, 230);
 	font-family: monospace;
+}
+
+::selection {
+
+	background: rgba(19, 120, 214, 0.45);
+	color: #fafafa;
+
 }
 
 /*
