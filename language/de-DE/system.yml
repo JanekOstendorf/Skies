@@ -88,3 +88,11 @@ page:
 
             error:
                 notExists: Diese Sprache scheint nicht mehr zu existieren. Komisch.
+
+error:
+
+    backLink: &laquo; Zurück zur letzten Seite
+
+    pageNotFound:
+        title: Seite nicht gefunden.
+        message: Die Seite '[[pageName]]' konnte nicht gefunden werden!

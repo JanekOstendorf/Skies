@@ -21,8 +21,8 @@
 
 				{include file="notifications.tpl"}
 
-				{$includePage = $page.templateName}
-				{include file="pages/$includePage"}
+				{$includeTemplate = $page.templateName}
+				{include file="pages/$includeTemplate"}
 
 			</div>
 			<!-- End content -->

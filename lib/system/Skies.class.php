@@ -4,6 +4,7 @@
 
 use skies\model\style\Style;
 use skies\model\template\Notification;
+use skies\system\exception\PageNotFoundException;
 use skies\system\exception\SystemException;
 use skies\system\language\Language;
 use skies\system\template\TemplateEngine;
@@ -26,7 +27,7 @@ define('NOW', time());
 // set exception handler
 set_exception_handler(['\Skies', 'handleException']);
 
-// set php error handler
+// set php errors handler
 if(DEBUG) {
 	error_reporting(E_ALL);
 }
@@ -250,7 +251,7 @@ class Skies {
 
 		// Notification
 		self::$notification = new Notification([
-			Notification::ERROR => 'error',
+			Notification::ERROR => 'errors',
 			Notification::NOTICE => 'notice',
 			Notification::SUCCESS => 'success',
 			Notification::WARNING => 'warning'
@@ -296,7 +297,16 @@ class Skies {
 		}
 
 		// Fetch from the DB
-		self::$page = PageUtil::getPageFromUrl($args);
+		try {
+			self::$page = PageUtil::getPageFromUrl($args);
+		}
+		catch(PageNotFoundException $e) {
+
+			$this->assignDefaults();
+			$e->show();
+			exit;
+
+		}
 
 	}
 
@@ -316,7 +326,7 @@ class Skies {
 			'style' => self::$style->getTemplateArray(),
 
 			// Current page
-			'page' => self::$page->getTemplateArray(),
+			'page' => (self::$page != null ? self::$page->getTemplateArray() : null),
 
 			// Navigation
 			'nav' => (new \skies\model\navigation\Navigation(1))->getTemplateArray(),
@@ -396,7 +406,7 @@ class Skies {
 	public static final function handleError($errorNo, $message, $filename, $lineNo) {
 
 		if(error_reporting() != 0) {
-			$type = 'error';
+			$type = 'errors';
 			switch($errorNo) {
 				case 2:
 					$type = 'warning';

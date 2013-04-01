@@ -29,18 +29,18 @@ class Style implements ITemplateArray {
 	protected $title = '';
 
 	/**
-	 * Main style file (usually php)
-	 *
-	 * @var string
-	 */
-	protected $mainFile = '';
-
-	/**
 	 * List of Cascading Stylesheets to include
 	 *
 	 * @var array<string>
 	 */
 	protected $cssFiles = [];
+
+	/**
+	 * CSS file for error pages
+	 *
+	 * @var string
+	 */
+	protected $errorCss = '';
 
 	/**
 	 * List of JavaScript files to include
@@ -103,6 +103,7 @@ class Style implements ITemplateArray {
 
 		$this->name = $this->config['name'];
 		$this->title = $this->config['title'];
+		$this->errorCss = $this->config['errorCss'];
 
 		// Check for a style script
 		if(isset($this->config['styleScript']) && !empty($this->config['styleScript'])) {
@@ -181,6 +182,17 @@ class Style implements ITemplateArray {
 	}
 
 	/**
+	 * Get the error CSS-file
+	 *
+	 * @return string
+	 */
+	public function getErrorCss() {
+
+		return $this->errorCss;
+
+	}
+
+	/**
 	 * Get the path to the custom template directory
 	 *
 	 * @return null|string
@@ -205,12 +217,12 @@ class Style implements ITemplateArray {
 		return [
 			'name' => $this->name,
 			'title' => $this->title,
-			'mainFile' => $this->mainFile,
 			'cssFiles' => $this->cssFiles,
 			'jsFiles' => $this->jsFiles,
 			'meta' => $this->meta,
 			'config' => $this->config,
 			'dir' => $this->getStyleDirUrl(),
+			'errorCss' => $this->getErrorCss(),
 			'object' => $this
 		];
 

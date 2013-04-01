@@ -87,3 +87,11 @@ page:
 
             error:
                 notExists: It seems like this language doesn't exist anymore. Weird.
+
+error:
+
+    backLink: &laquo; Back to the last page
+
+    pageNotFound:
+        title: Page not found.
+        message: The page '[[pageName]]' couldn't be found!

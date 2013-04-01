@@ -1,0 +1,46 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background: rgb(240, 240, 240);
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div#title {
+
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 48px;
+	text-align: center;
+	padding-top: 15%;
+	width: 100%;
+	border-bottom: 1px solid rgb(200, 200, 200);
+
+}
+
+div#message {
+	margin-top: 25px;
+	font-size: 14px;
+	text-align: center;
+}
+
+div#linkBack {
+	margin-top: 10px;
+	text-align: center;
+}
+
+div#linkBack a, div#linkBack a:hover {
+	font-size: 10px;
+	color: #555555;
+	font-style: normal;
+	text-decoration: none;
+}
+
+div#linkBack a:hover {
+	text-decoration: underline;
+}
+
+hr {
+	height: 0;
+	border: none;
+	border-bottom: 1px solid rgb(200, 200, 200);
+}

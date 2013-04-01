@@ -4,7 +4,7 @@ $(function () {
 	 * Hide notifications
 	 */
 
-	$('.error .hideLink a, .notice .hideLink a, .warning .hideLink a, .success .hideLink a').click(function () {
+	$('.errors .hideLink a, .notice .hideLink a, .warning .hideLink a, .success .hideLink a').click(function () {
 
 		$(this).parent().parent().slideUp('fast');
 

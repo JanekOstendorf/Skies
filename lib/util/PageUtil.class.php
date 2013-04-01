@@ -3,6 +3,7 @@
 namespace skies\util;
 
 use skies\model\Page;
+use skies\system\exception\PageNotFoundException;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -36,8 +37,11 @@ class PageUtil {
 			$lastPageName = $arguments[$i++];
 
 		// Default page
-		if(empty($lastPageName)) {
+		if(empty($arguments[0])) {
 			$lastPageName = \Skies::getConfig()['defaultPage'];
+		}
+		elseif(!in_array($arguments[0], $pageNames)) {
+			throw new PageNotFoundException($arguments[0]);
 		}
 
 		return self::getPage($lastPageName);

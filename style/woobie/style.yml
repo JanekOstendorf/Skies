@@ -28,6 +28,9 @@ meta:
 
 ### Files ###
 
+# Stylesheet for error pages
+errorCss: css/error.css
+
 # Stylesheet files relative to the style directory (comma separated list, with spaces)
 cssFiles: css/fonts.css, css/style.css, css/nav.css, css/forms.css
 
