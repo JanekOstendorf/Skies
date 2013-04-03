@@ -37,7 +37,16 @@ class TemplateEngine {
 		$this->smarty = new Smarty();
 
 		$this->smarty->setTemplateDir($styleDir ? [$styleDir, $tplDir] : $tplDir);
-		$this->smarty->setCompileDir(DIR_CACHE.'/template/');
+		$this->smarty->setPluginsDir([
+
+			// Smarty plugins
+			ROOT_DIR.'lib/smarty/plugins/',
+			ROOT_DIR.'lib/smarty/sysplugins/',
+			// Skies plugins
+			ROOT_DIR.'lib/system/smartyPlugins/'
+
+		]);
+		$this->smarty->setCompileDir(DIR_CACHE.'template/');
 		$this->smarty->setCacheDir(ROOT_DIR.DIR_CACHE); //self::Config('system.cache.dir')
 
 	}
