@@ -1,18 +1,18 @@
-<h1>{lang node='system.page.login.title'}</h1>
+<h1>{'system.page.login.title'|lang}</h1>
 
 {if $user.isGuest}
 	<p>
-		{lang node='system.page.login.introduction'}
+		{'system.page.login.introduction'|lang}
 	</p>
 	<fieldset class="float-left" style="width: 45%;">
 
-		<legend>{lang node='system.page.login.login.title'}</legend>
+		<legend>{'system.page.login.login.title'|lang}</legend>
 
 		<form method="post">
 			<table>
 				<tr>
 					<td>
-						<label for="username">{lang node="system.page.login.username"}:</label>
+						<label for="username">{'system.page.login.username'|lang}:</label>
 					</td>
 					<td>
 						<input type="text" required="required" name="username" id="username" />
@@ -20,7 +20,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="password">{lang node="system.page.login.password"}:</label>
+						<label for="password">{'system.page.login.password'|lang}:</label>
 					</td>
 					<td>
 						<input type="password" required="required" name="password" id="password" />
@@ -28,7 +28,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="longSession">{lang node="system.page.login.login.longSession"}:</label>
+						<label for="longSession">{'system.page.login.login.longSession'|lang}:</label>
 					</td>
 					<td>
 						<input type="checkbox" name="longSession" id="longSession" />
@@ -36,7 +36,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="login" id="login" value="{lang node="system.page.login.login.login"}" />
+						<input type="submit" name="login" id="login" value="{'system.page.login.login.login'|lang}" />
 					</td>
 				</tr>
 			</table>
@@ -45,12 +45,12 @@
 	</fieldset>
 	<fieldset class="float-right" style="width: 45%;">
 
-		<legend>{lang node='system.page.login.signUp.title'}</legend>
+		<legend>{'system.page.login.signUp.title'|lang}</legend>
 		<form method="post">
 			<table>
 				<tr>
 					<td>
-						<label for="signUpUsername">{lang node="system.page.login.username"}:</label>
+						<label for="signUpUsername">{'system.page.login.username'|lang}:</label>
 					</td>
 					<td>
 						<input type="text" required="required" name="signUpUsername" id="signUpUsername" pattern="{$loginPage.usernamePattern}" />
@@ -58,7 +58,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="mail">{lang node="system.page.login.mail"}:</label>
+						<label for="mail">{'system.page.login.mail'|lang}:</label>
 					</td>
 					<td>
 						<input type="text" required="required" name="mail" id="mail" pattern="{$loginPage.mailPattern}" />
@@ -66,7 +66,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="password1">{lang node="system.page.login.passwordTwice"}:</label>
+						<label for="password1">{'system.page.login.passwordTwice'|lang}:</label>
 					</td>
 					<td>
 						<input type="password" required="required" name="password1" id="password1" /><br />
@@ -75,7 +75,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="signUpSubmit" id="signUpSubmit" value="{lang node="system.page.login.signUp.signUp"}" />
+						<input type="submit" name="signUpSubmit" id="signUpSubmit" value="{'system.page.login.signUp.signUp'|lang}" />
 					</td>
 				</tr>
 			</table>
@@ -85,13 +85,13 @@
 	<br class="clear" />
 {else}
 	<p>
-		{lang node="system.page.login.welcomeText" userVars=["userName" => $user.name]}
+		{'system.page.login.welcomeText'|lang:["userName" => $user.name]}
 	</p>
 	<fieldset class="float-left" style="width: 45%;">
-		<legend>{lang node="system.page.login.changeMail.title"}</legend>
+		<legend>{'system.page.login.changeMail.title'|lang}</legend>
 
 		<p class="description">
-			{lang node="system.page.login.changeMail.description"}
+			{'system.page.login.changeMail.description'|lang}
 		</p>
 
 		<hr />
@@ -101,7 +101,7 @@
 			<table>
 				<tr>
 					<td>
-						<label for="changeMail">{lang node="system.page.login.mail"}:</label>
+						<label for="changeMail">{'system.page.login.mail'|lang}:</label>
 					</td>
 					<td>
 						<input type="text" required="required" name="changeMail" id="changeMail" pattern="{$loginPage.mailPattern}" value="{$loginPage.changeMail|default:$user.mail}" />
@@ -109,7 +109,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="changeMailPassword">{lang node="system.page.login.password"}:</label>
+						<label for="changeMailPassword">{'system.page.login.password'|lang}:</label>
 					</td>
 					<td>
 						<input type="password" required="required" name="changeMailPassword" id="changeMailPassword" />
@@ -117,7 +117,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="changeMailSubmit" id="changeMailSubmit" value="{lang node="system.page.login.changeMail.change"}" />
+						<input type="submit" name="changeMailSubmit" id="changeMailSubmit" value="{'system.page.login.changeMail.change'|lang}" />
 					</td>
 				</tr>
 			</table>
@@ -127,10 +127,10 @@
 	</fieldset>
 	<fieldset class="float-right" style="width: 45%;">
 
-		<legend>{lang node="system.page.login.changePassword.title"}</legend>
+		<legend>{'system.page.login.changePassword.title'|lang}</legend>
 
 		<p class="description">
-			{lang node="system.page.login.changePassword.description"}
+			{'system.page.login.changePassword.description'|lang}
 		</p>
 
 		<hr />
@@ -140,7 +140,7 @@
 			<table>
 				<tr>
 					<td>
-						<label for="changePassword1">{lang node="system.page.login.passwordTwice"}:</label>
+						<label for="changePassword1">{'system.page.login.passwordTwice'|lang}:</label>
 					</td>
 					<td>
 						<input type="password" required="required" name="changePassword1" id="changePassword1" /><br />
@@ -149,7 +149,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="changePasswordSubmit" id="changePasswordSubmit" value="{lang node="system.page.login.changePassword.change"}" />
+						<input type="submit" name="changePasswordSubmit" id="changePasswordSubmit" value="{'system.page.login.changePassword.change'|lang}" />
 					</td>
 				</tr>
 			</table>
@@ -160,16 +160,16 @@
 	<br class="clear" />
 	<fieldset class="float-left" style="width: 45%;">
 
-		<legend>{lang node="system.page.login.avatar.title"}</legend>
+		<legend>{'system.page.login.avatar.title'|lang}</legend>
 
 		<p class="description">
 
 			<img src="http://gravatar.com/avatar/{$user.mail|trim|strtolower|md5}.png?s=150" alt="avatar" class="float-left" id="avatar" />
 
-			{lang node="system.page.login.avatar.description"}
+			{'system.page.login.avatar.description'|lang}
 
 		<p>
-			<a href="http://gravatar.com/emails/">{lang node="system.page.login.avatar.avatarLink"}</a>
+			<a href="http://gravatar.com/emails/">{'system.page.login.avatar.avatarLink'|lang}</a>
 		</p>
 
 		<div class="clear"></div>
@@ -180,10 +180,10 @@
 	</fieldset>
 	<fieldset class="float-right" style="width: 45%;">
 
-		<legend>{lang node="system.page.login.chooseLanguage.title"}</legend>
+		<legend>{'system.page.login.chooseLanguage.title'|lang}</legend>
 
 		<p class="description">
-			{lang node="system.page.login.chooseLanguage.description"}
+			{'system.page.login.chooseLanguage.description'|lang}
 		</p>
 
 		<hr />
@@ -193,7 +193,7 @@
 			<table>
 				<tr>
 					<td>
-						<label for="chooseLanguage">{lang node="system.page.login.language"}:</label>
+						<label for="chooseLanguage">{'system.page.login.language'|lang}:</label>
 					</td>
 					<td>
 						<select name="chooseLanguage" id="chooseLanguage">
@@ -205,7 +205,7 @@
 				</tr>
 				<tr>
 					<td>
-						<input type="submit" name="chooseLanguageSubmit" id="chooseLanguageSubmit" value="{lang node="system.page.login.chooseLanguage.change"}" />
+						<input type="submit" name="chooseLanguageSubmit" id="chooseLanguageSubmit" value="{'system.page.login.chooseLanguage.change'|lang}" />
 					</td>
 				</tr>
 			</table>
