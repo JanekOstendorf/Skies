@@ -39,9 +39,9 @@ class HomePage extends Page {
 	 *
 	 * @return string
 	 */
-	public function getName() {
+	public function getPath() {
 
-		return [$this->data['pageName']];
+		return ['home'];
 
 	}
 
@@ -52,7 +52,17 @@ class HomePage extends Page {
 	 */
 	public function getTitle() {
 
-		return $this->data['pageTitle'];
+		return 'Home';
 
 	}
+
+	/**
+	 * Get the name of the page
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'home';
+	}
+
 }

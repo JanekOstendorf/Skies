@@ -17,11 +17,9 @@ abstract class Page implements ITemplateArray {
 	protected $data = [];
 
 	/**
-	 * @param array $data Data of this page (row from the DB)
+	 * Currently does nothing
 	 */
-	public function __construct(array $data) {
-
-		$this->data = $data;
+	public function __construct() {
 
 	}
 
@@ -30,28 +28,35 @@ abstract class Page implements ITemplateArray {
 	 *
 	 * @return void
 	 */
-	abstract function prepare();
+	abstract public function prepare();
 
 	/**
 	 * What's our style name?
 	 *
 	 * @return string
 	 */
-	abstract function getTemplateName();
+	abstract public function getTemplateName();
 
 	/**
-	 * Get the name of this page (short form for the URL)
+	 * Get the path to this page (short form for the URL)
 	 *
-	 * @return array
+	 * @return string[]
 	 */
-	abstract function getName();
+	abstract public function getPath();
 
 	/**
 	 * Get the title of this page.
 	 *
 	 * @return string
 	 */
-	abstract function getTitle();
+	abstract public function getTitle();
+
+	/**
+	 * Get the name of the page
+	 *
+	 * @return string
+	 */
+	abstract public function getName();
 
 	/**
 	 * Is this page active/shown?
@@ -81,6 +86,7 @@ abstract class Page implements ITemplateArray {
 	public function getTemplateArray() {
 
 		return [
+			'path' => $this->getPath(),
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
 			'isActive' => $this->isActive(),

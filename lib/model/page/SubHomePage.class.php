@@ -37,9 +37,9 @@ class SubHomePage extends SubPage {
 	 *
 	 * @return array
 	 */
-	public function getName() {
-		$name = $this->getParent()->getName();
-		$name[] = $this->data['pageName'];
+	public function getPath() {
+		$name = $this->getParent()->getPath();
+		$name[] = $this->getName();
 
 		return $name;
 	}
@@ -50,7 +50,25 @@ class SubHomePage extends SubPage {
 	 * @return string
 	 */
 	public function getTitle() {
-		return $this->data['pageTitle'];
+		return 'SubHome';
+	}
+
+	/**
+	 * Get the name of the parent
+	 *
+	 * @return string
+	 */
+	public function getParentName() {
+		return 'home';
+	}
+
+	/**
+	 * Get the name of the page
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'subHome';
 	}
 
 }

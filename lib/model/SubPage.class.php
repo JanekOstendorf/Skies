@@ -27,8 +27,8 @@ abstract class SubPage extends Page implements ITemplateArray {
 	 */
 	public function getParent() {
 
-		if($this->data['pageParentId'] != 0 && $this->parent === null) {
-			$this->parent = PageUtil::getPageById($this->data['pageParentId']);
+		if($this->getParentName() != null) {
+			$this->parent = PageUtil::getPage($this->getParentName());
 		}
 
 		return $this->parent;
@@ -36,11 +36,19 @@ abstract class SubPage extends Page implements ITemplateArray {
 	}
 
 	/**
+	 * Get the name of the parent
+	 *
+	 * @return string
+	 */
+	abstract public function getParentName();
+
+	/**
 	 * @return array
 	 */
 	public function getTemplateArray() {
 
 		return [
+			'path' => $this->getPath(),
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
 			'isActive' => $this->isActive(),

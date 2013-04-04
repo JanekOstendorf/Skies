@@ -178,7 +178,7 @@ class LoginPage extends Page {
 				// Some language vars are fetched before this is changed. Therefore there might be some text in the old language
 				// To avoid this, we use this very ugly method called redirecting.
 				// TODO: Look for a better solution
-				header('Location: /'.SUBDIR.implode('/', $this->getName()));
+				header('Location: /'.SUBDIR.implode('/', $this->getPath()));
 				exit;
 
 			}
@@ -216,7 +216,7 @@ class LoginPage extends Page {
 	 *
 	 * @return array
 	 */
-	public function getName() {
+	public function getPath() {
 		return ['login'];
 	}
 
@@ -230,4 +230,14 @@ class LoginPage extends Page {
 		return \Skies::getLanguage()->get('system.page.login.title');
 
 	}
+
+	/**
+	 * Get the name of the page
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return 'login';
+	}
+
 }

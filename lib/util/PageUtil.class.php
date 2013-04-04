@@ -14,33 +14,55 @@ use skies\system\exception\PageNotFoundException;
 class PageUtil {
 
 	/**
-	 * Get the current page
-	 *
-	 * @param array $arguments Array of URL arguments
-	 * @return null|\skies\model\Page
+	 * @var string[]
 	 */
+	protected static $pageClasses = [
+		'HomePage',
+		'LoginPage',
+		'SubHomePage'
+	];
+
+	/**
+	 * Page objects. Key is the name
+	 *
+	 * @var Page[]
+	 */
+	protected static $pageObjects = [];
+
+	/**
+	 * Initialize and instance all pages
+	 */
+	public static function init() {
+
+		// Create each object
+		foreach(self::$pageClasses as $pageClass) {
+
+			$pageClass = PAGE_NAMESPACE.$pageClass;
+
+			$page = new $pageClass();
+
+			if($page instanceof Page) {
+				self::$pageObjects[$page->getName()] = $page;
+			}
+
+		}
+
+	}
+
 	public static function getPageFromUrl(array $arguments) {
-
-		// Fetch all page names
-		$query = \Skies::getDb()->query('SELECT `pageName` FROM `page` WHERE 1');
-
-		$pageNames = [];
-
-		while($pageName = $query->fetchArray())
-			$pageNames[] = $pageName['pageName'];
 
 		// Look for the last argument being a page name
 		$lastPageName = '';
 		$i = 0;
 
-		while(isset($arguments[$i]) && in_array($arguments[$i], $pageNames))
+		while(isset($arguments[$i]) && isset(self::$pageObjects[$arguments[$i]]))
 			$lastPageName = $arguments[$i++];
 
 		// Default page
 		if(empty($arguments[0])) {
 			$lastPageName = \Skies::getConfig()['defaultPage'];
 		}
-		elseif(!in_array($arguments[0], $pageNames)) {
+		elseif(!isset(self::$pageObjects[$arguments[0]])) {
 			throw new PageNotFoundException($arguments[0]);
 		}
 
@@ -48,53 +70,15 @@ class PageUtil {
 
 	}
 
+	/**
+	 * Get a page by page name
+	 *
+	 * @param string $pageName
+	 * @return Page|null Null if not exists
+	 */
 	public static function getPage($pageName) {
 
-		// Fetch from the DB
-		$query = \Skies::getDb()->prepare('SELECT * FROM `page` WHERE `pageName` = :name');
-		$query->execute([':name' => $pageName]);
-
-		if($query->getRowCount() == 1) {
-
-			$data = $query->fetchArray();
-
-			// Build the class name
-			$pageClass = PAGE_NAMESPACE.$data['pageClass'];
-
-			$page = new $pageClass($data);
-
-			if($page instanceof Page) {
-				return $page;
-			}
-
-		}
-
-		return null;
-
-	}
-
-	public static function getPageById($pageId) {
-
-		// Fetch from the DB
-		$query = \Skies::getDb()->prepare('SELECT * FROM `page` WHERE `pageId` = :id');
-		$query->execute([':id' => $pageId]);
-
-		if($query->getRowCount() == 1) {
-
-			$data = $query->fetchArray();
-
-			// Build the class name
-			$pageClass = PAGE_NAMESPACE.$data['pageClass'];
-
-			$page = new $pageClass($data);
-
-			if($page instanceof Page) {
-				return $page;
-			}
-
-		}
-
-		return null;
+		return (isset(self::$pageObjects[$pageName]) ? self::$pageObjects[$pageName] : null);
 
 	}
 

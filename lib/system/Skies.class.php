@@ -296,7 +296,9 @@ class Skies {
 
 		}
 
-		// Fetch from the DB
+		// Fetch page
+		PageUtil::init();
+
 		try {
 			self::$page = PageUtil::getPageFromUrl($args);
 		}

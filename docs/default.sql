@@ -32,22 +32,6 @@ INSERT INTO `nav-entry` (`entryId`, `entryOrder`, `entryTitle`, `entryType`, `en
 (2, 2, 'Login', 1, 0, 'login', NULL, 1),
 (4, 3, 'SubHome', 1, 1, 'subhome', NULL, 1);
 
-DROP TABLE IF EXISTS `page`;
-CREATE TABLE IF NOT EXISTS `page` (
-    `pageID` int(255) NOT NULL AUTO_INCREMENT,
-    `pageName` varchar(500) NOT NULL,
-    `pageTitle` text NOT NULL,
-    `pageParentId` int(255) NOT NULL,
-    `pageClass` varchar(500) NOT NULL,
-    PRIMARY KEY (`pageID`),
-    KEY `pageID` (`pageID`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 4;
-
-INSERT INTO `page` (`pageID`, `pageName`, `pageTitle`, `pageParentId`, `pageClass`) VALUES
-(1, 'home', 'Home', 0, 'HomePage'),
-(2, 'login', 'Login', 0, 'LoginPage'),
-(3, 'subhome', 'SubHome', 1, 'SubHomePage');
-
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE IF NOT EXISTS `session` (
     `sessionId` varchar(40) NOT NULL DEFAULT '',
