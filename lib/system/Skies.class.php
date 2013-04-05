@@ -21,25 +21,6 @@ require_once ROOT_DIR.'/options.inc.php';
 // Core functions
 require_once ROOT_DIR.'/lib/system_functions.inc.php';
 
-// Performance reasons ...
-define('NOW', time());
-
-// set exception handler
-set_exception_handler(['\Skies', 'handleException']);
-
-// set php errors handler
-if(DEBUG) {
-	error_reporting(E_ALL);
-}
-else {
-	error_reporting(E_ALL ^ E_NOTICE);
-}
-
-set_error_handler(['\Skies', 'handleError'], E_ALL);
-
-// set autoload handler
-spl_autoload_register(['\Skies', 'autoload']);
-
 /*
  * Includes
  */
