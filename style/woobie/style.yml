@@ -32,7 +32,7 @@ meta:
 errorCss: css/error.css
 
 # Stylesheet files relative to the style directory (comma separated list, with spaces)
-cssFiles: css/fonts.css, css/style.css, css/nav.css, css/forms.css
+cssFiles: css/fonts.css, css/style.css, css/nav.css, css/forms.css, font-awesome/css/font-awesome.min.css
 
 # JavaScript files relative to the style directory [optional] (comma seperated list, with spaces)
 jsFiles: js/woobie.js

@@ -400,3 +400,14 @@ table td ul > li {
 	margin-left: 5px;
 
 }
+
+/*
+ * Font awsome
+ */
+[class^="icon-"],
+[class*=" icon-"],
+.icon {
+
+	color: #656565;
+
+}

@@ -33,6 +33,9 @@
 	<nav id="hornav">
 
 		{nav entries=$nav.entries}
+
+		{include file="loginField.tpl"}
+
 		<br class="clear" />
 
 	</nav>

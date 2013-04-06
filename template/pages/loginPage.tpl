@@ -15,7 +15,10 @@
 						<label for="username">{'system.page.login.username'|lang}:</label>
 					</td>
 					<td>
-						<input type="text" required="required" name="username" id="username" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-user"></i></span>
+							<input type="text" required="required" name="username" id="username" placeholder="{'system.page.login.username'|lang}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -23,7 +26,10 @@
 						<label for="password">{'system.page.login.password'|lang}:</label>
 					</td>
 					<td>
-						<input type="password" required="required" name="password" id="password" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="password" id="password" placeholder="{'system.page.login.password'|lang}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -53,7 +59,10 @@
 						<label for="signUpUsername">{'system.page.login.username'|lang}:</label>
 					</td>
 					<td>
-						<input type="text" required="required" name="signUpUsername" id="signUpUsername" pattern="{$loginPage.usernamePattern}" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-user"></i></span>
+							<input type="text" required="required" name="signUpUsername" id="signUpUsername" pattern="{$loginPage.usernamePattern}" placeholder="{'system.page.login.username'|lang}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -61,7 +70,10 @@
 						<label for="mail">{'system.page.login.mail'|lang}:</label>
 					</td>
 					<td>
-						<input type="text" required="required" name="mail" id="mail" pattern="{$loginPage.mailPattern}" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-envelope"></i></span>
+							<input type="text" required="required" name="mail" id="mail" pattern="{$loginPage.mailPattern}" placeholder="{'system.page.login.mail'|lang}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -69,8 +81,14 @@
 						<label for="password1">{'system.page.login.passwordTwice'|lang}:</label>
 					</td>
 					<td>
-						<input type="password" required="required" name="password1" id="password1" /><br />
-						<input type="password" required="required" name="password2" id="password2" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="password1" id="password1" placeholder="{'system.page.login.password'|lang}" />
+						</div>
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="password2" id="password2" placeholder="{'system.page.login.passwordAgain'|lang}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -104,7 +122,10 @@
 						<label for="changeMail">{'system.page.login.mail'|lang}:</label>
 					</td>
 					<td>
-						<input type="text" required="required" name="changeMail" id="changeMail" pattern="{$loginPage.mailPattern}" value="{$loginPage.changeMail|default:$user.mail}" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-envelope"></i></span>
+							<input type="text" required="required" name="changeMail" id="changeMail" pattern="{$loginPage.mailPattern}" value="{$loginPage.changeMail|default:$user.mail}" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -112,7 +133,10 @@
 						<label for="changeMailPassword">{'system.page.login.password'|lang}:</label>
 					</td>
 					<td>
-						<input type="password" required="required" name="changeMailPassword" id="changeMailPassword" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="changeMailPassword" id="changeMailPassword" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -143,8 +167,14 @@
 						<label for="changePassword1">{'system.page.login.passwordTwice'|lang}:</label>
 					</td>
 					<td>
-						<input type="password" required="required" name="changePassword1" id="changePassword1" /><br />
-						<input type="password" required="required" name="changePassword2" id="changePassword2" />
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="changePassword1" id="changePassword1" />
+						</div>
+						<div class="input-prepend">
+							<span class="add-on"><i class="icon-key"></i></span>
+							<input type="password" required="required" name="changePassword2" id="changePassword2" />
+						</div>
 					</td>
 				</tr>
 				<tr>

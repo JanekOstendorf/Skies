@@ -61,6 +61,7 @@
 
 #hornav ul.toplevel > li {
 	margin-right: 5px;
+	height: 28px;
 }
 
 #hornav ul.toplevel > li {
@@ -148,17 +149,18 @@
 /*
  * LoginForm
  */
-#loginform {
-	margin: auto 0;
+#loginField {
+	margin: 0;
 	text-align: right;
 	float: right;
-	padding: 5px 0 5px 10px;
-	line-height: 20px;
+	padding: 5px 10px;
+	height: 18px;
+	line-height: 18px;
 	border-left: 1px solid rgb(230, 230, 230);
 	background: #ffffff;
 }
 
-#loginform > a, #loginform > a:visited {
+#loginField > a, #loginField > a:visited {
 	text-decoration: none;
 	color: #fd4920;
 	transition: text-shadow 0.1s, color 0.1s;
@@ -166,17 +168,32 @@
 	margin: 0;
 }
 
-#loginform > a:hover {
+#loginField > a:hover {
 	text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
 	padding: 0;
 	margin: 0;
 }
 
-#loginform > a:active {
+#loginField > a:active {
 	color: #000000;
 }
 
-#loginform #link {
+#loginField #link {
 	padding-left: 5px;
 	padding-right: 10px;
+}
+
+#loginBox {
+
+	display: none;
+	background: #fff;
+	position: absolute;
+	right: 0;
+	top: 28px;
+	padding: 10px 10px 5px;
+	border-left: 1px solid rgb(230, 230, 230);
+	border-bottom: 1px solid rgb(230, 230, 230);
+	border-top: 1px solid rgb(230, 230, 230);
+
+
 }

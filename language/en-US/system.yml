@@ -12,6 +12,7 @@ page:
         username: User name
         password: Password
         passwordTwice: Password (twice)
+        passwordAgain: Password (again)
         mail: Email
         language: Language
 
@@ -28,6 +29,7 @@ page:
                 generic: Failed to login. :/
 
         logout:
+            logout: Logout
             success: You have successfully logged out.
             error:
                 guest: You're not even logged in!

@@ -23,6 +23,19 @@ $(function () {
 		$(this).children('div.submenu').fadeOut('fast');
 	});
 
+	/*
+	 * Login box
+	 */
+	$('#loginBox').hide();
+
+	$('#loginLink').click(function(e) {
+
+		e.preventDefault();
+
+		$('#loginBox').slideToggle('fast');
+
+	});
+
 });
 
 

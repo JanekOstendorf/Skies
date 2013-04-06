@@ -47,6 +47,12 @@ class LoginPage extends Page {
 						\Skies::updateUser();
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 
+						if(isset($_GET['_1']) && $_GET['_1'] == 'refer' && isset($_SERVER['HTTP_REFERER'])) {
+							header('Location: '.$_SERVER['HTTP_REFERER']);
+							exit;
+						}
+
+
 					}
 					else {
 

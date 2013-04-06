@@ -13,6 +13,7 @@ page:
         username: Benutzername
         password: Passwort
         passwordTwice: Passwort (zweimal)
+        passwordAgain: Passwort (Wiederholung)
         mail: E-Mail
         language: Sprache
 
@@ -29,6 +30,7 @@ page:
                 generic: Fehler beim Anmelden. :/
 
         logout:
+            title: Abmelden
             success: Du wurdest erfolgreich ausgeloggt.
             error:
                 guest: Du bist gar nicht eingeloggt!
