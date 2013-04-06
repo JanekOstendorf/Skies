@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `nav-entry` (
 INSERT INTO `nav-entry` (`entryId`, `entryOrder`, `entryTitle`, `entryType`, `entryParentEntryId`, `entryPageName`, `entryLink`, `entryNavId`) VALUES
 (1, 1, 'Home', 1, 0, 'home', NULL, 1),
 (2, 2, 'Login', 1, 0, 'login', NULL, 1),
-(4, 3, 'SubHome', 1, 1, 'subhome', NULL, 1);
+(4, 3, 'SubHome', 1, 1, 'subHome', NULL, 1);
 
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE IF NOT EXISTS `session` (
