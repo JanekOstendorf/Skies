@@ -84,6 +84,7 @@ class LoginPage extends Page {
 
 				\Skies::getSession()->logout();
 				\Skies::updateUser();
+				\Skies::getNotification()->addSession(Notification::SUCCESS, '{{system.page.login.logout.success}}');
 				header('Location: /'.SUBDIR);
 
 			}
