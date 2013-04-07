@@ -31,6 +31,13 @@ class Notification {
 	protected $storage = [];
 
 	/**
+	 * Buffer for session notifications
+	 *
+	 * @var array
+	 */
+	protected $sessionStorage = [];
+
+	/**
 	 * Which css class belongs to which type?
 	 *
 	 * @var array
@@ -46,6 +53,17 @@ class Notification {
 
 		$this->templates = $templates;
 
+		// Read from possible session notifications
+		if(!\Skies::getSession()->getData('notifications') == null) {
+
+			foreach(\Skies::getSession()->getData('notifications') as $notification) {
+
+				$this->add($notification['type'], $notification['message'], $notification['userVars']);
+
+			}
+
+		}
+
 	}
 
 	/**
@@ -56,6 +74,20 @@ class Notification {
 	public function add($type, $message, $userVars = []) {
 
 		$this->storage[$type][] = \Skies::getLanguage()->replaceVars($message, $userVars);
+
+	}
+
+	/**
+	 * Adds notification to the session storage so it will be displayed even on page reload
+	 *
+	 * @param int    $type     Type of this notification (constant)
+	 * @param string $message  Message
+	 * @param array  $userVars Additional user variables
+	 */
+	public function addSession($type, $message, $userVars = []) {
+
+		$this->sessionStorage[] = ['type' => $type, 'message' => $message, 'userVars' => $userVars];
+		\Skies::getSession()->setData('notifications', $this->sessionStorage);
 
 	}
 

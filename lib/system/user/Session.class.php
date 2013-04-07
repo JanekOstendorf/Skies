@@ -46,14 +46,21 @@ class Session {
 	 *
 	 * @var string
 	 */
-	protected $ip;
+	protected $ip = '';
 
 	/**
 	 * IP fetched from the DB
 	 *
 	 * @var string
 	 */
-	protected $oldIp;
+	protected $oldIp = '';
+
+	/**
+	 * Data for this session
+	 *
+	 * @var array
+	 */
+	protected $data = [];
 
 	/**
 	 * Starts session and handles login
@@ -122,6 +129,7 @@ class Session {
 			$this->userId = $data['sessionUserId'];
 			$this->long = ($data['sessionLong'] == 1);
 			$this->oldIp = $data['sessionIp'];
+			$this->data = unserialize($data['sessionData']);
 
 			// Check session's IP
 			//if($this->oldIP == $this->ip) {
@@ -242,6 +250,37 @@ class Session {
 		$query = \Skies::getDb()->prepare('DELETE FROM `session` WHERE `sessionId` = :id');
 
 		$query->execute([':id' => $this->id]);
+
+	}
+
+	/**
+	 * Write the data into the DB
+	 */
+	protected function updateData() {
+
+		$query = \Skies::getDb()->prepare('UPDATE `session` SET `sessionData` = :data WHERE `sessionId` = :id');
+		$query->execute([':data' => serialize($this->data), ':id' => $this->id]);
+
+	}
+
+	/**
+	 * @param string $key   Key in the data array
+	 * @param mixed  $value Value to assign
+	 */
+	public function setData($key, $value) {
+
+		$this->data[$key] = $value;
+		$this->updateData();
+
+	}
+
+	/**
+	 * @param string $key Key in the data array
+	 * @return mixed Null if not exists
+	 */
+	public function getData($key) {
+
+		return isset($this->data[$key]) ? $this->data($key) : null;
 
 	}
 
