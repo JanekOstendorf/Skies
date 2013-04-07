@@ -7,6 +7,25 @@
 /* Ubuntu */
 
 @font-face {
-	font-family: "Ubuntu-L";
+	font-family: 'Ubuntu-L';
+	font-weight: normal;
 	src: url('../fonts/Ubuntu-L.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Ubuntu-L';
+	font-weight: bold;
+	src: url('../fonts/Ubuntu-R.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	font-weight: normal;
+	src: url('../fonts/Ubuntu-R.ttf') format("truetype");
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	font-weight: bold;
+	src: url('../fonts/Ubuntu-B.ttf') format("truetype");
 }
