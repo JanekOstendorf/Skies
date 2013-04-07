@@ -39,12 +39,9 @@ CREATE TABLE IF NOT EXISTS `session` (
     `sessionIp` text,
     `sessionLastActivity` bigint(255) NOT NULL,
     `sessionLong` tinyint(1) NOT NULL,
+    `sessionData` longtext,
     PRIMARY KEY (`sessionId`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-INSERT INTO `session` (`sessionId`, `sessionUserId`, `sessionIp`, `sessionLastActivity`, `sessionLong`) VALUES
-('47c0fac80a6c33f118a06132bccf02b3b14c3892', NULL, '::ffff:7f00:1', 1364388718, 0),
-('a2e2b6f3bdb0de438c5477703dc411db36531a40', 1, '::ffff:7f00:1', 1364390052, 0);
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
@@ -58,4 +55,4 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 2;
 
 INSERT INTO `user` (`userId`, `userName`, `userMail`, `userPassword`, `userLastActivity`, `userData`) VALUES
-(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', 1364390052, 'a:1:{s:8:"language";s:5:"de-DE";}');
+(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', 1365372702, 'a:1:{s:8:"language";s:5:"de-DE";}');

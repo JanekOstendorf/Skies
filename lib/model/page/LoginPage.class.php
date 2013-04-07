@@ -48,10 +48,11 @@ class LoginPage extends Page {
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 
 						if(isset($_GET['_1']) && $_GET['_1'] == 'refer' && isset($_SERVER['HTTP_REFERER'])) {
+
+							\Skies::getNotification()->addSession(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 							header('Location: '.$_SERVER['HTTP_REFERER']);
 							exit;
 						}
-
 
 					}
 					else {

@@ -62,6 +62,9 @@ class Notification {
 
 			}
 
+			// Remove notifications
+			\Skies::getSession()->setData('notifications', []);
+
 		}
 
 	}
