@@ -53,20 +53,6 @@ class Notification {
 
 		$this->templates = $templates;
 
-		// Read from possible session notifications
-		if(!\Skies::getSession()->getData('notifications') == null) {
-
-			foreach(\Skies::getSession()->getData('notifications') as $notification) {
-
-				$this->add($notification['type'], $notification['message'], $notification['userVars']);
-
-			}
-
-			// Remove notifications
-			\Skies::getSession()->setData('notifications', []);
-
-		}
-
 	}
 
 	/**
@@ -98,6 +84,20 @@ class Notification {
 	 * Send the notifications to the template engine
 	 */
 	public function assign() {
+
+		// Read from possible session notifications
+		if(!\Skies::getSession()->getData('notifications') == null) {
+
+			foreach(\Skies::getSession()->getData('notifications') as $notification) {
+
+				$this->add($notification['type'], $notification['message'], $notification['userVars']);
+
+			}
+
+			// Remove notifications
+			\Skies::getSession()->setData('notifications', []);
+
+		}
 
 		\Skies::getTemplate()->assign(['notifications' => $this->storage, 'notificationTemplates' => $this->templates]);
 
