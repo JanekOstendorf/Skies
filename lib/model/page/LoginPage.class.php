@@ -47,10 +47,29 @@ class LoginPage extends Page {
 						\Skies::updateUser();
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 
-						if(isset($_GET['_1']) && $_GET['_1'] == 'refer' && isset($_SERVER['HTTP_REFERER'])) {
+						if(isset($_GET['_1']) && $_GET['_1'] == 'refer') {
+
+							$referTo = '';
+
+							// Redirect back to the HTTP_REFERER if none is given
+							if(!isset($_GET['_2']))
+								$referTo = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+							else {
+
+								// Build url
+								$referTo = '/'.SUBDIR;
+
+								$i = 2;
+
+								while(isset($_GET['_'.$i])) {
+									$referTo .= $_GET['_'.$i++].'/';
+								}
+
+							}
+
 
 							\Skies::getNotification()->addSession(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
-							header('Location: '.$_SERVER['HTTP_REFERER']);
+							header('Location: '.$referTo);
 							exit;
 						}
 
