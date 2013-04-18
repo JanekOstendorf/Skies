@@ -71,7 +71,7 @@ page:
 
             success: Dein Passwort wurde erfolgreich geändert.
             error:
-                mismacth: Die eingegebenen Passwörter stimmen nicht überein.
+                mismatch: Die eingegebenen Passwörter stimmen nicht überein.
                 missing: Nicht alle erfoderlichen Felder wurden ausgefüllt.
 
         avatar:

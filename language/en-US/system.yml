@@ -70,7 +70,7 @@ page:
 
             success: Your password has been changed successfully.
             error:
-                mismacth: The passwords do not match!
+                mismatch: The passwords do not match!
                 missing: Not all required fields are filled.
 
         avatar:
