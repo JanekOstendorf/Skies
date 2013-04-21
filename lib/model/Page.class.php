@@ -40,7 +40,7 @@ abstract class Page implements ITemplateArray {
 	/**
 	 * Get the path to this page (short form for the URL)
 	 *
-	 * @return string[]
+	 * @return array
 	 */
 	abstract public function getPath();
 

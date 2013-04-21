@@ -14,7 +14,7 @@ use skies\system\exception\PageNotFoundException;
 class PageUtil {
 
 	/**
-	 * @var string[]
+	 * @var array
 	 */
 	protected static $pageClasses = [
 		'HomePage',
