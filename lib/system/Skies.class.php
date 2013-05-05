@@ -7,6 +7,8 @@ use skies\model\template\Notification;
 use skies\system\exception\PageNotFoundException;
 use skies\system\exception\SystemException;
 use skies\system\language\Language;
+use skies\system\protocol\Uri;
+use skies\system\protocol\UriMethod;
 use skies\system\template\TemplateEngine;
 use skies\system\user\Session;
 use skies\system\user\User;
@@ -15,6 +17,7 @@ use skies\util\LanguageUtil;
 use skies\util\PageUtil;
 use skies\util\SessionUtil;
 use skies\util\spyc;
+use skies\util\StringUtil;
 
 require_once ROOT_DIR.'/options.inc.php';
 
@@ -109,6 +112,13 @@ class Skies {
 	 * @var \skies\model\Page
 	 */
 	private static $page = null;
+
+	/**
+	 * URI
+	 *
+	 * @var \skies\system\protocol\Uri
+	 */
+	private static $uri = null;
 
 	/**
 	 * Initialize Skies
@@ -258,30 +268,20 @@ class Skies {
 	 */
 	private final function initPage() {
 
-		$args = [];
+		// Get URI method
+		$constantString = '\skies\system\protocol\Uri::METHOD_'.strtoupper(self::$config['uriMethod']);
 
-		// Parse GET arguments
-		if(isset($_GET['__0'])) {
-
-			// Remove prefixed slash
-			$_GET['__0'] = ltrim($_GET['__0'], '/');
-			$args = explode('/', $_GET['__0']);
-
-			$i = 0;
-
-			foreach($args as $argument) {
-
-				$_GET['_'.$i++] = $argument;
-
-			}
-
+		if(!defined($constantString)) {
+			throw new SystemException('URI method \''.StringUtil::encodeHtml(self::$config['uriMethod']).'\' not found.');
 		}
+
+		self::$uri = new Uri(constant($constantString));
 
 		// Fetch page
 		PageUtil::init();
 
 		try {
-			self::$page = PageUtil::getPageFromUrl($args);
+			self::$page = PageUtil::getPageFromUrl(self::$uri);
 		}
 		catch(PageNotFoundException $e) {
 
@@ -542,6 +542,15 @@ class Skies {
 	public final static function getUser() {
 
 		return self::$user;
+
+	}
+
+	/**
+	 * @return Uri
+	 */
+	public final static function getUri() {
+
+		return self::$uri;
 
 	}
 

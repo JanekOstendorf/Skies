@@ -10,8 +10,10 @@ namespace skies\model\page;
 use skies\model\Page;
 use skies\model\template\Notification;
 use skies\system\language\Language;
+use skies\system\protocol\Uri;
 use skies\system\user\User;
 use skies\util\LanguageUtil;
+use skies\util\StringUtil;
 use skies\util\UserUtil;
 
 /**
@@ -31,28 +33,28 @@ class LoginPage extends Page {
 		 */
 
 		// Login
-		if(isset($_POST['login'])) {
+		if(\Skies::getUri()->getPost('login')) {
 
-			$userId = UserUtil::usernameToID($_POST['username']);
+			$userId = UserUtil::usernameToID(\Skies::getUri()->getPost('username'));
 
 			if($userId !== false) {
 
 				$user = new User($userId);
 
 				// Check password
-				if($user->checkPassword($_POST['password'])) {
+				if($user->checkPassword(\Skies::getUri()->getPost('password'))) {
 
-					if(\Skies::getSession()->login($user->getId(), (isset($_POST['longSession']) && $_POST['longSession'] != null)) !== false) {
+					if(\Skies::getSession()->login($user->getId(), \Skies::getUri()->getPost('longSession') !== false)) {
 
 						\Skies::updateUser();
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.login.success}}', ['userName' => $user->getName()]);
 
-						if(isset($_GET['_1']) && $_GET['_1'] == 'refer') {
+						if(\Skies::getUri()->getArgument(1, 'refer') == 'refer') {
 
 							$referTo = '';
 
 							// Redirect back to the HTTP_REFERER if none is given
-							if(!isset($_GET['_2'])) {
+							if(\Skies::getUri()->getArgument(2, 'referTo') === false) {
 								$referTo = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 							}
 							else {
@@ -60,10 +62,19 @@ class LoginPage extends Page {
 								// Build url
 								$referTo = '/'.SUBDIR;
 
-								$i = 2;
+								switch(\Skies::getUri()->getMethod()) {
 
-								while(isset($_GET['_'.$i])) {
-									$referTo .= $_GET['_'.$i++].'/';
+									case Uri::METHOD_ARGUMENT:
+										$referTo .= \Skies::getUri()->getArgument(2, 'referTo');
+										break;
+									case Uri::METHOD_REWRITE:
+										$i = 2;
+
+										while(\Skies::getUri()->getArgument($i, '')) {
+											$referTo .= \Skies::getUri()->getArgument($i++, '').'/';
+										}
+										break;
+
 								}
 
 							}
@@ -97,7 +108,7 @@ class LoginPage extends Page {
 		}
 
 		// Logout
-		if((isset($_GET['_1']) && $_GET['_1'] == 'logout') || isset($_GET['logout'])) {
+		if(\Skies::getUri()->getArgument(1, 'logout') == 'logout') {
 
 			if(!\Skies::getUser()->isGuest()) {
 
@@ -116,19 +127,19 @@ class LoginPage extends Page {
 		}
 
 		// Change email
-		if(isset($_POST['changeMailSubmit'])) {
+		if(\Skies::getUri()->getPost('changeMailSubmit') !== false) {
 
 			// Everything set?
-			if(isset($_POST['changeMail']) && isset($_POST['changeMailPassword'])) {
+			if(\Skies::getUri()->getPost('changeMail') !== false && \Skies::getUri()->getPost('changeMailPassword') !== false) {
 
 				// Check mail pattern
-				if(UserUtil::checkMail($_POST['changeMail'])) {
+				if(UserUtil::checkMail(\Skies::getUri()->getPost('changeMail'))) {
 
 					// Check password
-					if(\Skies::getUser()->checkPassword($_POST['changeMailPassword'])) {
+					if(\Skies::getUser()->checkPassword(\Skies::getUri()->getPost('changeMailPassword'))) {
 
 						// Everything's right, change the mail
-						\Skies::getUser()->setMail($_POST['changeMail'], $_POST['changeMailPassword']);
+						\Skies::getUser()->setMail(\Skies::getUri()->getPost('changeMail'), \Skies::getUri()->getPost('changeMailPassword'));
 						\Skies::getUser()->update();
 
 						\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.changeMail.success}}', ['newMail' => \Skies::getUser()->getMail()]);
@@ -157,14 +168,14 @@ class LoginPage extends Page {
 		}
 
 		// Change Password
-		if(isset($_POST['changePasswordSubmit'])) {
+		if(\Skies::getUri()->getPost('changePasswordSubmit') !== false) {
 
 			// Check for passwords
-			if(isset($_POST['changePassword1']) && isset($_POST['changePassword2'])) {
+			if(\Skies::getUri()->getPost('changePassword1') !== false && \Skies::getUri()->getPost('changePassword2') !== false) {
 
-				if($_POST['changePassword1'] == $_POST['changePassword2']) {
+				if(\Skies::getUri()->getPost('changePassword1') == \Skies::getUri()->getPost('changePassword2')) {
 
-					\Skies::getUser()->setPassword($_POST['changePassword1']);
+					\Skies::getUser()->setPassword(\Skies::getUri()->getPost('changePassword1'));
 					\Skies::updateUser();
 
 					\Skies::getNotification()->add(Notification::SUCCESS, '{{system.page.login.changePassword.success}}');
@@ -194,18 +205,18 @@ class LoginPage extends Page {
 			$languageIds[] = $language->getId();
 		}
 
-		if(isset($_POST['chooseLanguageSubmit'])) {
+		if(\Skies::getUri()->getPost('chooseLanguageSubmit') !== false) {
 
 			// Is the language valid?
-			if(in_array($_POST['chooseLanguage'], $languageIds)) {
+			if(in_array(\Skies::getUri()->getPost('chooseLanguage'), $languageIds)) {
 
-				\Skies::getUser()->setData('language', $_POST['chooseLanguage']);
+				\Skies::getUser()->setData('language', \Skies::getUri()->getPost('chooseLanguage'));
 				\Skies::getUser()->update();
 
 				// Some language vars are fetched before this is changed. Therefore there might be some text in the old language
 				// To avoid this, we use this very ugly method called redirecting.
 				// TODO: Look for a better solution
-				header('Location: /'.SUBDIR.implode('/', $this->getPath()));
+				header('Location: '.\Skies::getPage()->getRelativeLink());
 				exit;
 
 			}
@@ -223,7 +234,7 @@ class LoginPage extends Page {
 				'mailPattern' => UserUtil::MAIL_PATTERN,
 				'usernamePattern' => UserUtil::USERNAME_PATTERN,
 				'availableLanguages' => $availableLanguages,
-				'changeMail' => (isset($_POST['changeMail']) ? $_POST['changeMail'] : null)
+				'changeMail' => (\Skies::getUri()->getPost('changeMail') !== false ? \Skies::getUri()->getPost('changeMail') : null)
 			]
 		]);
 

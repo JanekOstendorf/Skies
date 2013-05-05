@@ -4,6 +4,7 @@ namespace skies\util;
 
 use skies\model\Page;
 use skies\system\exception\PageNotFoundException;
+use skies\system\protocol\Uri;
 
 /**
  * @author    Janek Ostendorf (ozzy) <ozzy2345de@gmail.com>
@@ -49,24 +50,58 @@ class PageUtil {
 
 	}
 
-	public static function getPageFromUrl(array $arguments) {
+	public static function getPageFromUrl(Uri $uri) {
 
-		// Look for the last argument being a page name
-		$lastPageName = '';
-		$i = 0;
+		$pageName = '';
 
-		while(isset($arguments[$i]) && isset(self::$pageObjects[$arguments[$i]]))
-			$lastPageName = $arguments[$i++];
+		switch($uri->getMethod()) {
 
-		// Default page
-		if(empty($arguments[0])) {
-			$lastPageName = \Skies::getConfig()['defaultPage'];
+			case Uri::METHOD_REWRITE:
+
+				if($uri->getArgument(0, '') == null) {
+					$pageName = \Skies::getConfig()['defaultPage'];
+				}
+				elseif(!isset(self::$pageObjects[$uri->getArgument(0, '')])) {
+					throw new PageNotFoundException($uri->getArgument(0, ''));
+				}
+				else {
+
+					// Look for the last argument being a page name
+					$i = 0;
+
+					while($uri->getArgument($i, '') !== false && isset(self::$pageObjects[$uri->getArgument($i, '')])) {
+						$pageName = $uri->getArgument($i++, '');
+					}
+
+				}
+
+				break;
+
+			case Uri::METHOD_ARGUMENT:
+
+				$arguments = explode('/', trim($uri->getArgument(0, 'page', '/')));
+
+				// Default page
+				if(empty($arguments[0]) || !isset($arguments[0])) {
+					$pageName = \Skies::getConfig()['defaultPage'];
+				}
+				elseif(!isset(self::$pageObjects[$arguments[0]])) {
+					throw new PageNotFoundException($arguments[0]);
+				}
+				else {
+
+					$i = 0;
+
+					while(isset($arguments[$i]) && isset(self::$pageObjects[$arguments[$i]]))
+						$pageName = $arguments[$i++];
+
+				}
+
+				break;
+
 		}
-		elseif(!isset(self::$pageObjects[$arguments[0]])) {
-			throw new PageNotFoundException($arguments[0]);
-		}
 
-		return self::getPage($lastPageName);
+		return self::getPage($pageName);
 
 	}
 

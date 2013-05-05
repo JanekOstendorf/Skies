@@ -28,6 +28,22 @@ class StringUtil {
 	}
 
 	/**
+	 * Converts to URI conform string
+	 *
+	 * @param $string
+	 * @return string
+	 */
+	public static function encodeUri($string) {
+
+		if(is_object($string)) {
+			$string = $string->__toString();
+		}
+
+		return @urlencode($string);
+
+	}
+
+	/**
 	 * Alias to php sha1() function
 	 *
 	 * @static

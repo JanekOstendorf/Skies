@@ -14,7 +14,7 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 
 # Page given
-# Everything => $_GET['_0']
+# Everything => $_GET['__0']
 RewriteRule ^(.*)$ index.php?__0=$1&%{QUERY_STRING}
 
 ## NGINX EQUIVALENT ##

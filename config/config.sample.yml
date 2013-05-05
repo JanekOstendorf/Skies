@@ -26,6 +26,14 @@ defaultPage: home
 # Default time zone
 defaultTimezone: Europe/Berlin
 
+# Uri method
+# Options:
+#  * argument:
+#    Uses default GET arguments like '?page=home'
+#  * rewrite:
+#    Uses rewritten URLs. See .htaccess in the root dir
+uriMethod: argument
+
 # Are normal users allowed to login?
 allowNormalLogin: true
 

@@ -14,7 +14,15 @@ use skies\system\template\ITemplateArray;
  */
 abstract class Page implements ITemplateArray {
 
+	/**
+	 * @var array
+	 */
 	protected $data = [];
+
+	/**
+	 * @var \skies\system\protocol\Link
+	 */
+	protected $link = null;
 
 	/**
 	 * Currently does nothing
@@ -64,17 +72,23 @@ abstract class Page implements ITemplateArray {
 	 * @return bool
 	 */
 	public function isActive() {
-
 		return \Skies::getPage() == $this;
-
 	}
 
 	/**
 	 * @return array
 	 */
 	public function getData() {
-
 		return $this->data;
+	}
+
+	/**
+	 * @param array $arguments Optional arguments
+	 * @return string
+	 */
+	public function getRelativeLink($arguments = []) {
+
+		return \Skies::getUri()->getLink($this->getPath(), $arguments)->getRelativeUri();
 
 	}
 
