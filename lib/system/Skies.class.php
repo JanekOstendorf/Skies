@@ -337,6 +337,11 @@ class Skies {
 		self::$notification->assign();
 
 		if(self::isApiMode()) {
+
+			if(self::$uri->getArgument(0, 'html') == 'html') {
+				self::$template->assign(['html' => self::$template->parse('index.tpl')]);
+			}
+
 			print json_encode(self::$template->getVars());
 		}
 		else {

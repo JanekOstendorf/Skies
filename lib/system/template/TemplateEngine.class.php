@@ -74,6 +74,18 @@ class TemplateEngine {
 
 	}
 
+	/**
+	 * Parses a template and returns it
+	 *
+	 * @param string $templateName Template to parse
+	 * @return string
+	 */
+	public function parse($templateName) {
+
+		return $this->smarty->fetch($templateName);
+
+	}
+
 	public function flushCache() {
 
 		$this->smarty->clearAllCache();
