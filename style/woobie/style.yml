@@ -32,10 +32,16 @@ meta:
 errorCss: css/error.css
 
 # Stylesheet files relative to the style directory (comma separated list, with spaces)
-cssFiles: css/fonts.css, css/style.css, css/nav.css, css/forms.css, font-awesome/css/font-awesome.min.css
+cssFiles:
+    - css/fonts.css
+    - css/style.css
+    - css/nav.css
+    - css/forms.css
+    - font-awesome/css/font-awesome.min.css
 
 # JavaScript files relative to the style directory [optional] (comma seperated list, with spaces)
-jsFiles: js/woobie.js
+jsFiles:
+    - js/woobie.js
 
 # If you have a script, state the class name here
 # The file has to be in the main style directory and is to be named {scriptClass}.class.php

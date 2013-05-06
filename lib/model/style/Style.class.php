@@ -31,7 +31,7 @@ class Style implements ITemplateArray {
 	/**
 	 * List of Cascading Stylesheets to include
 	 *
-	 * @var array<string>
+	 * @var array
 	 */
 	protected $cssFiles = [];
 
@@ -45,7 +45,7 @@ class Style implements ITemplateArray {
 	/**
 	 * List of JavaScript files to include
 	 *
-	 * @var array<string>
+	 * @var array
 	 */
 	protected $jsFiles = [];
 
@@ -66,14 +66,14 @@ class Style implements ITemplateArray {
 	/**
 	 * Meta information
 	 *
-	 * @var array<string|array>
+	 * @var array
 	 */
 	protected $meta = [];
 
 	/**
 	 * Content of our style.yml
 	 *
-	 * @var array<string|array>
+	 * @var array
 	 */
 	protected $config = [];
 
@@ -96,8 +96,8 @@ class Style implements ITemplateArray {
 			throw new SystemException('Failed to load style '.$name.'!', 0, 'Failed to read the configuration file of the style "'.$name.'".');
 		}
 
-		$this->cssFiles = explode(', ', $this->config['cssFiles']);
-		$this->jsFiles = explode(', ', $this->config['jsFiles']);
+		$this->cssFiles = isset($this->config['cssFiles']) ? $this->config['cssFiles'] : [];
+		$this->jsFiles = isset($this->config['jsFiles']) ? $this->config['jsFiles'] : [];
 		$this->templateDir = empty($this->config['templateDir']) ? null : $this->config['templateDir'];
 		$this->meta = $this->config['meta'];
 
