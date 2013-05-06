@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2013 Janek Ostendorf
  * @license   http://opensource.org/licenses/gpl-3.0.html GNU General Public License, version 3
  */
- 
+
 namespace skies\system\protocol;
 
 /**
@@ -14,6 +14,7 @@ namespace skies\system\protocol;
 class Uri {
 
 	const METHOD_ARGUMENT = 1;
+
 	const METHOD_REWRITE = 2;
 
 	/**
@@ -49,7 +50,13 @@ class Uri {
 	 */
 	public function __construct($method) {
 
-		$this->method = $method;
+		// Always argument mode in API mode
+		if(\Skies::isApiMode()) {
+			$this->method = self::METHOD_ARGUMENT;
+		}
+		else {
+			$this->method = $method;
+		}
 
 		$this->readGetArguments();
 		$this->readPostArguments();
@@ -67,8 +74,9 @@ class Uri {
 			foreach($_GET as $key => $curArg) {
 
 				// Rewrite arguments
-				if($key == '__0')
+				if($key == '__0') {
 					continue;
+				}
 
 				// TODO: Escape maybe?
 				$this->getArguments[$key] = (empty($curArg) ? true : $curArg);
@@ -129,8 +137,8 @@ class Uri {
 	/**
 	 * Get argument dependant on used method
 	 *
-	 * @param int $argumentPosition Position of the argument in the rewrite URL
-	 * @param string $argumentName  Name of the argument when using the ARG method
+	 * @param int    $argumentPosition Position of the argument in the rewrite URL
+	 * @param string $argumentName     Name of the argument when using the ARG method
 	 * @return mixed|null NULL if not existant
 	 */
 	public function getArgument($argumentPosition, $argumentName) {
@@ -139,17 +147,20 @@ class Uri {
 
 			case self::METHOD_ARGUMENT:
 
-				if(isset($this->getArguments[$argumentName]))
+				if(isset($this->getArguments[$argumentName])) {
 					return ($this->getArguments[$argumentName] === true ? $argumentName : $this->getArguments[$argumentName]);
+				}
 
 				break;
 
 			case self::METHOD_REWRITE:
 
-				if(isset($this->rewriteArguments[$argumentPosition]))
+				if(isset($this->rewriteArguments[$argumentPosition])) {
 					return $this->rewriteArguments[$argumentPosition];
-				elseif(isset($this->getArguments[$argumentName]))
+				}
+				elseif(isset($this->getArguments[$argumentName])) {
 					return $this->getArguments[$argumentName];
+				}
 
 				break;
 
