@@ -46,6 +46,20 @@ class Uri {
 	protected $postArguments = [];
 
 	/**
+	 * Is the connection using HTTPS?
+	 *
+	 * @var bool
+	 */
+	protected $isSsl = false;
+
+	/**
+	 * Client's SSL certificate
+	 *
+	 * @var ClientSslCertificate
+	 */
+	protected $clientSslCertificate = null;
+
+	/**
 	 * @param int $method URI method used
 	 */
 	public function __construct($method) {
@@ -61,6 +75,11 @@ class Uri {
 		$this->readGetArguments();
 		$this->readPostArguments();
 		$this->readRewriteArguments();
+
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+			$this->isSsl = true;
+		}
+		$this->clientSslCertificate = new ClientSslCertificate();
 
 	}
 
@@ -197,6 +216,13 @@ class Uri {
 	 */
 	public function getLink(array $pagePath, array $arguments = [], $keepGetArguments = false) {
 		return new Link($this, $pagePath, $arguments, $keepGetArguments);
+	}
+
+	/**
+	 * @return \skies\system\protocol\ClientSslCertificate
+	 */
+	public function getClientSslCertificate() {
+		return $this->clientSslCertificate;
 	}
 
 }

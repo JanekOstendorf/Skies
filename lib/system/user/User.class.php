@@ -156,16 +156,6 @@ class User implements ITemplateArray {
 	}
 
 	/**
-	 * @param string $password Password to check
-	 * @return bool
-	 */
-	public function checkPassword($password) {
-
-		return SecureUtil::CheckPassword($password, $this->mail, $this->password);
-
-	}
-
-	/**
 	 * Is this user a guest?
 	 *
 	 * @return bool
@@ -212,6 +202,13 @@ class User implements ITemplateArray {
 
 		$this->name = $name;
 
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPasswordHash() {
+		return $this->password;
 	}
 
 	/**

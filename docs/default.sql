@@ -49,10 +49,11 @@ CREATE TABLE IF NOT EXISTS `user` (
     `userName` text NOT NULL,
     `userMail` text NOT NULL,
     `userPassword` text NOT NULL,
+    `userCertSerial` text DEFAULT NULL,
     `userLastActivity` bigint(255) NOT NULL,
     `userData` varchar(1000) NOT NULL,
     PRIMARY KEY (`userId`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 AUTO_INCREMENT = 2;
 
-INSERT INTO `user` (`userId`, `userName`, `userMail`, `userPassword`, `userLastActivity`, `userData`) VALUES
-(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', 1365372702, 'a:1:{s:8:"language";s:5:"de-DE";}');
+INSERT INTO `user` (`userId`, `userName`, `userMail`, `userPassword`, `userCertSerial`, `userLastActivity`, `userData`) VALUES
+(1, 'test', 'test@test.com', '$2a$08$QILBz4OkxKnrPvZV8Ma2EOvy278He1df2FNnVBmYma/KYygkHYN9C', NULL, 1365372702, 'a:1:{s:8:"language";s:5:"de-DE";}');

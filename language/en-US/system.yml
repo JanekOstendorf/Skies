@@ -1,3 +1,6 @@
+generic:
+    sslLogin: Your SSL certificate has been recognized and you've been logged in as '[[userName]]' automatically.
+
 notification:
     hide: Hide
 

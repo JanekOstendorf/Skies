@@ -10,6 +10,7 @@ use skies\system\language\Language;
 use skies\system\protocol\Uri;
 use skies\system\protocol\UriMethod;
 use skies\system\template\TemplateEngine;
+use skies\system\user\authentication\SslCertificateAuthentication;
 use skies\system\user\Session;
 use skies\system\user\User;
 use skies\util\Benchmark;
@@ -142,6 +143,7 @@ class Skies {
 		self::$style->prepare();
 		self::$page->prepare();
 
+		$this->genericInitialization();
 		$this->assignDefaults();
 
 		$this->show();
@@ -216,6 +218,16 @@ class Skies {
 		define('SUBDIR', self::$config['subdir']);
 
 		/**#@-*/
+
+		// Get URI method
+		$constantString = '\skies\system\protocol\Uri::METHOD_'.strtoupper(self::$config['uriMethod']);
+
+		if(!defined($constantString)) {
+			throw new SystemException('URI method \''.StringUtil::encodeHtml(self::$config['uriMethod']).'\' not found.');
+		}
+
+		self::$uri = new Uri(constant($constantString));
+
 	}
 
 	/**
@@ -268,15 +280,6 @@ class Skies {
 	 */
 	private final function initPage() {
 
-		// Get URI method
-		$constantString = '\skies\system\protocol\Uri::METHOD_'.strtoupper(self::$config['uriMethod']);
-
-		if(!defined($constantString)) {
-			throw new SystemException('URI method \''.StringUtil::encodeHtml(self::$config['uriMethod']).'\' not found.');
-		}
-
-		self::$uri = new Uri(constant($constantString));
-
 		// Fetch page
 		PageUtil::init();
 
@@ -289,6 +292,21 @@ class Skies {
 			$e->show();
 			exit;
 
+		}
+
+	}
+
+	private final function genericInitialization() {
+
+		// Check for SSL cert login
+		$sslAuth = new SslCertificateAuthentication(self::$uri->getClientSslCertificate());
+		if($sslAuth->isValid()) {
+
+			if(self::$user->isGuest() || self::$user->getId() != $sslAuth->getUser()->getId()) {
+				self::$session->login($sslAuth->getUser()->getId());
+				self::updateUser();
+				self::$notification->add(Notification::SUCCESS, '{{system.generic.sslLogin}}', ['userName' => $sslAuth->getUser()->getName()]);
+			}
 		}
 
 	}

@@ -17,6 +17,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 # Everything => $_GET['__0']
 RewriteRule ^(.*)$ index.php?__0=$1&%{QUERY_STRING}
 
+SSLVerifyClient optional_no_ca
+SSLVerifyDepth 1
+SSLOptions +StdEnvVars
+
 ## NGINX EQUIVALENT ##
 
 #location / {

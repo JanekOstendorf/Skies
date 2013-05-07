@@ -35,7 +35,7 @@ class SecureUtil {
 	 * @param   string $stored     The encrypted password
 	 * @return  bool
 	 */
-	public static function CheckPassword($password, $email, $stored) {
+	public static function checkPassword($password, $email, $stored) {
 		$string = hash_hmac('whirlpool', str_pad($password, strlen($password) * 4, sha1($email), STR_PAD_BOTH), \Skies::getConfig()['salt'], false);
 
 		return crypt($string, substr($stored, 0, 30)) == $stored;
