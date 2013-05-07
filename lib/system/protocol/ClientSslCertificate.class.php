@@ -75,15 +75,11 @@ class ClientSslCertificate {
 			if(isset($_SERVER['SSL_CLIENT_M_SERIAL'])) {
 
 				$this->isExisting = true;
-
-				// Parse time
 				$this->serial = $_SERVER['SSL_CLIENT_M_SERIAL'];
 
 			}
 
 		}
-
-		var_dump($this);
 
 	}
 
